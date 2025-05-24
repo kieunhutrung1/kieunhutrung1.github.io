@@ -1,7 +1,602 @@
--- Hãy copy chữ bên trong mục Control của file Deb Tweak.
--- Hãy thêm 3 dòng sau khi Copy:
-Filename: ./debs/tên_file.deb
-Size: kích cỡ theo byte
-MD5sum: mã hash md5 của file
+Package: com.a3tweaks.flipswitch
+Version: 1.0.16~rc3
+Architecture: iphoneos-arm
+Maintainer: rpetrich & a3tweaks <rpetrich+flipswitch@gmail.com>
+Depends: mobilesubstrate (>= 0.9.5001), com.rpetrich.rocketbootstrap (>= 1.0.9) | firmware (<< 7.0)
+Conflicts: com.rpetrich.donotdisturbtoggle (<= 1.0-1), com.jerryen.rotationlockflipswitch, com.jakeashacks.realcc (<< 1.0.2)
+Replaces: com.jerryen.rotationlockflipswitch, tw.garynil.ccfixer93, tw.hiraku.nightshift, com.jakeashacks.realcc (<< 1.0.2)
+Filename: ./Debs/com.a3tweaks.flipswitch_1.0.16~rc3_iphoneos-arm.deb
+Size: 301098
+MD5sum: 6aa1da6c359b385e715cc8a71aa64364
+SHA1: 23618f385d41c2624fc09a60e9f554f3f8faff24
+SHA256: a13a6928248a41a6b81b1faec9703f4e7af9aedcede5ef11dbd71dbd22fc58ec
+Section: System
+Description: Centralized toggle system for iOS
+Author: rpetrich <rpetrich+flipswitch@gmail.com>
+Depiction: https://rpetri.ch/cydia/flipswitch/beta/
+Homepage: https://rpetri.ch/cydia/flipswitch/beta/
+Icon: file:///Applications/Preferences.app/icon-table.png
+Installed-Size: 2408
+Name: Flipswitch
+Provides: com.jerryen.rotationlockflipswitch, tw.garynil.ccfixer93, tw.hiraku.nightshift
+Tag: purpose::extension, role::developer
+dev: flipswitch
 
--- Sau khi thêm, hãy nhấn Enter để xuống dòng (bắt buộc) rồi mới lưu lại.
+Package: com.cokepokes.appstoreplusplus
+Version: 0.10.1-5
+Architecture: iphoneos-arm
+Maintainer: CokePokes
+Depends: firmware (>= 11.0), com.rpetrich.actiwidget, mobilesubstrate, net.kenhtao.icleanerpro, jetslammed, com.kidsautopro.kidssupport, net.kenhtao.appdatamanager, me.autotouch.AutoTouch.ios8.inputtext, com.kidsautopro.kidsautosetting, com.ienthach.XoaInfo, com.ichitaso.powerselector11
+Conflicts: com.unlimapps.uaupdatetools
+Replaces:
+Filename: ./Debs/com.cokepokes.appstoreplusplus_0.10.1-5_iphoneos-arm.deb
+Size: 4624354
+MD5sum: 4cff76b1918deab5c477d971d0a01c52
+SHA1: 968b0e20f6a327a605335906bd2d8c56ed85eb1a
+SHA256: 0ef8cbdcb8c3377d086cdffc3c76a45b1f06fba9408d40c41f0415b26fd267dd
+Section: Tweaks
+Description: Allows you to downgrade/upgrade apps in the AppStore on iOS 11-15.whatever
+Author: CokePokes
+Depiction: https://cokepokes.github.io/depiction/appstoreplus.html
+Homepage:
+Icon: https://cokepokes.github.io/depiction/appstoreplus/icon.png
+Name: AppStore++
+Priority: optional
+dev:
+
+Package: com.hackyouriphone.puck
+Version: 1.1
+Architecture: iphoneos-arm
+Maintainer: HackYouriPhone <repo@hackyouriphone.org>
+Depends: mobilesubstrate, preferenceloader, ws.hbang.common (>= 1.14), firmware (>= 12.0), com.opa334.ccsupport
+Filename: ./Debs/com.hackyouriphone.puck_1.deb
+Size: 1529062
+MD5sum: 5df86c9a1ecde035d5a5a69ae9e18873
+SHA1: b888667afc3e491fb4fbbf7a2ad4d3374476acfa
+SHA256: 06b9b922a61e4d36663fb0ed51b3dba5b9cef3bb7a764059bf8ce8f3427cdb32
+Section: HYI - Theme HD
+Description: Your magical watching spirit
+Author: Litten <repo@hackyouriphone.org>
+Depiction: http://repo.hackyouriphone.org/depiction/depiction.php?filename=puck
+Homepage: http://repo.hackyouriphone.org/depiction/depiction.php?filename=puck
+Name: Puck
+SileoDepiction: https://depiction.hackyouriphone.org/sileoDepiction.php?filename=puck
+
+Package: com.ichitaso.powerselector11
+Version: 1.3.2
+Architecture: iphoneos-arm
+Maintainer: ichitaso <willfeeltips+ps11@gmail.com>
+Depends: mobilesubstrate, preferenceloader, com.opa334.ccsupport
+Conflicts: com.ichitaso.powerselector, com.dpkgdan.powertap, com.weesstt.powerdownoptions, com.subdiox.powertap2, com.rustybalboa.powertapxi
+Replaces: com.ichitaso.powerselector11
+Filename: ./Debs/com.ichitaso.powerselector11.deb
+Size: 215644
+MD5sum: 993217fb63151e4971ec8e36cf0161b4
+SHA1: b9aa25e09562aa21f876b72de03c81d3f1be5212
+SHA256: fb98dc468f58fc3bca5780229d6445c6de0e43e61afdea36eb939bd9b3f553e6
+Section: Utilities
+Description: The power supply relation of a device is operated.
+Author: ichitaso <willfeeltips+ps11@gmail.com>
+Depiction: https://cydia.ichitaso.com/depiction/powerselector11.html
+Homepage: https://cydia.ichitaso.com/depiction/powerselector11.html
+Icon: file:///Library/PreferenceBundles/PowerSelectorSettings.bundle/icon@2x.png
+Installed-Size: 2424
+Name: PowerSelector (iOS 11 to 14)
+Pre-Depends: firmware (>= 11.0)
+Sponsor: thebigboss.org <http://thebigboss.org>
+Tag: purpose::extension, compatible::ios11, compatible::ios12, compatible::ios13, compatible::ios14
+dev: ichitaso
+
+Package: com.ienthach.XoaInfo
+Version: 2.14-7
+Architecture: iphoneos-arm
+Maintainer: Nguyen Quang Vu (ienthach) <ienthach87@gmail.com>
+Depends: firmware (>= 7.0), mobilesubstrate, com.rpetrich.rocketbootstrap, curl, openssh
+Filename: ./Debs/com.ienthach.XoaInfo_2.14-7_iphoneos-arm.deb
+Size: 5808542
+MD5sum: 8bbdaa9ee6ff9817d5d9d40712f94e72
+SHA1: cb951606a6f739fcd756c00b0bd83e653306fbea
+SHA256: aaa4a8967568e365b0207ff092e9ad9254b8bd282c468fed9894614424e3c5bc
+Section: Utilities
+Description: Tool RRS for mmo iOS
+Author: Nguyen Quang Vu (ienthach) <ienthach87@gmail.com>
+Depiction: https://XoaInfo.com/xoainfo/depiction/xoainfo.php
+Homepage: https://XoaInfo.com/
+Name: Xoa Info 2015
+
+Package: com.mins.linhvuauto
+Version: 0.0.1-836+debug
+Architecture: iphoneos-arm
+Maintainer: Mins
+Depends: mobilesubstrate, com.rpetrich.rocketbootstrap, jetslammed, ws.hbang.common, zip, tar, unzip, gzip, unrar, p7zip
+Filename: ./Debs/com.mins.linhvuauto.deb
+Size: 1249172
+MD5sum: d9113b1e0b858160fad5208a2c14191c
+SHA1: 801b257be46f7eb2497a62c4cfdebde14958ad5e
+SHA256: 8a9ab751667e128bfe65229652600ff0042d0a4f0c580c0d2ca00f5903294c45
+Section: System
+Description: An awesome tool of some sort!!
+Author: Mins
+Installed-Size: 6700
+Name: LinhVu
+Tag: role::hacker
+
+Package: com.mins.linhvuplus
+Version: 1.0-643+debug
+Architecture: iphoneos-arm
+Maintainer: Mins
+Depends: mobilesubstrate, com.rpetrich.rocketbootstrap, jetslammed, ws.hbang.common, zip, tar, unzip, gzip, unrar, p7zip, openssh, curl
+Filename: ./Debs/com.mins.linhvuplus.deb
+Size: 4996796
+MD5sum: 81948d08afdb1db8ba037544e59047bd
+SHA1: 9cfa1badd43c7c67f21564d66cf35d9e3867d9cb
+SHA256: 7fc41aac46ba09c920e8ab5e7113df8923cb19b1f9e5691e86e5d34627be07d8
+Section: System
+Description: An awesome tool of some sort!!
+Author: Mins
+Installed-Size: 18088
+Name: LinhVu Plus
+Tag: role::hacker
+
+Package: com.mins.ramleakprevent
+Version: 0.0.1-1+debug
+Architecture: iphoneos-arm
+Maintainer: Mins
+Depends: jetslammed
+Filename: ./Debs/com.mins.ramleakprevent.deb
+Size: 2876
+MD5sum: 06f6bb0a3af0b14cc8c1c2bdf6399159
+SHA1: 48959dd04dd6dcbc98b95c6aced04ef47ad88920
+SHA256: dae72c334d2ac818dcc766cf29a685a58b793b5c17172652d142b23f9a9e680f
+Section: System
+Description: Extend ram for SpringBoard
+Author: Mins
+Installed-Size: 72
+Name: RamLeak
+Tag: role::hacker
+
+Package: com.mins.ttweak
+Version: 0.0.1-345+debug
+Architecture: iphoneos-arm
+Maintainer: Mins
+Depends: mobilesubstrate, com.rpetrich.rocketbootstrap, jetslammed, ws.hbang.common, zip, tar, unzip, gzip, unrar, p7zip, openssh, curl,applist
+Filename: ./Debs/com.mins.ttweak_0.0.1-345+debug_iphoneos-arm.deb
+Size: 1151338
+MD5sum: 3a3903d7348808bb7bc9454ec4258a68
+SHA1: 0447876e2f4376294e0f98462a6bf594a1da2742
+SHA256: 32b93a77226944e7c226aea3da26b62f69f86ef55ae2d89aa048f27992ba0c15
+Section: System
+Description: An awesome tool of some sort!!
+Author: Mins
+Installed-Size: 5564
+Name: TTweak
+Tag: role::hacker
+
+Package: com.opa334.ccsupport
+Version: 1.3.13-2
+Architecture: iphoneos-arm
+Maintainer: opa334
+Depends: mobilesubstrate, firmware (>=11.0)
+Conflicts: com.ioscreatix.silo
+Replaces: com.ioscreatix.silo
+Filename: ./Debs/com.opa334.ccsupport_1.3.13-2_iphoneos-arm.deb
+Size: 64204
+MD5sum: fb8f8641a2508106e155a2fa701d9099
+SHA1: a5229c5da464d2b2f9ff334748801f4194ac6a2e
+SHA256: 60de418d12dbf2384ce045c3f029fb6aa87c53da16c63860ab17d117b7b0473c
+Section: Tweaks
+Description: Support tweak for CC modules!
+Author: opa334
+Depiction: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=ccsupportDp
+Installed-Size: 496
+Name: CCSupport
+Provides: com.ioscreatix.silo
+
+Package: com.rpetrich.actiwidget
+Version: 0.1
+Architecture: iphoneos-arm
+Maintainer: Ryan Petrich
+Depends: firmware (>= 5.0), mobilesubstrate, com.chpwn.weeloader, libactivator (>= 1.7.5~beta10)
+Filename: ./Debs/com.rpetrich.actiwidget_0.1.deb
+Size: 7468
+MD5sum: 3ca41995283c895b2363068ea5ccf9a0
+SHA1: d132df169f96eb17fede69eda325855f9a4eb7fb
+SHA256: 54dee47da9d1a123384da02dc8bf6cdbc0db869a9a3b248278bfcf262234a78b
+Section: Addons (NotificationCenter)
+Description: Activator-integration for the Notification Center
+Author: Ryan Petrich
+Installed-Size: 28
+Name: Actiwidget
+
+Package: com.rpetrich.rocketbootstrap
+Version: 1.0.10~beta1
+Architecture: iphoneos-arm
+Maintainer: BigBoss <bigboss@thebigboss.org>
+Depends: mobilesubstrate (>= 0.9.5000), firmware (>= 3.0)
+Filename: ./Debs/com.rpetrich.rocketbootstrap_1.0.10~beta1_iphoneos-arm.deb
+Size: 38344
+MD5sum: b52417e29631c59cdb267379e71e2a69
+SHA1: 5839fce38b27e624ab5629d50fd543f30b473615
+SHA256: d06e18eefbfcb40f3e3b215bfbccaf34091fb30b2ccb1e4f6c519aa91d2b7248
+Section: Tweaks
+Description: Support library allowing tweaks to communicate with sandboxed processes
+Author: Ryan Petrich <rpetrich+rocketbootstrap@gmail.com>
+Depiction: https://www.rpetrich.com/cydia/rocketbootstrap/beta/
+Homepage: https://www.rpetrich.com/cydia/rocketbootstrap/beta/
+Installed-Size: 596
+Name: RocketBootstrap
+Sponsor: thebigboss.org <http://thebigboss.org>
+Tag: purpose::extension, role::developer
+dev: rpetrich
+
+Package: com.shiftcmdk.autoalerts
+Version: 1.0.2
+Architecture: iphoneos-arm
+Maintainer: shiftcmdk
+Depends: mobilesubstrate
+Filename: ./Debs/com.shiftcmdk.autoalerts.deb
+Size: 101892
+MD5sum: a47320321361cd2ffd649a3d0026723d
+SHA1: 853da48d0826736417560bb0cfe6f056d9811b8c
+SHA256: fa7e9e82f3ddb65a0def1f499c63421ce5c1212a36c865f6e91cb99e8816be59
+Section: Tweaks
+Description: Automate alert actions.
+Author: shiftcmdk
+Depiction: https://shiftcmdk.github.io/repo/depictions/?p=com.shiftcmdk.autoalerts
+Installed-Size: 424
+Name: AutoAlerts
+
+Package: jetslammed
+Version: 1.3
+Architecture: iphoneos-arm
+Maintainer: Mario Ciabarra <https://github.com/mariociabarra/jetslammed>
+Depends: firmware (>= 7)
+Filename: ./Debs/Jetslammed1_3.deb
+Size: 12324
+MD5sum: 51691faa6e8588256781d13ee4fa5ec1
+SHA1: d8f947cdd398cd4f2217bed75b1721b94a99f4da
+SHA256: 372e5495fac2f0a487d6f0ade25bf8c0bb8b67a9155238341af8a20928fe7a94
+Section: Utilities
+Description: Library for modifying jetsam memory limits per process
+Author: Mario Ciabarra <https://github.com/mariociabarra/jetslammed>
+Name: Jetslammed
+
+Package: jp.akusio.kernbypass-unofficial
+Version: 0.0.5
+Architecture: iphoneos-arm
+Maintainer: ichitaso
+Depends: mobilesubstrate, preferenceloader
+Conflicts: jp.akusio.kernbypass, com.apple.memecity
+Replaces: jp.akusio.kernbypass-unofficial
+Filename: ./Debs/jp.akusio.kernbypass-unofficial_0.0.5.deb
+Size: 144922
+MD5sum: 88664e2a63933c4ba6c58a13936d4299
+SHA1: d2eed190bf07e978ec7e78c4f3ae5c39729a91f2
+SHA256: 8ee495c8fff663df9ddeb562b595bd8438fcc86a3a5e83fcbe0bfbf9a6a14f6b
+Section: System
+Description: kernel level jailbreak detection bypass.
+Author: akusio
+Depiction: https://cydia.ichitaso.com/depiction/kernbypass.html
+Homepage: https://ichitaso.com
+Icon: file:///Library/PreferenceBundles/KernBypassPrefs.bundle/icon@2x.png
+Installed-Size: 920
+Name: KernBypass (Unofficial)
+Pre-Depends: firmware (>= 12.0), firmware (<< 15.0)
+Tag: purpose::extension, compatible::ios12, compatible::ios13, compatible::ios14
+dev: akusio, Misty, ichitaso, XsF1re
+
+Package: com.kidsautopro.kidsautosetting
+Version: 1.2-22
+Architecture: iphoneos-arm
+Maintainer: Dev by KidsAuto Team
+Depends: mobilesubstrate, ws.hbang.common
+Conflicts: com.kidsprivate.kidsrestore, com.kidsauto.sslkillswitch2
+Filename: ./Debs/KidsSetting1222.deb
+Size: 61566
+MD5sum: 32239ba95a760e208b81ab1136ee953e
+SHA1: 7b115aac2d16a4a23d5f299482152382fc84d008
+SHA256: c0036b4397ae6a6960de2a61565079e4112c922dfb03ae3b5c0bc77c047f8617
+Section: Tweaks
+Description: Utilities to support KidsAuto Pro, Fixed SSL to Bugs App!!!
+Author: KidsAuto Pro - Cường Trần <https://www.facebook.com/kidsauto91>
+Name: KidsAutoSetting
+
+Package: com.kidsautopro.kidssupport
+Version: 1.11-10-2-1
+Architecture: iphoneos-arm
+Maintainer: KidsAuto Teams
+Filename: ./Debs/KidsSupport.deb
+Size: 1180664
+MD5sum: 37366f13d004156ae949f1e4b524b8b0
+SHA1: 2ad007258a987c8c0043f80fd0ab29740192ca7a
+SHA256: a282b642df1fb5ec83f12d392f47572d8b41e8789f395f6342a4bff48797c911
+Section: Utilities
+Description: Utilities to support KidsAuto Pro!!!
+Author: KidsAuto Pro - Cường Trần <https://www.facebook.com/kidsauto91>
+Depiction: http://kidsauto.github.io/pro
+Icon: file:///Applications/kidsauto.app/AppIcon.png
+Installed-Size: 2012
+Name: Kids Support
+
+Package: libactivator
+Version: 1.9.13~rc6
+Architecture: iphoneos-arm
+Maintainer: Ryan Petrich <rpetrich+activator@gmail.com>
+Depends: mobilesubstrate (>= 0.9.5101), preferenceloader (>= 2.2.2), com.a3tweaks.flipswitch (>= 1.0.16~rc3), com.rpetrich.rocketbootstrap (>= 1.0.9)
+Conflicts: com.booleanmagic.overboard (<= 1.1), com.ashman.lockinfo (<= 2.0.0-6), sbsettings (<= 3.0.6), com.fuyuchi.missionboardpro (<= 1.3), com.kindadev.nobetaalert, libhide (<< 2.4.1), com.fortysixandtwo.activ8rfix, net.tateu.actisearch, com.jakeashacks.activator, com.udevs.activatorhomebuttoncrashfix, eu.rio-doro.actithemefix
+Replaces: com.booleanmagic.overboard (<= 1.1), com.ashman.lockinfo (<= 2.0.0-6), com.fuyuchi.missionboardpro (<= 1.3), com.kindadev.nobetaalert, com.fortysixandtwo.activ8rfix, net.tateu.actisearch, com.jakeashacks.activator, com.udevs.activatorhomebuttoncrashfix, eu.rio-doro.actithemefix
+Filename: ./Debs/libactivator_1.9.13~rc6_iphoneos-arm.deb
+Size: 929288
+MD5sum: edb85ee5c115534b48818d8bb9592152
+SHA1: 31be51e4b89f8e4e39ec1920e945960d3f458d96
+SHA256: 2fcd743e3b3f6e13a5c138c1445cab1d81c66125823f3895e4ef62508e30d8ef
+Section: System
+Description: Centralized gestures, button and shortcut management for iOS
+Author: Ryan Petrich <rpetrich+activator@gmail.com>
+Depiction: https://rpetri.ch/cydia/activator/beta/
+Homepage: https://rpetri.ch/cydia/activator/beta/
+Icon: file:///Applications/Activator.app/Icon-Small-modern@2x.png
+Installed-Size: 5060
+Name: Activator
+Priority: optional
+Sponsor: thebigboss.org <http://thebigboss.org>
+dev: rpetrich
+
+Package: me.autotouch.AutoTouch.ios8.inputtext
+Version: 6.1.8-2k
+Architecture: iphoneos-arm
+Maintainer: Kent Krantz <kentkrantz@gmail.com>
+Depends: firmware (>= 8.0), mobilesubstrate, com.rpetrich.rocketbootstrap (>> 1.0.6)
+Conflicts: com.repo.xarold.com.autotouch8, repo.biteyourapple.net.autotouch8, repo.biteyourapple.net.autotouch, com.hackyouriphone.autotouch8
+Filename: ./Debs/me.autotouch.AutoTouch.ios8.inputtext.deb
+Size: 26461766
+MD5sum: c16716bbc1d4af016e5b7c30889574bf
+SHA1: 0ccc1a3d70b2b90435399e61a9f4225887c0f491
+SHA256: 036ad48a13cc51ae64da2eb108b7dd7cd25ccbcc70c41b06efbc983d6dac168c
+Section: Utilities
+Description: Record and playback touch operations, play macro scripts automatically.
+Author: Kent Krantz <kentkrantz@gmail.com>
+Homepage: https://autotouch.net
+Icon: file:///Applications/AutoTouch.app/AppIcon60x60@2x.png
+Installed-Size: 100716
+Name: AutoTouch with inputText
+Priority: optional
+
+Package: mobilesubstrate
+Version: 0.9.6301
+Architecture: iphoneos-arm
+Maintainer: Jay Freeman (saurik) <saurik@saurik.com>
+Depends: com.saurik.substrate.safemode
+Conflicts: me.devbug.msreloadfix, com.r3pwn.startsubstrate, com.ragemasta.bootstrap
+Breaks: uikittools (<< 1.1.1), com.mywi4 (<= 5.03.2), com.phoenix.pandoracontrols (<= 1.1.0-1), com.intelliborn.intelliscreenx (<= 1.0.110), com.evad3rs.evasi0n7 (<< 0.2)
+Replaces: cycript (<= 0.9.594)
+Filename: ./Debs/mobilesubstrate_0.9.6301_iphoneos-arm.deb
+Size: 122342
+MD5sum: f2ca15c08aab522d8b7e842238aa83c6
+SHA1: 02ad8dce33adae8ba256dd5a4cac3bdf0246deec
+SHA256: 8dc91a066f088632409fecf65613831b8d6802e3b799f2dc87563c3ea2ed06ca
+Section: System
+Description: powerful code insertion platform
+Author: Jay Freeman (saurik) <saurik@saurik.com>
+Depiction: http://cydia.saurik.com/info/mobilesubstrate/
+Name: Cydia Substrate
+Pre-Depends: dpkg (>= 1.14.25-8)
+Priority: optional
+
+Package: net.kenhtao.appdatamanager
+Version: 1.6.1-11
+Architecture: iphoneos-arm
+Maintainer: Kênh Táo
+Filename: ./Debs/net.kenhtao.appdatamanager.deb
+Size: 2531260
+MD5sum: 33602027bd268aae0a7cb03d176cc1e3
+SHA1: 777cb5fcb347772c6e69aabfc64f83aa634fe853
+SHA256: cd6156ddb0d67f4fe68d519047fb8590d62056c292e79922dcb3ef4d63c0e38a
+Section: Utilities
+Description: Trình quản lý dữ liệu cho các ứng dụng trên iOS.
+Author: TIGI Software
+Depiction: https://repo.kenhtao.net/view/8116
+Homepage: http://cydia.saurik.com/package/com.tigisoftware.appdatamanager/
+Icon: file:///Applications/Cydia.app/Sections/tienich.png
+Installed-Size: 9112
+Name: Apps Manager VN
+Sileodepiction: http://repo.kenhtao.net/sileo-depiction/net.kenhtao.appdatamanager
+
+Package: net.kenhtao.callblocker
+Version: 2.0.3
+Architecture: iphoneos-arm
+Maintainer: Kênh Táo
+Depends: mobilesubstrate, preferenceloader
+Filename: ./Debs/net.kenhtao.callblocker.deb
+Size: 79282
+MD5sum: ee5aa2631f6610c699f330aa5ce4e6f5
+SHA1: 5248cde75c8c78ea6882437e2a562dc7d5caa335
+SHA256: e6732e2b5ce0da774b48857db282d6377aa9786e69f9308ea27b916d00197246
+Section: Security
+Description: Chặn cuộc gọi nâng cao hơn.
+Author: P2KDev <p2kdev@gmail.com>
+Depiction: https://repo.kenhtao.net/view/2540
+Icon: file:///Applications/Cydia.app/Sections/security.png
+Installed-Size: 512
+Name: CallBlocker VN
+Sileodepiction: http://kenhtao.net/sileo-depiction/net.kenhtao.callblocker
+
+Package: net.kenhtao.icleanerpro
+Version: 7.9.1
+Architecture: iphoneos-arm
+Maintainer: Kênh Táo
+Depends: firmware (>= 4.0), findutils, apt | apt7
+Conflicts: org.altervista.exilecom.icleaner, com.exile90.icleanerpro
+Replaces: org.altervista.exilecom.icleaner
+Filename: ./Debs/net.kenhtao.icleanerpro.deb
+Size: 4804842
+MD5sum: e238f15a7983a0c97ae5c0e674f12e17
+SHA1: 32f740e4a22f764bbffbdd6c3962dc2c17311fde
+SHA256: 207842284cf7fb5b6ad14fdaefc33bdd383558247a961615a8753e6491dcceb9
+Section: Utilities
+Description: Trình dọn dẹp và tối ưu hóa hệ thống iOS tốt nhất.
+Author: Ivano Bilenchi
+Depiction: https://kenhtao.net/view/8713
+Homepage: http://ib-soft.net/depictions/?pkgId=com.exile90.icleanerpro
+Icon: file:///Applications/Cydia.app/Sections/tienich.png
+Name: iCleaner Pro VN
+Sileodepiction: http://kenhtao.net/sileo-depiction/net.kenhtao.icleanerpro
+
+Package: net.kenhtao.killx
+Version: 3.0.2
+Architecture: iphoneos-arm
+Maintainer: Kênh Táo
+Depends: mobilesubstrate, preferenceloader, applist, firmware (>= 13.0)
+Conflicts: com.cemck.killx
+Filename: ./Debs/net.kenhtao.killx_3.0.2_iphoneos-arm.deb
+Size: 274264
+MD5sum: 53d3eb8aef988331999b9a824acc5a35
+SHA1: eb610930eb4dcbbe7875e953a1f7c1c40afd297a
+SHA256: c70b31ed4139490dace32597b55fa3db4759b1fd35d8598e81a2e666712e066f
+Section: Tweaks
+Description: Vuốt xuống thẻ trong Đa nhiệm để đóng toàn bộ.
+Author: Cem K
+Depiction: https://repo.kenhtao.net/view/6831
+Icon: file:///Applications/Cydia.app/Sections/tinhchinh.png
+Installed-Size: 984
+Name: KillX Pro VN
+Sileodepiction: http://repo.kenhtao.net/sileo-depiction/net.kenhtao.killx
+
+Package: preferenceloader
+Version: 2.2.4~beta1
+Architecture: iphoneos-arm
+Maintainer: Dustin Howett <cydia.pl@relay.howett.net>
+Depends: mobilesubstrate
+Filename: ./Debs/preferenceloader_2.2.4~beta1_iphoneos-arm.deb
+Size: 33838
+MD5sum: 61efed5a8aa8507208731da2d737c882
+SHA1: 5c180113d9fc6263cf30700a725dacb92b546218
+SHA256: d395cfb1d8dd56f984df50dc0db33746e3e1e72f311be5bad3f4235342b21b90
+Section: System
+Description: load preferences in style
+Author: Dustin Howett <cydia.pl@relay.howett.net>
+Depiction: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=preferenceloader2Data
+Homepage: http://moreinfo.thebigboss.org/moreinfo/depiction.php?file=preferenceloader2Data
+Installed-Size: 532
+Name: PreferenceLoader
+Tag: role::hacker, purpose::library
+dev: dustinhowett
+
+Package: com.touchsprite.ios.arm64.pro.v3
+Version: 3.1.3~Crack
+Architecture: iphoneos-arm
+Maintainer: touchsprite <cydia.pl@relay.howett.net>
+Depends: mobilesubstrate, firmware (>= 11.0), com.ienthach.XoaInfo, com.ichitaso.powerselector11
+Filename: ./Debs/com.touchsprite.ios.arm64.pro.v3_3.1.3_crack.deb
+Size: 11960094
+MD5sum: 4ff6f935079a1791565bcadb50db0f44
+SHA1: 0a3bbfe7f09b4ab08ca166ac8ee3d8328e746087
+SHA256: e50236551df2ba0091d46f9f2afd7c814b61e188efabc358c2a866bc485289cd
+Section: Utilities
+Description: load preferences in style
+Author: touchsprite <cydia.pl@relay.howett.net>
+Depiction: https://apt.touchsprite.com/index.php
+Homepage: https://apt.touchsprite.com/index.php
+Icon: ./assets/touchsprite.png
+Name: A-Touchsprite
+Tag: role::hacker, purpose::library
+dev: KNT ios
+
+Package: com.bvnsupport.filza
+Version: 4.0.1~Crack
+Architecture: iphoneos-arm
+Maintainer: filza <cydia.pl@relay.howett.net>
+Depends: 
+Filename: ./Debs/com.bvnsupport.filza_4.0.1-2_iphoneos-arm.deb
+Size: 13940132
+MD5sum: e92fb1970fcc2efab2703e0195823ba1
+SHA1: b56eba7d10b5cfcacf7aeb9b6f1bb2c7c0f24bec
+SHA256: 56af6583e2679cbe2b84be62b86cd6d228b09d79f272ea9dcd45d2126b75b53f
+Section: Tweaks
+Description: load preferences in style
+Author: touchsprite <cydia.pl@relay.howett.net>
+Depiction: https://moreinfo.thebigboss.org/moreinfo/depiction.php?file=filzafilemanagerDp
+Homepage: https://moreinfo.thebigboss.org/moreinfo/depiction.php?file=filzafilemanagerDp
+Name: Filza VH Crack
+Tag: role::hacker, purpose::library
+dev: Trungios
+
+Package: cydia.net.angelxwind.appsyncunified
+Version: 78.0
+Architecture: iphoneos-arm
+Maintainer: Karen/あけみ <karen@akemi.ai>
+Depends: firmware (>= 5.0), firmware (<= 13.5.5), firmware (<< 12.0)
+Filename: ./Debs/net.angelxwind.appsyncunified_78.0_iphoneos-arm.deb
+Size: 42210
+MD5sum: 9e324b47dc9dfca5e8d1c104ad46d1ce
+SHA1: e12e8ea3fcfcdee15529bc253ac7d4752919c6f0
+SHA256: 1ab0696d066a92b7fbcafbc63a215e24fc8e450590c20bed79d45aa3d693662f
+Section: Tweaks
+Description: load preferences in style
+Author: Linus Yang, Karen/あけみ <karen@akemi.ai>
+Depiction: https://cydia.akemi.ai/?page/net.angelxwind.appsyncunified
+Homepage: https://cydia.akemi.ai/
+Installed-Size: 496
+Name: AppSync Unified-< IOS12
+Tag: role::hacker, purpose::library
+dev: Trungios
+
+Package: ai.akemi.appsyncunified
+Version: 110.0
+Architecture: iphoneos-arm
+Maintainer: Karen/あけみ <karen@akemi.ai>
+Depends: firmware (>= 5.0), mobilesubstrate (>= 0.9.5100), firmware (<= 16.3.1)
+Filename: ./Debs/ai.akemi.appsyncunified_110.0.deb
+Size: 58440
+MD5sum: 26f898f0b80f3bd842527aa9a9859bb1
+SHA1: f0392e1c1992789ac92c17dc7db3718fca6df899
+SHA256: fa97d20ecaab914c7d07fc17ff2f31c15d34b33a5eebc158cb2c83e8a7ec2abc
+Section: Tweaks
+Description: load preferences in style
+Author: Linus Yang, Karen/あけみ <karen@akemi.ai>
+Depiction: https://cydia.akemi.ai/?page/net.angelxwind.appsyncunified
+Homepage: https://cydia.akemi.ai/
+Installed-Size: 700
+Name: AppSync Unified KNT
+Tag: role::hacker, purpose::library
+dev: Trungios
+
+Package: com.knt.touchspritesetting
+Version: 1.0
+Architecture: iphoneos-arm
+Maintainer: Karen/あけみ <karen@akemi.ai>
+Depends: 
+Filename: ./Debs/com.knt.touchspritesetting_1.0_iphoneos-arm.deb
+Size: 24790928
+MD5sum: 6864f814a19459fef70202100fefda54
+SHA1: 983f7908b3ce005beaf0f6fb9ad36aee241f06c6
+SHA256: 2a37ede5e39650638701392bb746e978410f8e3b15ca73a4e51c069aeabac8b4
+Section: Tweaks
+Description: load preferences in style
+Author: Linus Yang, Karen/あけみ <karen@akemi.ai>
+Depiction: https://cydia.akemi.ai/?page/net.angelxwind.appsyncunified
+Homepage: https://cydia.akemi.ai/
+Installed-Size: 700
+Name: touchspritesetting KNT
+Tag: role::hacker, purpose::library
+dev: Trungios
+
+Package: com.touchsprite.ios.arm64.pro.v3
+Version: 3.1.3~Crack
+Architecture: iphoneos-arm
+Maintainer: touchsprite <cydia.pl@relay.howett.net>
+Depends: mobilesubstrate, firmware (>= 11.0)
+Filename: ./Debs/com.touchsprite.ios.arm64.pro.v3_3.1.3_crack.deb
+Size: 11960094
+MD5sum: 4ff6f935079a1791565bcadb50db0f44
+SHA1: 0a3bbfe7f09b4ab08ca166ac8ee3d8328e746087
+SHA256: e50236551df2ba0091d46f9f2afd7c814b61e188efabc358c2a866bc485289cd
+Section: Utilities
+Description: load preferences in style
+Author: touchsprite <cydia.pl@relay.howett.net>
+Depiction: https://apt.touchsprite.com/index.php
+Homepage: https://apt.touchsprite.com/index.php
+Icon: ./assets/touchsprite.png
+Name: A-Touchsprite-AA
+Tag: role::hacker, purpose::library
+dev: KNT ios

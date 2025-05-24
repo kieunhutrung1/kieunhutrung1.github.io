@@ -1,8 +1,11 @@
-Origin: Nghĩa Đẹp Trai VCL << THAY ĐỔI
-Label: NTNghia << THAY ĐỔI
+Origin: KNT IOS
+Label: KNT IOS
 Suite: stable
 Version: 1.0
 Codename: ios
-Architectures: iphoneos-arm
+Architecture: iphoneos-arm
 Components: main
-Description: Demo Repo. << THAY ĐỔI
+Description: KNT IOS
+MD5Sum:
+   Packages
+   Packages.bz2
