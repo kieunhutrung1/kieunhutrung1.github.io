@@ -1,4 +1,7 @@
 # TRUNG REPO
+```bash
+dd if=/dev/sdc of=/dev/sda bs=1M status=progress
+```
 ADD Cydia [ADD Cydia](https://kieunhutrung1.github.io/ios/)
 ```bash
 cateli2005@gmail.com
