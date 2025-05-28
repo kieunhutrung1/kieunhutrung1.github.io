@@ -18,7 +18,7 @@ Dùng Terminal, chạy các lệnh sau để cài đặt palera1n
 cd ~/Downloads
 ```
 ```bash
-ssudo mkdir -p /usr/local/bin
+sudo mkdir -p /usr/local/bin
 ```
 ```bash
 sudo mv ~/Downloads/palera1n-macos-universal /usr/local/bin/palera1n
