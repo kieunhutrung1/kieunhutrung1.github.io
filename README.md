@@ -18,6 +18,9 @@ Dùng Terminal, chạy các lệnh sau để cài đặt palera1n
 cd ~/Downloads
 ```
 ```bash
+ssudo mkdir -p /usr/local/bin
+```
+```bash
 sudo mv ~/Downloads/palera1n-macos-universal /usr/local/bin/palera1n
 ```
 ```bash
@@ -35,6 +38,25 @@ sudo /usr/local/bin/palera1n -f -B -v
 ```
 ```bash
 sudo /usr/local/bin/palera1n -f -v
+```
+Linux
+
+Mở một cửa sổ terminal
+```bash
+sudo systemctl stop usbmuxd
+```
+```bash
+sudo usbmuxd -f -p
+```
+Mở một cửa sổ terminal mới và cdtới thư mục mà palera1n đã được tải xuống (thường là cd ~/Downloads).
+```bash
+cd ~/Downloads
+```
+```bash
+sudo mv ./palera1n-linux-x86_64 /usr/bin/palera1n
+```
+```bash
+sudo chmod +x /usr/bin/palera1n
 ```
 TrollInstallerX [Bấm vào đây để tải TrollInstallerX](https://kieunhutrung1.github.io/ios/tmp/TrollInstallerX/TrollInstallerX.zip)
 
