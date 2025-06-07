@@ -1,4 +1,3 @@
-```bash
 #!/bin/bash
 
 # Lấy địa chỉ IP
@@ -13,4 +12,3 @@ RESULT="socks5://$IP:$USER:$PASS"
 
 # In kết quả
 echo $RESULT
-```
