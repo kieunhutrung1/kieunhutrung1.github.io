@@ -2,33 +2,23 @@
 
 # Đường dẫn đến file JSON
 CONFIG_FILE="/etc/xray/proxy1.json"
+TEMP_FILE="/tmp/temp_config.json"
 
-# Trường hợp dùng để lưu kết quả
-declare -A UNIQUE_URLS
+# Lấy từ dòng 2 đến dòng 15 từ file JSON và lưu vào file tạm
+sed -n '2,15p' "$CONFIG_FILE" > "$TEMP_FILE"
 
-# Duyệt qua tất cả các inbound trong file JSON
-jq -c '.inbounds[]' "$CONFIG_FILE" | while read -r inbound; do
-    # Lấy địa chỉ listen và port từ đối tượng inbound
-    LISTEN=$(echo "$inbound" | jq -r '.listen')
-    PORT=$(echo "$inbound" | jq -r '.port')
-    
-    # Lấy danh sách tài khoản từ trường "accounts" nếu có
-    echo "$inbound" | jq -c '.settings.accounts[]?' | while read -r account; do
-        USER=$(echo "$account" | jq -r '.user')
-        PASS=$(echo "$account" | jq -r '.pass')
+# Trích xuất listen (IP) và port từ file tạm
+IP=$(grep -oP '"listen": *"\K[^"]+' "$TEMP_FILE")
+# PORT=$(grep -oP '"port": *"\K[0-9]+' "$TEMP_FILE")
+PORT=$(jq -r '.[0].port' "$TEMP_FILE")
+# PORT=$(jq -r '.inbounds[].port' "$TEMP_FILE")
+# Trích xuất user và pass, loại bỏ trùng lặp và chỉ lấy giá trị đầu tiên của user
+USER=$(grep -oP '"user": *"\K[^"]+' "$TEMP_FILE")
+PASS=$(grep -oP '"pass": *"\K[^"]+' "$TEMP_FILE")
 
-        # Kiểm tra nếu có đủ thông tin
-        if [[ -n "$LISTEN" && -n "$PORT" && -n "$USER" && -n "$PASS" ]]; then
-            # Ghép lại thành định dạng socks5
-            SOCKS5_URL="socks5://$LISTEN:$PORT:$USER:$PASS"
-            
-            # Lưu kết quả vào mảng để loại bỏ trùng lặp
-            UNIQUE_URLS["$SOCKS5_URL"]=1
-        fi
-    done
-done
-
-# In ra các URL không trùng lặp
-for url in "${!UNIQUE_URLS[@]}"; do
-    echo "$url"
-done
+# Ghép lại thành định dạng socks5
+SOCKS5_URL="socks5://$IP:7001:$USER:$PASS"
+sed -n '7p' /etc/xray/proxy1.json
+echo "SOCKS5 URL: $SOCKS5_URL"
+# Xóa file tạm sau khi sử dụng
+rm "$TEMP_FILE"
