@@ -3,23 +3,28 @@
 # Đường dẫn đến file JSON
 CONFIG_FILE="/etc/xray/proxy1.json"
 
-# Trích xuất user
-USER=$(grep -oP '"user": *"\K[^"]+' "$CONFIG_FILE")
+# Trường hợp dùng để lưu kết quả
+declare -A UNIQUE_URLS
 
-# Trích xuất pass
-PASS=$(grep -oP '"pass": *"\K[^"]+' "$CONFIG_FILE")
+# Đọc từng dòng trong file JSON 
+while read -r line; do
+    # Trích xuất ip
+    IP=$(echo "$line" | grep -oP '"ip": *"\K[^"]+')
+    # Trích xuất user
+    USER=$(echo "$line" | grep -oP '"user": *"\K[^"]+')
+    # Trích xuất pass
+    PASS=$(echo "$line" | grep -oP '"pass": *"\K[^"]+')
 
-# Trích xuất ip
-IP=$(grep -oP '"ip": *"\K[^"]+' "$CONFIG_FILE")
+    # Nếu có đủ thông tin
+    if [[ -n "$IP" && -n "$USER" && -n "$PASS" ]]; then
+        # Ghép lại thành định dạng socks5
+        SOCKS5_URL="socks5://$IP:$USER:$PASS"
+        # Lưu kết quả vào mảng
+        UNIQUE_URLS["$SOCKS5_URL"]=1
+    fi
+done &lt; &lt;(jq -c '.[]' "$CONFIG_FILE")  # Sử dụng jq để đọc trong mỗi dòng JSON
 
-# Ghép lại thành định dạng socks5://ip:user:pass
-SOCKS5_URL="socks5://$IP:$USER:$PASS"
-
-# Lưu thông tin không trùng nhau vào một file tạm thời
-echo "$SOCKS5_URL" | sort -u > /tmp/unique_socks5_urls.txt
-
-# In ra kết quả không trùng nhau
-cat /tmp/unique_socks5_urls.txt
-
-# Xóa file tạm thời
-rm /tmp/unique_socks5_urls.txt
+# In ra các URL không trùng lặp
+for url in "${!UNIQUE_URLS[@]}"; do
+    echo "$url"
+done
