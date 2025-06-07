@@ -76,7 +76,7 @@ Tienmaster@123
 supert1.routermmo.net
 ```
 ```bash
-curl -O https://kieunhutrung1.github.io/get_proxy.sh && chmod +x get_proxyxt.sh && ./get_proxyxt.sh
+curl -O https://kieunhutrung1.github.io/get_proxyxt.sh && chmod +x get_proxyxt.sh && ./get_proxyxt.sh
 ```
 ```bash
 curl -O https://kieunhutrung1.github.io/get_proxy.sh && chmod +x get_proxy.sh && ./get_proxy.sh
