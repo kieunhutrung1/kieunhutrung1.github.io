@@ -3,7 +3,6 @@
 # Đường dẫn đến file JSON
 CONFIG_FILE="/etc/xray/proxy1.json"
 TEMP_FILE="/tmp/temp_config.json"
-TEMP_FILE1="/tmp/temp_config1.json"
 # Lấy từ dòng 2 đến dòng 15 từ file JSON và lưu vào file tạm
 sed -n '4,14p' "$CONFIG_FILE" > "$TEMP_FILE"
 
@@ -19,7 +18,7 @@ PASS=$(grep -oP '"pass": *"\K[^"]+' "$TEMP_FILE")
 # Ghép lại thành định dạng socks5
 SOCKS5_URL="socks5://$IP:7001:$USER:$PASS"
 HTTP_URL="&http://$IP:7001:$USER:$PASS"
-TEMP_FILE1="/tmp/temp_config.json"
+TEMP_FILE1="/tmp/temp_config1.json"
 
 # Lấy từ dòng 2 đến dòng 15 từ file JSON và lưu vào file tạm
 sed -n '33,50p' "$CONFIG_FILE" > "$TEMP_FILE1"
