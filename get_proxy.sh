@@ -30,7 +30,7 @@ METHOD=$(grep -oP '"method": *"\K[^"]+' "$TEMP_FILE1")
 SHADOWSOCKS_URL="shadowsocks://$IP:$METHOD:$PASSWORD"
 sed -n '7p' /etc/xray/proxy1.json
 sed -n '19p' /etc/xray/proxy1.json
-echo "$SOCKS5_URL	$HTTP_URL	$SHADOWSOCKS_URL"
+echo "$SOCKS5_URL&$HTTP_URL&$SHADOWSOCKS_URL"
 # Xóa file tạm sau khi sử dụng
 rm "$TEMP_FILE"
 rm "$TEMP_FILE1"
