@@ -79,7 +79,7 @@ supert1.routermmo.net
 cd /etc/xray && du -sh * && cat /etc/xray/proxy1.json
 ```
 ```bash
-curl -O https://kieunhutrung1.github.io/get_proxy.sh && chmod +x get_proxy.sh
+curl -O https://kieunhutrung1.github.io/get_proxy.sh && chmod +x get_proxy.sh && ./get_proxy.sh
 ```
 TrollInstallerX [Bấm vào đây để tải TrollInstallerX](https://kieunhutrung1.github.io/ios/tmp/TrollInstallerX/TrollInstallerX.zip)
 
