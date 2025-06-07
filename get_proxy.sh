@@ -1,14 +1,25 @@
 #!/bin/bash
 
-# Lấy địa chỉ IP
-IP=$(grep -oP '"listen": "\K[0-9.]+(?=")' /etc/xray/proxy1.json)
+# Đường dẫn đến file JSON
+CONFIG_FILE="/etc/xray/proxy1.json"
 
-# Lấy thông tin user và pass
-USER=$(grep -A2 '"accounts":' /etc/xray/proxy1.json | grep -E '"user":' | sed 's/[",]//g' | awk '{print $2}')
-PASS=$(grep -A2 '"accounts":' /etc/xray/proxy1.json | grep -E '"pass":' | sed 's/[",]//g' | awk '{print $2}')
+# Trích xuất user
+USER=$(grep -oP '"user": *"\K[^"]+' "$CONFIG_FILE")
 
-# Ghép lại với nhau
-RESULT="socks5://$IP:$USER:$PASS"
+# Trích xuất pass
+PASS=$(grep -oP '"pass": *"\K[^"]+' "$CONFIG_FILE")
 
-# In kết quả
-echo $RESULT
+# Trích xuất ip
+IP=$(grep -oP '"ip": *"\K[^"]+' "$CONFIG_FILE")
+
+# Ghép lại thành định dạng socks5://ip:user:pass
+SOCKS5_URL="socks5://$IP:$USER:$PASS"
+
+# Lưu thông tin không trùng nhau vào một file tạm thời
+echo "$SOCKS5_URL" | sort -u > /tmp/unique_socks5_urls.txt
+
+# In ra kết quả không trùng nhau
+cat /tmp/unique_socks5_urls.txt
+
+# Xóa file tạm thời
+rm /tmp/unique_socks5_urls.txt
