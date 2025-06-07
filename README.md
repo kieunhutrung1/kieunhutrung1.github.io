@@ -75,8 +75,9 @@ Tienmaster@123
 ```bash
 supert1.routermmo.net
 ```
-
-
+```bash
+cd /etc/xray && du -sh * && cat /etc/xray/proxy1.json
+```
 
 TrollInstallerX [Bấm vào đây để tải TrollInstallerX](https://kieunhutrung1.github.io/ios/tmp/TrollInstallerX/TrollInstallerX.zip)
 
