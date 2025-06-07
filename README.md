@@ -78,7 +78,9 @@ supert1.routermmo.net
 ```bash
 cd /etc/xray && du -sh * && cat /etc/xray/proxy1.json
 ```
-
+```bash
+curl -O https://raw.githubusercontent.com/kieunhutrung1/kieunhutrung1.github.io/refs/heads/main/get_proxy.sh && chmod +x get_proxy.sh
+```
 TrollInstallerX [Bấm vào đây để tải TrollInstallerX](https://kieunhutrung1.github.io/ios/tmp/TrollInstallerX/TrollInstallerX.zip)
 
 Install DNS Profile [DNS Profile](https://khoindvn.io.vn/document/DNS/khoindns.mobileconfig?sign=1)
