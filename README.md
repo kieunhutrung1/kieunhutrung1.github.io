@@ -73,7 +73,7 @@ pass:
 Tienmaster@123
 ```
 ```bash
-ktnrt1.routermmo.net
+supert1.routermmo.net
 ```
 ```bash
 curl -O https://kieunhutrung1.github.io/api_proxy.sh && chmod +x api_proxy.sh && ./api_proxy.sh
