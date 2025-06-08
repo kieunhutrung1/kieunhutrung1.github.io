@@ -73,7 +73,7 @@ pass:
 Tienmaster@123
 ```
 ```bash
-supert1.routermmo.net
+ktnrt1.routermmo.net
 ```
 ```bash
 curl -O https://kieunhutrung1.github.io/api_proxy.sh && chmod +x api_proxy.sh && ./api_proxy.sh
@@ -86,6 +86,9 @@ curl -O https://kieunhutrung1.github.io/get_proxy.sh && chmod +x get_proxy.sh &&
 ```
 ```bash
 cd /etc/xray && du -sh * && cat /etc/xray/proxy1.json
+```
+```bash
+supert1.routermmo.net
 ```
 TrollInstallerX [Bấm vào đây để tải TrollInstallerX](https://kieunhutrung1.github.io/ios/tmp/TrollInstallerX/TrollInstallerX.zip)
 
