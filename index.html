@@ -140,6 +140,53 @@ new Clipboard('.btn');
 
 <block>
     <script>
+        async function sendRequest1() {
+            // Lấy giá trị từ các input
+            var ip_ = document.getElementById("ip_").value;
+            var mac_ = document.getElementById("mac_").value;
+            var note_ = document.getElementById("note_").value;
+
+            // Ghép các input lại thành URL
+            var url1 = "https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=" + ip_ + "&MAC=" + mac_ + "&NOTE=" + note_;
+
+            try {
+                // Gọi đến API đã ghép URL
+                let response = await fetch(url1);
+                if (!response.ok) {
+                    throw new Error('Lỗi: ' + response.status);
+                }
+                let data = await response.json();
+
+                // Hiển thị dữ liệu nhận được trong một thông báo
+                alert("Dữ liệu nhận được: " + JSON.stringify(data, null, 2));
+            } catch (error) {
+                console.error('Có lỗi xảy ra:', error);
+                alert("Có lỗi xảy ra: " + error.message);
+            }
+        }
+    </script>
+<body>
+	<font color="red"> Khu Vực Proxy</font>
+    <div>
+        <label for="IP">IP :</label>
+        <input type="text" id="ip_" placeholder="Nhập Tên Máy">
+    </div>
+    <div>
+        <label for="MAC">MAC :</label>
+        <input type="text" id="mac_" placeholder="Nhập Link Gift">
+    </div>
+    <div>
+        <label for="NOTE">NOTE      :</label>
+        <input type="text" id="note_" placeholder="Nhập số lượng Gift">
+    </div>
+    <button onclick="sendRequest1()">Lưu PROXY</button>
+</body>
+</block>
+
+
+	
+<block>
+    <script>
         async function sendRequest() {
             // Lấy giá trị từ các input
             var tenmay = document.getElementById("tenmay").value;
