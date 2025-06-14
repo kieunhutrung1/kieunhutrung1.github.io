@@ -147,11 +147,11 @@ new Clipboard('.btn');
             var note_ = document.getElementById("note_").value;
 
             // Ghép các input lại thành URL
-            var url1 = "https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=" + ip_ + "&MAC=" + mac_ + "&NOTE=" + note_;
+            var url2 = "https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=" + ip_ + "&MAC=" + mac_ + "&NOTE=" + note_;
 
             try {
                 // Gọi đến API đã ghép URL
-                let response = await fetch(url1);
+                let response = await fetch(url2);
                 if (!response.ok) {
                     throw new Error('Lỗi: ' + response.status);
                 }
