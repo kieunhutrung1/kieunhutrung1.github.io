@@ -116,7 +116,7 @@ if [[ ${MOD_PARTSIZE} = true ]] && [[ ${IMAGE_PROFILE} = "generic" ]]; then
     [[ -z ${KERNEL_PARTSIZE} ]] &&
         read -p "    x86 ONLY!: Enter KERNEL partition MB [OWRT default is 16 - hit enter for ${KERNEL_RESIZE_DEF}, or enter custom size]: " KERNEL_PARTSIZE
     [[ -z ${ROOT_PARTSIZE} ]] &&
-        read -p "    x86 ONLY!: Enter ROOT partition MB between 104 & 1024 [OWRT default is 104 - hit enter for ${ROOT_RESIZE_DEF}, or enter custom size]: " ROOT_PARTSIZE
+        read -p "    x86 ONLY!: Enter ROOT partition MB between 104 & 1024-2048-3072-4096 [OWRT default is 104 - hit enter for ${ROOT_RESIZE_DEF}, or enter custom size]: " ROOT_PARTSIZE
 fi
 
 # If no kernel partition size value given, create a default value
