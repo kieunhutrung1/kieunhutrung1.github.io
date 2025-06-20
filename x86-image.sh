@@ -3,7 +3,7 @@
 # curl -O https://kieunhutrung1.github.io/x86-image.sh && chmod +x x86-image.sh && ./x86-image.sh
 # sudo apt update
 # sudo apt upgarde
-# sudo install net-tools
+# sudo apt install net-tools
 # Build and virtualize custom OpenWRT images for x86
 # DO NOT RESIZE ROUTER NAND FLASH PARTITIONS, RESIZE IS FOR x86 BUILDS ONLY!!
 # David Harrop
