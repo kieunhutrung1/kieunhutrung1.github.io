@@ -82,7 +82,7 @@ clear
     KERNEL_PARTSIZE=""       # variable set in MB
     ROOT_PARTSIZE=""         # variable set in MB (values over 8192 may give memory exhaustion errors)
     KERNEL_RESIZE_DEF="16"   # OWRT default is 16 MB - don't change this without a specific reason.
-    ROOT_RESIZE_DEF="104"    # OWRT default is 104 MB. 1024-2048-3072-4096 is the max if you want to use sysupgrade. Don't go above 8192.
+    ROOT_RESIZE_DEF="1024"    # OWRT default is 104 MB. 1024-2048-3072-4096 is the max if you want to use sysupgrade. Don't go above 8192.
     IMAGE_TAG=""             # ID tag is added to the completed image filename to uniquely identify the built image(s)
     CREATE_VM=""             # Create VMware images of the final build true/false
     RELEASE_URL="https://downloads.openwrt.org/releases/" # Where to obtain latest stable version number
