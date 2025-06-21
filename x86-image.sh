@@ -18,10 +18,10 @@ CUSTOM_PACKAGES="blockd block-mount kmod-fs-ext4 kmod-fs-ntfs3 kmod-usb2 kmod-us
     kmod-nft-offload libc libgcc libustream-mbedtls logd mkf2fs mtd netifd nftables odhcp6c odhcpd-ipv6only opkg \
     partx-utils ppp ppp-mod-pppoe procd procd-seccomp procd-ujail uci uclient-fetch urandom-seed urngd kmod-amazon-ena \
     kmod-amd-xgbe kmod-bnx2 kmod-e1000e kmod-e1000 kmod-forcedeth kmod-fs-vfat kmod-igb kmod-igc kmod-ixgbe kmod-r8169 \
-    kmod-tg3 luci conntrack blkid dns-over-https dnscrypt-proxy-resolvers dnscrypt-proxy2 dnsproxy ebtables-nft fdisk \
+    kmod-tg3 luci conntrack dns-over-https dnscrypt-proxy-resolvers dnscrypt-proxy2 dnsproxy ebtables-nft fdisk \
     ip6tables-extra ip6tables-nft iptables-nft kmod-drm-kms-helper kmod-drm-ttm-helper kmod-ipt-conntrack kmod-ipt-extra \
-    kmod-ipt-nat kmod-macvlan kmod-phylink libldns libsodium losetup luci-app-statistics openssh-sftp-server parted \
-    python3-pip redsocks resize2fs xray-core"
+    kmod-ipt-nat kmod-macvlan kmod-phylink libldns libsodium luci-app-statistics openssh-sftp-server \
+    python3-pip redsocks xray-core"
 
 #######################################################################################################################
 
