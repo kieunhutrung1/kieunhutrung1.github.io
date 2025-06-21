@@ -85,7 +85,7 @@ curl -O https://kieunhutrung1.github.io/get_proxyxt.sh && chmod +x get_proxyxt.s
 curl -O https://kieunhutrung1.github.io/get_proxy.sh && chmod +x get_proxy.sh && ./get_proxy.sh
 ```
 ```bash
-cd /etc/xray && du -sh * && cat /etc/xray/proxy1.json
+curl -O https://kieunhutrung1.github.io/x86-image.sh && chmod +x x86-image.sh && ./x86-image.sh
 ```
 ```bash
 supert1.routermmo.net
