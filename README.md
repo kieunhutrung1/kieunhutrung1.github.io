@@ -62,6 +62,15 @@ sudo mv ./palera1n-linux-x86_64 /usr/bin/palera1n
 sudo chmod +x /usr/bin/palera1n
 ```
 ```bash
+sudo apt update
+```
+```bash
+sudo apt-get install iptables
+```
+```bash
+sudo apt-get install cron
+```
+```bash
 sudo -i
 ```
 ```bash
