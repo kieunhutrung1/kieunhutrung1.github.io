@@ -65,10 +65,8 @@ sudo chmod +x /usr/bin/palera1n
 sudo apt update
 ```
 ```bash
-sudo apt-get install iptables
-```
-```bash
-sudo apt-get install cron
+sudo apt-get install --no-upgrade iptables cron -y
+
 ```
 ```bash
 sudo -i
