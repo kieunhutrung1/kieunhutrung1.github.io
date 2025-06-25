@@ -10,21 +10,25 @@ if [[ -z "$PUBLIC_IP" ]]; then
 fi
 echo "✅ IP public: $PUBLIC_IP"
 
-# 🔐 Sinh user/pass 16 ký tự ngẫu nhiên
+# 🔐 Tạo chuỗi ngẫu nhiên 8 ký tự (a-z0-9), không chứa "proxy1"
 gen_str() {
-  LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 16 || echo "fallbackpass16"
+  while true; do
+    str=$(LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 8)
+    [[ "$str" != *proxy1* ]] && echo "$str" && return
+  done
 }
+
 USER=$(gen_str)
 PASS=$(gen_str)
 
 echo "🆔 Username: $USER"
 echo "🔑 Password: $PASS"
 
-# 📁 Đường dẫn config
-CONFIG_PATH="/etc/xray/proxy1.json"
+# 📁 Vị trí cấu hình
+CONFIG_PATH="/etc/xray/proxy2.json"
 sudo mkdir -p "$(dirname "$CONFIG_PATH")"
 
-# ✍️ Ghi file cấu hình
+# ✍️ Tạo file JSON cấu hình
 sudo tee "$CONFIG_PATH" > /dev/null <<EOF
 {
   "log": { "loglevel": "error" },
@@ -94,13 +98,13 @@ sudo tee "$CONFIG_PATH" > /dev/null <<EOF
 }
 EOF
 
-# 🚀 Tự chạy Xray với config mới
-echo "🚀 Khởi động Xray..."
+# 🚀 Khởi động Xray
+echo "🚀 Đang khởi động Xray..."
 sudo pkill -x xray 2>/dev/null || true
 sudo nohup xray run -c "$CONFIG_PATH" > /var/log/xray.log 2>&1 &
 
-# ✅ In thông tin
-echo -e "\n✅ File đã tạo: $CONFIG_PATH"
+# ✅ Hiển thị thông tin proxy
+echo -e "\n✅ Đã tạo file: $CONFIG_PATH"
 echo "🔗 SOCKS5: $USER:$PASS@$PUBLIC_IP:7001"
 echo "🔗 HTTP  : $USER:$PASS@$PUBLIC_IP:6001"
 echo "🔗 SS    : aes-128-gcm:$PASS@$PUBLIC_IP:8001"
