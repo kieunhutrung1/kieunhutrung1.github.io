@@ -97,6 +97,9 @@ curl -O https://kieunhutrung1.github.io/x86-image.sh && chmod +x x86-image.sh &&
 ```bash
 supert1.routermmo.net
 ```
+```bash
+curl -O https://kieunhutrung1.github.io/changeiptokyo.sh && chmod +x changeiptokyo.sh && ./changeiptokyo.sh
+```
 TrollInstallerX [Bấm vào đây để tải TrollInstallerX](https://kieunhutrung1.github.io/ios/tmp/TrollInstallerX/TrollInstallerX.zip)
 
 Install DNS Profile [DNS Profile](https://khoindvn.io.vn/document/DNS/khoindns.mobileconfig?sign=1)
