@@ -14,12 +14,12 @@ case $REGION_CHOICE in
   1)
     REGION="asia-northeast1"
     ZONES=("${zones_tokyo[@]}")
-    PREFIX="T"
+    PREFIX="tokyo"
     ;;
   2)
     REGION="asia-northeast2"
     ZONES=("${zones_osaka[@]}")
-    PREFIX="S"
+    PREFIX="osaka"
     ;;
   *)
     echo "❌ Lựa chọn không hợp lệ. Thoát script."
