@@ -21,7 +21,7 @@ echo "🆔 Username: $USER"
 echo "🔑 Password: $PASS"
 
 # 📁 Vị trí lưu file
-CONFIG_PATH="/etc/xray/proxy1.json"
+CONFIG_PATH="/etc/xray/proxy2.json"
 mkdir -p "$(dirname "$CONFIG_PATH")"
 
 # ✍️ Ghi file cấu hình
