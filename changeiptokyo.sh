@@ -1,42 +1,37 @@
 #!/bin/bash
 
-# 🖊️ Nhập tên VM
-read -p "👉 Nhập tên VM (INSTANCE_NAME): " INSTANCE_NAME
-if [ -z "$INSTANCE_NAME" ]; then
-  echo "❌ Bạn chưa nhập tên VM. Thoát script."
+# 📋 Lấy danh sách tất cả VM trong dự án
+echo "📦 Lấy danh sách VM..."
+INSTANCES=($(gcloud compute instances list --format="value(name)"))
+
+# Kiểm tra có VM không
+if [ ${#INSTANCES[@]} -eq 0 ]; then
+  echo "❌ Không tìm thấy VM nào trong dự án."
   exit 1
 fi
 
-# 📍 Chọn REGION
-echo "🌏 Chọn REGION:"
-select REGION in asia-northeast1 asia-northeast2; do
-  if [ -n "$REGION" ]; then
+# 👇 Hiển thị menu chọn VM
+echo "💻 Chọn VM để gán IP:"
+select INSTANCE_NAME in "${INSTANCES[@]}"; do
+  if [ -n "$INSTANCE_NAME" ]; then
     break
   else
-    echo "❗️ Vui lòng chọn một số hợp lệ (1–2)."
+    echo "❗ Vui lòng chọn số hợp lệ."
   fi
 done
 
-# 📍 Chọn ZONE dựa theo REGION
-if [ "$REGION" == "asia-northeast1" ]; then
-  ZONES=("asia-northeast1-a" "asia-northeast1-b" "asia-northeast1-c")
-elif [ "$REGION" == "asia-northeast2" ]; then
-  ZONES=("asia-northeast2-a" "asia-northeast2-b" "asia-northeast2-c")
-fi
+# 🔍 Tìm zone và region tương ứng
+ZONE=$(gcloud compute instances list \
+  --filter="name=($INSTANCE_NAME)" \
+  --format="value(zone)" | rev | cut -d'/' -f1 | rev)
 
-echo "🌐 Chọn ZONE trong $REGION:"
-select ZONE in "${ZONES[@]}"; do
-  if [ -n "$ZONE" ]; then
-    break
-  else
-    echo "❗️ Vui lòng chọn một số hợp lệ."
-  fi
-done
+REGION=$(echo "$ZONE" | rev | cut -d'-' -f2- | rev)
 
-# ⚙️ Tạo IP tĩnh
+echo "📍 VM [$INSTANCE_NAME] nằm ở ZONE: $ZONE | REGION: $REGION"
+
+# 🚀 Tạo IP tĩnh
 IP_NAME="static-ip-$RANDOM"
-
-echo "🚀 Tạo IP tĩnh [$IP_NAME] trong vùng $REGION..."
+echo "⚙️ Tạo IP tĩnh [$IP_NAME] trong $REGION..."
 gcloud compute addresses create $IP_NAME --region=$REGION
 
 STATIC_IP=$(gcloud compute addresses describe $IP_NAME \
@@ -44,13 +39,13 @@ STATIC_IP=$(gcloud compute addresses describe $IP_NAME \
 
 echo "✅ IP tĩnh vừa tạo: $STATIC_IP"
 
-# 🔍 Kiểm tra xem đã có access config chưa
+# 🔎 Kiểm tra access config cũ
 HAS_ACCESS_CONFIG=$(gcloud compute instances describe $INSTANCE_NAME \
   --zone=$ZONE \
   --format="get(networkInterfaces[0].accessConfigs[0].natIP)")
 
 if [ -n "$HAS_ACCESS_CONFIG" ]; then
-  echo "⚠️ Gỡ IP cũ..."
+  echo "⚠️ Gỡ IP cũ khỏi [$INSTANCE_NAME]..."
   gcloud compute instances delete-access-config $INSTANCE_NAME \
     --access-config-name="external-nat" \
     --zone=$ZONE
@@ -58,12 +53,12 @@ else
   echo "✅ VM chưa có IP public."
 fi
 
-# 🔗 Gán IP tĩnh
-echo "🔗 Gán IP [$STATIC_IP] vào VM [$INSTANCE_NAME]..."
+# 🔗 Gán IP mới
+echo "🔗 Gán IP [$STATIC_IP] vào [$INSTANCE_NAME]..."
 gcloud compute instances add-access-config $INSTANCE_NAME \
   --access-config-name="external-nat" \
   --address=$STATIC_IP \
   --zone=$ZONE
 
-echo "🎉 Hoàn tất! VM [$INSTANCE_NAME] tại [$ZONE] dùng IP:"
+echo "🎉 HOÀN TẤT! [$INSTANCE_NAME] đang dùng IP:"
 echo "$STATIC_IP"
