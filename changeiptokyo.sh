@@ -1,39 +1,31 @@
 #!/bin/bash
 
-# 🖊️ Nhập tên máy ảo (VM) cần gán IP
-read -p "Nhập tên VM (INSTANCE_NAME): " INSTANCE_NAME
-
-# Kiểm tra nếu người dùng không nhập
-if [ -z "$INSTANCE_NAME" ]; then
-  echo "❌ Bạn chưa nhập tên VM. Thoát script."
-  exit 1
-fi
-
-# ⚙️ Các biến khác
+# ⚙️ Cấu hình
+INSTANCE_NAME="tokyo-3"
 ZONE="asia-northeast1-b"
 REGION="asia-northeast1"
-IP_NAME="static-ip-$RANDOM"
+IP_NAME="static-ip-$RANDOM"  # tên IP tĩnh random
 
-echo "🚀 Đang tạo IP tĩnh [$IP_NAME] trong vùng $REGION..."
+echo "🚀 Tạo IP tĩnh [$IP_NAME] trong vùng $REGION..."
 gcloud compute addresses create $IP_NAME --region=$REGION
 
-# Lấy IP vừa tạo
+# Lấy địa chỉ IP thực tế vừa tạo
 STATIC_IP=$(gcloud compute addresses describe $IP_NAME \
   --region=$REGION \
   --format="get(address)")
 
-echo "✅ IP tĩnh được tạo: $STATIC_IP"
+echo "✅ IP tĩnh vừa tạo: $STATIC_IP"
 
-echo "⚠️ Gỡ IP hiện tại khỏi VM [$INSTANCE_NAME] (nếu có)..."
+echo "⚠️ Gỡ IP động hiện tại khỏi VM $INSTANCE_NAME..."
 gcloud compute instances delete-access-config $INSTANCE_NAME \
   --access-config-name="external-nat" \
-  --zone=$ZONE || echo "👉 Không có IP hiện tại để xoá hoặc đã bị xoá."
+  --zone=$ZONE
 
-echo "🔗 Gán IP tĩnh [$STATIC_IP] vào VM [$INSTANCE_NAME]..."
+echo "🔗 Gán IP tĩnh [$STATIC_IP] vào VM..."
 gcloud compute instances add-access-config $INSTANCE_NAME \
   --access-config-name="external-nat" \
   --address=$STATIC_IP \
   --zone=$ZONE
 
-echo "🎉 Xong! VM [$INSTANCE_NAME] hiện đang dùng IP tĩnh:"
-echo "$STATIC_IP"
+echo "✅ Đã gán IP tĩnh thành công:"
+echo "$INSTANCE_NAME --> $STATIC_IP"
