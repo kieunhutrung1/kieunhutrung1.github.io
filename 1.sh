@@ -12,7 +12,7 @@ echo "✅ IP public: $PUBLIC_IP"
 
 # 🔐 Sinh user/pass ngẫu nhiên 8 ký tự (a-z0-9)
 gen_str() {
-  LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 8 || echo "proxy01"
+  LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 4 || echo "proxy01"
 }
 USER=$(gen_str)
 PASS=$(gen_str)
