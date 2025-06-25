@@ -12,7 +12,7 @@ echo "✅ IP public: $PUBLIC_IP"
 
 # 🔐 Sinh user/pass ngẫu nhiên 8 ký tự (a-z0-9)
 gen_str() {
-  tr -dc 'a-z0-9' </dev/urandom | head -c 8
+  LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 8 || echo "proxy01"
 }
 USER=$(gen_str)
 PASS=$(gen_str)
@@ -21,11 +21,11 @@ echo "🆔 Username: $USER"
 echo "🔑 Password: $PASS"
 
 # 📁 Vị trí lưu file
-CONFIG_PATH="/etc/xray/proxy2.json"
-mkdir -p "$(dirname "$CONFIG_PATH")"
+CONFIG_PATH="/etc/xray/proxy1.json"
+sudo mkdir -p "$(dirname "$CONFIG_PATH")"
 
 # ✍️ Ghi file cấu hình
-cat > "$CONFIG_PATH" <<EOF
+sudo tee "$CONFIG_PATH" > /dev/null <<EOF
 {
   "log": {
     "loglevel": "error"
@@ -105,7 +105,7 @@ cat > "$CONFIG_PATH" <<EOF
 }
 EOF
 
-# ✅ Xuất thông tin
+# ✅ Xuất thông tin ra terminal
 echo -e "\n✅ File đã tạo: $CONFIG_PATH"
 echo "🔗 SOCKS5: $USER:$PASS@$PUBLIC_IP:7001"
 echo "🔗 HTTP  : $USER:$PASS@$PUBLIC_IP:6001"
