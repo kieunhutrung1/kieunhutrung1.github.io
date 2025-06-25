@@ -107,6 +107,6 @@ EOF
 
 # ✅ Xuất thông tin ra terminal
 echo -e "\n✅ File đã tạo: $CONFIG_PATH"
-echo "🔗 SOCKS5: $USER:$PASS@$PUBLIC_IP:7001"
-echo "🔗 HTTP  : $USER:$PASS@$PUBLIC_IP:6001"
-echo "🔗 SS    : aes-128-gcm:$PASS@$PUBLIC_IP:8001"
+echo "🔗$PUBLIC_IP:$USER:$PASS:7001:socks"
+echo "🔗$PUBLIC_IP:$USER:$PASS:6001:http"
+echo "🔗$PUBLIC_IP:8001:aes-128-gcm:$PASS:shadowsocks"
