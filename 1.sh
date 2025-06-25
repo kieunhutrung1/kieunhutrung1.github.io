@@ -10,9 +10,9 @@ if [[ -z "$PUBLIC_IP" ]]; then
 fi
 echo "✅ IP public: $PUBLIC_IP"
 
-# 🔐 Sinh user/pass ngẫu nhiên 8 ký tự (a-z0-9)
+# 🔐 Sinh user/pass 16 ký tự ngẫu nhiên
 gen_str() {
-  LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 8 || echo ""
+  LC_ALL=C tr -dc 'a-z0-9' </dev/urandom | head -c 16 || echo "fallbackpass16"
 }
 USER=$(gen_str)
 PASS=$(gen_str)
@@ -20,16 +20,14 @@ PASS=$(gen_str)
 echo "🆔 Username: $USER"
 echo "🔑 Password: $PASS"
 
-# 📁 Vị trí lưu file
-CONFIG_PATH="/etc/xray/proxy2.json"
+# 📁 Đường dẫn config
+CONFIG_PATH="/etc/xray/proxy1.json"
 sudo mkdir -p "$(dirname "$CONFIG_PATH")"
 
 # ✍️ Ghi file cấu hình
 sudo tee "$CONFIG_PATH" > /dev/null <<EOF
 {
-  "log": {
-    "loglevel": "error"
-  },
+  "log": { "loglevel": "error" },
   "inbounds": [
     {
       "tag": "socks1",
@@ -54,10 +52,7 @@ sudo tee "$CONFIG_PATH" > /dev/null <<EOF
       },
       "streamSettings": {
         "network": "tcp",
-        "sockopt": {
-          "mark": 255,
-          "tcpFastOpen": true
-        }
+        "sockopt": { "mark": 255, "tcpFastOpen": true }
       }
     },
     {
@@ -72,10 +67,7 @@ sudo tee "$CONFIG_PATH" > /dev/null <<EOF
       },
       "streamSettings": {
         "network": "tcp",
-        "sockopt": {
-          "mark": 255,
-          "tcpFastOpen": true
-        }
+        "sockopt": { "mark": 255, "tcpFastOpen": true }
       }
     }
   ],
@@ -87,10 +79,7 @@ sudo tee "$CONFIG_PATH" > /dev/null <<EOF
       "settings": {},
       "streamSettings": {
         "network": "tcp",
-        "sockopt": {
-          "mark": 255,
-          "tcpFastOpen": true
-        }
+        "sockopt": { "mark": 255, "tcpFastOpen": true }
       }
     }
   ],
@@ -105,8 +94,14 @@ sudo tee "$CONFIG_PATH" > /dev/null <<EOF
 }
 EOF
 
-# ✅ Xuất thông tin ra terminal
+# 🚀 Tự chạy Xray với config mới
+echo "🚀 Khởi động Xray..."
+sudo pkill -x xray 2>/dev/null || true
+sudo nohup xray run -c "$CONFIG_PATH" > /var/log/xray.log 2>&1 &
+
+# ✅ In thông tin
 echo -e "\n✅ File đã tạo: $CONFIG_PATH"
-echo "🔗$PUBLIC_IP:$USER:$PASS:7001:socks"
-echo "🔗$PUBLIC_IP:$USER:$PASS:6001:http"
-echo "🔗$PUBLIC_IP:8001:aes-128-gcm:$PASS:shadowsocks"
+echo "🔗 SOCKS5: $USER:$PASS@$PUBLIC_IP:7001"
+echo "🔗 HTTP  : $USER:$PASS@$PUBLIC_IP:6001"
+echo "🔗 SS    : aes-128-gcm:$PASS@$PUBLIC_IP:8001"
+echo "📄 Log: /var/log/xray.log"
