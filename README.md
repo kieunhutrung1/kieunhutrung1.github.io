@@ -98,6 +98,10 @@ curl -O https://kieunhutrung1.github.io/x86-image.sh && chmod +x x86-image.sh &&
 supert1.routermmo.net
 ```
 ```bash
+curl -O https://kieunhutrung1.github.io/addgl.sh && chmod +x addgl.sh && ./addgl.sh
+```
+
+```bash
 curl -O https://kieunhutrung1.github.io/changeiptokyo.sh && chmod +x changeiptokyo.sh && ./changeiptokyo.sh
 ```
 ```bash
