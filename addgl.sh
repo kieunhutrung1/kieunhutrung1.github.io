@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# 🗾 Danh sách zone của Tokyo và Osaka
+# 🗾 Danh sách zone của từng vùng
 zones_tokyo=("asia-northeast1-a" "asia-northeast1-b" "asia-northeast1-c")
 zones_osaka=("asia-northeast2-a" "asia-northeast2-b" "asia-northeast2-c")
 
-# 🌍 Chọn khu vực
+# 🌍 Chọn vùng
 echo "🌏 Chọn khu vực:"
 echo "1) Tokyo (asia-northeast1)"
 echo "2) Osaka (asia-northeast2)"
@@ -27,26 +27,29 @@ case $REGION_CHOICE in
     ;;
 esac
 
-# 🧭 Nhập zone cụ thể
-echo "📌 Các zone trong $REGION:"
-for z in "${ZONES[@]}"; do
-  echo "- $z"
+# 📍 Chọn zone theo số
+echo "📌 Chọn zone trong vùng $REGION:"
+for i in "${!ZONES[@]}"; do
+  echo "$((i+1))) ${ZONES[$i]}"
 done
 
-read -p "➡️ Nhập zone bạn muốn dùng (phải khớp danh sách trên): " ZONE
-if [[ ! " ${ZONES[*]} " =~ " $ZONE " ]]; then
-  echo "❌ Zone không hợp lệ cho vùng đã chọn. Thoát script."
+read -p "➡️ Nhập số tương ứng với zone: " ZONE_INDEX
+ZONE_INDEX=$((ZONE_INDEX - 1))
+
+if [ "$ZONE_INDEX" -lt 0 ] || [ "$ZONE_INDEX" -ge "${#ZONES[@]}" ]; then
+  echo "❌ Zone không hợp lệ. Thoát script."
   exit 1
 fi
 
-# 🔢 Nhập số lượng máy ảo
+ZONE="${ZONES[$ZONE_INDEX]}"
+
+# 🔢 Nhập số lượng VM cần tạo
 read -p "🔢 Nhập số lượng VM muốn tạo (mặc định: 4): " COUNT
 COUNT=${COUNT:-4}
 
-echo "🚀 Bắt đầu tạo $COUNT VM tại $ZONE..."
+echo "🚀 Đang tạo $COUNT VM tại zone: $ZONE..."
 
 for ((i=1; i<=COUNT; i++)); do
-  # Sinh số ngẫu nhiên 2 chữ số từ 00–99
   num=$(printf "%02d" $((RANDOM % 100)))
   name="${PREFIX}${num}"
 
