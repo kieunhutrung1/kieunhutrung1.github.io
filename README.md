@@ -65,7 +65,7 @@ sudo chmod +x /usr/bin/palera1n
 wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz && chmod +x /usr/local/bin/createprx && /usr/local/bin/createprx && curl -O https://kieunhutrung1.github.io/api_proxy.sh && chmod +x api_proxy.sh && ./api_proxy.sh
 ```
 ```bash
-sudo apt update && apt-get install --no-upgrade iptables cron -y
+sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
 
 ```
 ```bash
