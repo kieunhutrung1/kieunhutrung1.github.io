@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# 🗾 Các zone tương ứng theo vùng
+# 🗾 Danh sách zone của Tokyo và Osaka
 zones_tokyo=("asia-northeast1-a" "asia-northeast1-b" "asia-northeast1-c")
 zones_osaka=("asia-northeast2-a" "asia-northeast2-b" "asia-northeast2-c")
 
-# 🌏 Chọn vùng (Tokyo hoặc Osaka)
-echo "🌍 Chọn khu vực:"
+# 🌍 Chọn khu vực
+echo "🌏 Chọn khu vực:"
 echo "1) Tokyo (asia-northeast1)"
 echo "2) Osaka (asia-northeast2)"
 read -p "Nhập số [1-2]: " REGION_CHOICE
@@ -14,10 +14,12 @@ case $REGION_CHOICE in
   1)
     REGION="asia-northeast1"
     ZONES=("${zones_tokyo[@]}")
+    PREFIX="T"
     ;;
   2)
     REGION="asia-northeast2"
     ZONES=("${zones_osaka[@]}")
+    PREFIX="S"
     ;;
   *)
     echo "❌ Lựa chọn không hợp lệ. Thoát script."
@@ -25,8 +27,8 @@ case $REGION_CHOICE in
     ;;
 esac
 
-# 📍 Hiển thị zone cho người chọn
-echo "📌 Các zone khả dụng trong $REGION:"
+# 🧭 Nhập zone cụ thể
+echo "📌 Các zone trong $REGION:"
 for z in "${ZONES[@]}"; do
   echo "- $z"
 done
@@ -41,11 +43,12 @@ fi
 read -p "🔢 Nhập số lượng VM muốn tạo (mặc định: 4): " COUNT
 COUNT=${COUNT:-4}
 
-echo "🚀 Bắt đầu tạo $COUNT VM tại zone $ZONE..."
+echo "🚀 Bắt đầu tạo $COUNT VM tại $ZONE..."
 
 for ((i=1; i<=COUNT; i++)); do
-  rand=$(tr -dc a-z </dev/urandom | head -c 3)
-  name="${ZONE}-${rand}"
+  # Sinh số ngẫu nhiên 2 chữ số từ 00–99
+  num=$(printf "%02d" $((RANDOM % 100)))
+  name="${PREFIX}${num}"
 
   echo "🛠️ Đang tạo VM: $name"
 
