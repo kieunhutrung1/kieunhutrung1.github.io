@@ -157,14 +157,39 @@ change_ip_flow() {
   echo "🎉 HOÀN TẤT! [$INSTANCE_NAME] đang dùng IP: $STATIC_IP"
 }
 
+# ======================== XOÁ TOÀN BỘ IP KHÔNG DÙNG ========================
+cleanup_global_ips_direct() {
+  echo "\n🧨 Đang kiểm tra và xoá IP không dùng toàn bộ dự án..."
+  mapfile -t IP_ENTRIES < <(gcloud compute addresses list --filter="status=RESERVED" --format="value(name,region)")
+  if [ ${#IP_ENTRIES[@]} -eq 0 ]; then echo "✅ Không có IP nào cần xoá."; return; fi
+
+  LOGFILE="deleted_ips_$(date +%Y%m%d_%H%M%S).log"
+
+  read -p "⚠️ Sẽ xoá ${#IP_ENTRIES[@]} IP không dùng. Xác nhận? [Y/n]: " confirm
+  confirm=${confirm,,}
+  if [[ "$confirm" == "n" || "$confirm" == "no" ]]; then echo "🚫 Huỷ thao tác."; return; fi
+
+  for entry in "${IP_ENTRIES[@]}"; do
+    IP_NAME=$(echo "$entry" | awk '{print $1}')
+    REGION_URL=$(echo "$entry" | awk '{print $2}')
+    REGION_NAME=$(basename "$REGION_URL")
+    echo "❌ Đang xoá IP [$IP_NAME] tại vùng [$REGION_NAME]..."
+    echo "$IP_NAME,$REGION_NAME" >> "$LOGFILE"
+    gcloud compute addresses delete "$IP_NAME" --region="$REGION_NAME" --quiet
+  done
+  echo "✅ Đã xoá toàn bộ IP không dùng. Log lưu tại: $LOGFILE"
+}
+
 # ======================== MENU CHÍNH ========================
 echo "\n🌐 Chọn thao tác:"
 echo "1) Tạo nhiều VM"
 echo "2) Đổi IP VM"
-read -p "👉 Nhập lựa chọn (1 hoặc 2): " MAIN_CHOICE
+echo "3) Xoá tất cả IP tĩnh không dùng (toàn bộ dự án)"
+read -p "👉 Nhập lựa chọn (1/2/3): " MAIN_CHOICE
 
 case "$MAIN_CHOICE" in
   1) create_vm_flow ;;
   2) change_ip_flow ;;
+  3) cleanup_global_ips_direct ;;
   *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
 esac
