@@ -29,15 +29,47 @@ REGION=$(echo "$ZONE" | rev | cut -d'-' -f2- | rev)
 
 echo "📍 VM [$INSTANCE_NAME] nằm ở ZONE: $ZONE | REGION: $REGION"
 
-# 🚀 Tạo IP tĩnh
-IP_NAME="static-ip-$RANDOM"
-echo "⚙️ Tạo IP tĩnh [$IP_NAME] trong $REGION..."
-gcloud compute addresses create $IP_NAME --region=$REGION
+# ⏩ Hàm tạo IP tĩnh mới
+create_static_ip() {
+  IP_NAME="static-ip-$RANDOM"
+  echo "⚙️ Đang tạo IP tĩnh [$IP_NAME] trong $REGION..."
+  gcloud compute addresses create $IP_NAME --region=$REGION --quiet
 
-STATIC_IP=$(gcloud compute addresses describe $IP_NAME \
-  --region=$REGION --format="get(address)")
+  STATIC_IP=$(gcloud compute addresses describe $IP_NAME \
+    --region=$REGION --format="get(address)")
+}
 
-echo "✅ IP tĩnh vừa tạo: $STATIC_IP"
+# 🔄 Lặp cho tới khi chọn gán IP hoặc thoát
+while true; do
+  create_static_ip
+  echo "🔍 IP tĩnh mới tạo: $STATIC_IP"
+
+  echo "🧭 Bạn muốn làm gì?"
+  echo "1) Gán IP này cho VM"
+  echo "2) Tạo IP mới khác (thay đổi IP)"
+  echo "3) Thoát không gán"
+
+  read -p "👉 Nhập lựa chọn (1/2/3): " CHOICE
+
+  case "$CHOICE" in
+    1)
+      echo "✅ Tiến hành gán IP..."
+      break
+      ;;
+    2)
+      echo "♻️ Xoá IP [$STATIC_IP] và tạo IP mới..."
+      gcloud compute addresses delete $IP_NAME --region=$REGION --quiet
+      ;;
+    3)
+      echo "❌ Thoát script. Xoá IP [$STATIC_IP]..."
+      gcloud compute addresses delete $IP_NAME --region=$REGION --quiet
+      exit 0
+      ;;
+    *)
+      echo "❗ Lựa chọn không hợp lệ. Vui lòng chọn 1, 2 hoặc 3."
+      ;;
+  esac
+done
 
 # 🔎 Kiểm tra access config cũ
 HAS_ACCESS_CONFIG=$(gcloud compute instances describe $INSTANCE_NAME \
