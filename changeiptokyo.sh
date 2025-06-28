@@ -45,8 +45,8 @@ create_vm_flow() {
   read -p "✏️ Nhập prefix đặt tên VM (mặc định: $PREFIX): " CUSTOM_PREFIX
   PREFIX=${CUSTOM_PREFIX:-$PREFIX}
 
-  read -p "🔢 Nhập số lượng VM muốn tạo (mặc định: 24): " COUNT
-  COUNT=${COUNT:-24}
+  read -p "🔢 Nhập số lượng VM muốn tạo (mặc định: 4): " COUNT
+  COUNT=${COUNT:-4}
 
   echo "🌐 Chọn loại IP:"
   echo "1) Có IP công cộng (Public IP – sẽ gán IP tĩnh riêng)"
