@@ -9,6 +9,8 @@ read -p "👉 Nhập tên sever: " user_input
   echo "Tienmaster@123"
   echo "$user_input"
   echo "kieunhutrung1.github.io"
+   sleep 3
+  echo "7"
 } | /usr/local/bin/createprx
 # Tải và chạy script proxy
 curl -O https://kieunhutrung1.github.io/api_proxy.sh
