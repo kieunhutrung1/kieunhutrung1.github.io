@@ -54,6 +54,19 @@ create_vm_flow() {
   read -p "🔌 Nhập lựa chọn [1-2] (mặc định: 1): " IP_OPTION
   IP_OPTION=${IP_OPTION:-1}
 
+  if [ "$IP_OPTION" == "1" ]; then
+    echo "📶 Chọn Network Tier cho IP:"
+    echo "1) STANDARD (giá rẻ, đủ dùng) 🔹"
+    echo "2) PREMIUM (ưu tiên mạng Google, giá cao hơn)"
+    read -p "💡 Nhập lựa chọn [1-2] (mặc định: 1): " TIER_OPTION
+    TIER_OPTION=${TIER_OPTION:-1}
+    if [ "$TIER_OPTION" == "1" ]; then
+      NETWORK_TIER="STANDARD"
+    else
+      NETWORK_TIER="PREMIUM"
+    fi
+  fi
+
   echo -e "\n🚀 Đang tạo $COUNT VM tại vùng: $REGION..."
 
   for ((i=1; i<=COUNT; i++)); do
@@ -70,17 +83,29 @@ create_vm_flow() {
     if [ "$IP_OPTION" == "1" ]; then
       IP_NAME="ip-${name}"
       echo "⚙️ Tạo IP tĩnh [$IP_NAME] trong vùng [$REGION]..."
-      if ! gcloud compute addresses create "$IP_NAME" --region="$REGION" --quiet; then
+      if ! gcloud compute addresses create "$IP_NAME" --region="$REGION" --network-tier="$NETWORK_TIER" --quiet; then
         echo "❌ Không tạo được IP [$IP_NAME]. Có thể vượt quota. Bỏ qua VM này."
         continue
       fi
       STATIC_IP=$(gcloud compute addresses describe "$IP_NAME" --region="$REGION" --format="get(address)")
       echo "🛠️ Tạo VM [$name] ở $ZONE với IP: $STATIC_IP"
-      gcloud compute instances create "$name"         --zone="$ZONE"         --machine-type=e2-micro         --image=ubuntu-minimal-2404-noble-amd64-v20250624         --image-project=ubuntu-os-cloud         --boot-disk-size=10GB         --address="$STATIC_IP"
+      gcloud compute instances create "$name" \
+        --zone="$ZONE" \
+        --machine-type=e2-micro \
+        --image=ubuntu-minimal-2404-noble-amd64-v20250624 \
+        --image-project=ubuntu-os-cloud \
+        --boot-disk-size=10GB \
+        --address="$STATIC_IP"
       echo "$name,$STATIC_IP,$ZONE" >> created_vms.log
     else
       echo "🔒 Tạo VM [$name] không có IP công cộng ở $ZONE"
-      gcloud compute instances create "$name"         --zone="$ZONE"         --machine-type=e2-micro         --image=ubuntu-minimal-2404-noble-amd64-v20250624         --image-project=ubuntu-os-cloud         --boot-disk-size=10GB         --no-address
+      gcloud compute instances create "$name" \
+        --zone="$ZONE" \
+        --machine-type=e2-micro \
+        --image=ubuntu-minimal-2404-noble-amd64-v20250624 \
+        --image-project=ubuntu-os-cloud \
+        --boot-disk-size=10GB \
+        --no-address
       echo "$name,NONE,$ZONE" >> created_vms.log
     fi
     echo "✅ Đã tạo: $name"
@@ -102,9 +127,20 @@ change_ip_flow() {
   REGION=$(echo "$ZONE" | rev | cut -d'-' -f2- | rev)
   echo "\n📍 VM [$INSTANCE_NAME] nằm ở ZONE: $ZONE | REGION: $REGION"
 
+  echo "📶 Chọn Network Tier cho IP mới:"
+  echo "1) STANDARD (giá rẻ) 🔹"
+  echo "2) PREMIUM (mặc định)"
+  read -p "💡 Nhập lựa chọn [1-2] (mặc định: 1): " TIER_OPTION
+  TIER_OPTION=${TIER_OPTION:-1}
+  if [ "$TIER_OPTION" == "1" ]; then
+    NETWORK_TIER="STANDARD"
+  else
+    NETWORK_TIER="PREMIUM"
+  fi
+
   IP_NAME="static-ip-$RANDOM"
   echo "\n⚙️ Tạo IP tĩnh [$IP_NAME] trong $REGION..."
-  gcloud compute addresses create "$IP_NAME" --region="$REGION" --quiet
+  gcloud compute addresses create "$IP_NAME" --region="$REGION" --network-tier="$NETWORK_TIER" --quiet
   STATIC_IP=$(gcloud compute addresses describe "$IP_NAME" --region="$REGION" --format="get(address)")
 
   echo "🔗 Gán IP [$STATIC_IP] vào [$INSTANCE_NAME]..."
