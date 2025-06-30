@@ -22,9 +22,10 @@ echo "6) Android 1492 PPPoE (wifi)"
 echo "7) macOS 1492 PPPoE (wifi)"
 echo "8) Windows 1492 PPPoE (wifi)"
 echo "9) Windows 1440 generic tunnel or VPN (4G-5G)"
-# 🔁 Vòng lặp kiểm tra đầu vào hợp lệ
+# 🔁 Nhập lựa chọn, mặc định là 7 nếu ấn Enter
 while true; do
-  read -p "👉 Chọn cấu hình TCP/IP (nhập số 1-9): " config_option
+  read -p "👉 Chọn cấu hình TCP/IP (nhập số 1-9, Enter = mặc định 7): " config_option
+  config_option=${config_option:-7}
   if [[ "$config_option" =~ ^[1-9]$ ]]; then
     break
   else
