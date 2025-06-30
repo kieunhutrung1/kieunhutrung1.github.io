@@ -1,5 +1,5 @@
 #!/bin/bash
-read -p "👉 Nhập dòng thứ 2 (kieu): " user_input
+read -p "👉 Nhập Tên SEVER: " user_input
 read -p "1) iOS 1440 generic tunnel or VPN(4G-5G)
 2) iOS 1450 generic tunnel or VPN(4G-5G)
 3) iOS 1492 PPPoE(wifi)
@@ -9,7 +9,7 @@ read -p "1) iOS 1440 generic tunnel or VPN(4G-5G)
 7) macOS 1492 PPPoE(wifi)
 8) Windows 1492 PPPoE(wifi)
 9) Windows 1440 generic tunnel or VPN(4G-5G)
-" user_input1
+👉 Nhập cấu hình muốn tạo :" user_input1
 # Tải file nhị phân về /usr/local/bin
 wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz
 chmod +x /usr/local/bin/createprx
