@@ -95,7 +95,8 @@ create_vm_flow() {
         --image=ubuntu-minimal-2404-noble-amd64-v20250624 \
         --image-project=ubuntu-os-cloud \
         --boot-disk-size=10GB \
-        --address="$STATIC_IP"
+        --address="$STATIC_IP" \
+        --network-tier="$NETWORK_TIER"
       echo "$name,$STATIC_IP,$ZONE" >> created_vms.log
     else
       echo "🔒 Tạo VM [$name] không có IP công cộng ở $ZONE"
