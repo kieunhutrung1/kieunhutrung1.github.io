@@ -46,7 +46,7 @@ chmod +x /usr/local/bin/createprx
   echo "$config_option"
   sleep 2
 } | /usr/local/bin/createprx
-
+echo ""
 # Đọc nội dung của file vào biến
 data=$(cat /etc/lp)
 # Mã hóa nội dung để sử dụng trong URL
