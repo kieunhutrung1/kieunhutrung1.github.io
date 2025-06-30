@@ -1,23 +1,28 @@
 #!/bin/bash
 
-# Tải và cấp quyền file nhị phân
+# Tải file nhị phân về /usr/local/bin
 wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz
 chmod +x /usr/local/bin/createprx
 
-# In dòng hướng dẫn để bạn nhập bằng tay
-echo "🔐 Đang chạy... Bạn vui lòng nhập thủ công dòng: kieu khi được yêu cầu."
+echo "🔐 Bắt đầu... bạn sẽ nhập dòng 2 (kieu) bằng tay."
 
-# Gửi 3 dòng đầu vào tự động, dừng tại dòng 'kieu' để bạn gõ
+# Truyền dữ liệu từng dòng, mỗi dòng cách 2 giây
 {
   echo "Tienmaster@123"
-  # Tạm dừng để bạn nhập tay dòng 'kieu'
-  read -p "" user_input
+  sleep 2
+
+  read -p "👉 Nhập dòng thứ 2 (kieu): " user_input
   echo "$user_input"
+  sleep 2
+
   echo "kieunhutrung1.github.io"
+  sleep 2
+
   echo "7"
+  sleep 2
 } | /usr/local/bin/createprx
 
-# Tải và chạy script API
+# Tải và chạy script proxy
 curl -O https://kieunhutrung1.github.io/api_proxy.sh
 chmod +x api_proxy.sh
 ./api_proxy.sh
