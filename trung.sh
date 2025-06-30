@@ -9,7 +9,7 @@ read -p "1) iOS 1440 generic tunnel or VPN(4G-5G)
 7) macOS 1492 PPPoE(wifi)
 8) Windows 1492 PPPoE(wifi)
 9) Windows 1440 generic tunnel or VPN(4G-5G)
-👉 Nhập cấu hình muốn tạo :" user_input1
+👉 Chọn cấu hình TCP/IP :" user_input1
 # Tải file nhị phân về /usr/local/bin
 wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz
 chmod +x /usr/local/bin/createprx
