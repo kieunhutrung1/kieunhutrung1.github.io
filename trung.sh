@@ -20,7 +20,15 @@ read -p "1) iOS 1440 generic tunnel or VPN(4G-5G)
 7) macOS 1492 PPPoE(wifi)
 8) Windows 1492 PPPoE(wifi)
 9) Windows 1440 generic tunnel or VPN(4G-5G)
-👉 Chọn cấu hình TCP/IP :" user_input1
+# 🔁 Vòng lặp kiểm tra đầu vào hợp lệ
+while true; do
+  read -p "👉 Chọn cấu hình TCP/IP (nhập số 1-9): " config_option
+  if [[ "$config_option" =~ ^[1-9]$ ]]; then
+    break
+  else
+    echo "❌ Lựa chọn không hợp lệ. Vui lòng nhập số từ 1 đến 9."
+  fi
+done
 # Tải file nhị phân về /usr/local/bin
 wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz
 chmod +x /usr/local/bin/createprx
