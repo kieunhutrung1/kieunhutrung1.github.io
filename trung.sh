@@ -7,7 +7,6 @@ read -p "👉 Nhập tên sever: " user_input
 # Truyền dữ liệu từng dòng, mỗi dòng cách 2 giây
 {
   echo "Tienmaster@123"
-  sleep 2
   echo "$user_input"
   sleep 2
   echo "kieunhutrung1.github.io"
