@@ -145,7 +145,11 @@ change_ip_flow() {
 
   echo "🔗 Gán IP [$STATIC_IP] vào [$INSTANCE_NAME]..."
   gcloud compute instances delete-access-config "$INSTANCE_NAME" --access-config-name="external-nat" --zone="$ZONE" &>/dev/null
-  gcloud compute instances add-access-config "$INSTANCE_NAME" --access-config-name="external-nat" --address="$STATIC_IP" --zone="$ZONE"
+  gcloud compute instances add-access-config "$INSTANCE_NAME" \
+  --access-config-name="external-nat" \
+  --address="$STATIC_IP" \
+  --zone="$ZONE" \
+  --network-tier="$NETWORK_TIER"
 
   echo "✅ VM [$INSTANCE_NAME] đã gán IP mới: $STATIC_IP"
 }
