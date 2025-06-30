@@ -42,7 +42,7 @@ chmod +x /usr/local/bin/createprx
   echo "kieunhutrung1.github.io"
   sleep 2
 
-  echo "$user_input1"
+  echo "$config_option"
   sleep 2
 } | /usr/local/bin/createprx
 
