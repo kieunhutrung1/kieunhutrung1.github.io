@@ -11,15 +11,17 @@ else
   echo "⏩ Bỏ qua bước cập nhật."
 fi
 read -p "👉 Nhập Tên SEVER: " user_input
-read -p "1) iOS 1440 generic tunnel or VPN(4G-5G)
-2) iOS 1450 generic tunnel or VPN(4G-5G)
-3) iOS 1492 PPPoE(wifi)
-4) Android 1440 generic tunnel or VPN(4G-5G)
-5) Android 1450 generic tunnel or VPN(4G-5G)
-6) Android 1492 PPPoE(wifi)
-7) macOS 1492 PPPoE(wifi)
-8) Windows 1492 PPPoE(wifi)
-9) Windows 1440 generic tunnel or VPN(4G-5G)
+# 🧠 Hiển thị và chọn cấu hình TCP/IP hợp lệ (1–9)
+echo ""
+echo "1) iOS 1440 generic tunnel or VPN (4G-5G)"
+echo "2) iOS 1450 generic tunnel or VPN (4G-5G)"
+echo "3) iOS 1492 PPPoE (wifi)"
+echo "4) Android 1440 generic tunnel or VPN (4G-5G)"
+echo "5) Android 1450 generic tunnel or VPN (4G-5G)"
+echo "6) Android 1492 PPPoE (wifi)"
+echo "7) macOS 1492 PPPoE (wifi)"
+echo "8) Windows 1492 PPPoE (wifi)"
+echo "9) Windows 1440 generic tunnel or VPN (4G-5G)"
 # 🔁 Vòng lặp kiểm tra đầu vào hợp lệ
 while true; do
   read -p "👉 Chọn cấu hình TCP/IP (nhập số 1-9): " config_option
