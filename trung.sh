@@ -1,4 +1,11 @@
 #!/bin/bash
+read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/n): " update_ans
+if [[ "$update_ans" =~ ^[Yy]$ ]]; then
+  echo "🔧 Đang cập nhật và cài đặt..."
+  sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
+else
+  echo "⏩ Bỏ qua bước cập nhật."
+fi
 read -p "👉 Nhập Tên SEVER: " user_input
 read -p "1) iOS 1440 generic tunnel or VPN(4G-5G)
 2) iOS 1450 generic tunnel or VPN(4G-5G)
