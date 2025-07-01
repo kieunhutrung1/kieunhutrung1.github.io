@@ -35,9 +35,10 @@ show_proxy() {
         echo "⚠️ Không xác định: $entry"
         ;;
     esac
-    echo "🧾 Dòng đầy đủ:  $entry"
-    echo ""
   done
+  echo "----------------------------------------"
+  echo "📄 Dòng đầy đủ trong file /etc/lp:"
+  echo "$(cat "$file_path")"
   echo "----------------------------------------"
 }
 
