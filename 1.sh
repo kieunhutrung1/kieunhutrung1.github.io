@@ -111,8 +111,6 @@ while IFS= read -r proxy_line; do
 
   echo "🌐 Gửi dòng: $proxy_line"
   curl -s -G "$url" && echo "✅ Gửi thành công." || echo "❌ Gửi thất bại."
-  echo "----------------------------------------"
-
 done < "$file_path"
 
 # ========== HIỂN THỊ SAU KHI GỬI ==========
