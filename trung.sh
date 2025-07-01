@@ -1,132 +1,53 @@
-#!/bin/bash
-
-# ========================== MENU BAN ĐẦU ==========================
-while true; do
-  echo ""
-  echo "🌐 MENU CHÍNH:"
-  echo "1) Tạo Proxy & gửi API"
-  echo "2) Hiển thị danh sách Proxy"
-  read -p "👉 Nhập lựa chọn (1 hoặc 2, Enter = mặc định 1): " main_choice
-  main_choice=${main_choice:-1}
-
-  if [[ "$main_choice" == "1" || "$main_choice" == "2" ]]; then
-    break
-  else
-    echo "❌ Vui lòng chỉ nhập 1 hoặc 2."
-  fi
-done
-
-file_path="/etc/lp"
-
-# ========================== CHỈ HIỂN THỊ PROXY ==========================
-if [[ "$main_choice" == "2" ]]; then
-  if [ -f "$file_path" ]; then
-    echo ""
-    echo "📄 Danh sách Proxy:"
-    echo "----------------------------------------"
-    cat "$file_path"
-    echo "----------------------------------------"
-  else
-    echo "❌ Không tìm thấy danh sách Proxy."
-  fi
-  exit 0
-fi
-
-# ========================== CHẠY TOÀN BỘ ==========================
-# ❓ Cập nhật hệ thống
-read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
-update_ans=${update_ans:-n}
-
-if [[ "$update_ans" =~ ^[Yy]$ ]]; then
-  echo "🔧 Đang cập nhật và cài đặt..."
-  sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
-else
-  echo "⏩ Bỏ qua bước cập nhật."
-fi
-
-# ❓ Gửi API hay không? (Enter = y)
-while true; do
-  read -p "👉 Sau khi tạo proxy, bạn có muốn gửi danh sách Proxy lên API? (y/n, Enter = y): " send_api_ans
-  send_api_ans=${send_api_ans:-y}
-  if [[ "$send_api_ans" == "y" || "$send_api_ans" == "n" ]]; then
-    break
-  else
-    echo "❌ Vui lòng chỉ nhập y hoặc n."
-  fi
-done
-
-# 📥 Nhập tên server
-read -p "👉 Nhập Tên SEVER: " user_input
-
-# 📶 Hiển thị cấu hình TCP/IP
-echo ""
-echo "1) iOS 1440 generic tunnel or VPN (4G-5G)"
-echo "2) iOS 1450 generic tunnel or VPN (4G-5G)"
-echo "3) iOS 1492 PPPoE (wifi)"
-echo "4) Android 1440 generic tunnel or VPN (4G-5G)"
-echo "5) Android 1450 generic tunnel or VPN (4G-5G)"
-echo "6) Android 1492 PPPoE (wifi)"
-echo "7) macOS 1492 PPPoE (wifi)"
-echo "8) Windows 1492 PPPoE (wifi)"
-echo "9) Windows 1440 generic tunnel or VPN (4G-5G)"
-
-# 🔁 Nhập cấu hình
-while true; do
-  read -p "👉 Chọn cấu hình TCP/IP (1-9, Enter = mặc định 7): " config_option
-  config_option=${config_option:-7}
-  if [[ "$config_option" =~ ^[1-9]$ ]]; then
-    break
-  else
-    echo "❌ Lựa chọn không hợp lệ. Vui lòng nhập số từ 1 đến 9."
-  fi
-done
-
-# ⚙️ Tải và chạy createprx
-wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz
-chmod +x /usr/local/bin/createprx
-
-{
-  echo "Tienmaster@123"
-  echo "$user_input"
-  echo "kieunhutrung1.github.io"
-  sleep 2
-  echo "$config_option"
-  sleep 2
-} | /usr/local/bin/createprx
-
-# ========================== GỬI API (nếu có) ==========================
 if [[ "$send_api_ans" == "y" ]]; then
-  if [ -f "$file_path" ]; then
-    data=$(cat "$file_path")
-    if [ -n "$data" ]; then
-      encoded_data=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$data'''))")
-      url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?PROXY=$encoded_data"
+  if [ "$api_mode" == "1" ]; then
+    # ==== KIỂU GỬI CŨ: Gửi từng loại proxy riêng biệt ====
+    socks_proxy=""
+    http_proxy=""
+    shadow_proxy=""
+    main_ip=""
+    server_name="$user_input"
+
+    while IFS= read -r line; do
+      IFS=':' read -ra parts <<< "$line"
+      type="${parts[-1]}"
+      if [[ "$type" == "socks" ]]; then
+        socks_proxy="${parts[0]}:${parts[1]}:${parts[2]}:${parts[3]}"
+        [[ -z "$main_ip" ]] && main_ip="${parts[0]}"
+      elif [[ "$type" == "http" ]]; then
+        http_proxy="${parts[0]}:${parts[1]}:${parts[2]}:${parts[3]}"
+        [[ -z "$main_ip" ]] && main_ip="${parts[0]}"
+      elif [[ "$type" == "shadowsocks" ]]; then
+        shadow_proxy="${parts[0]}:${parts[1]}:${parts[2]}:${parts[3]}"
+        [[ -z "$main_ip" ]] && main_ip="${parts[0]}"
+      fi
+    done < "$file_path"
+
+    # Encode và gửi
+    encoded_ip=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$main_ip'''))")
+    encoded_socks=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$socks_proxy'''))")
+    encoded_http=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$http_proxy'''))")
+    encoded_shadow=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$shadow_proxy'''))")
+    encoded_server=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$server_name'''))")
+
+    url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=$encoded_ip&PROXY=$encoded_socks&HTTP=$encoded_http&SHADOW=$encoded_shadow&SEVER=$encoded_server"
+    curl -s -G "$url" > /dev/null 2>&1
+    echo "✅ Đã gửi proxy theo kiểu cũ (phân loại)."
+
+  elif [ "$api_mode" == "2" ]; then
+    # ==== KIỂU GỬI MỚI: Gửi toàn bộ nội dung file ====
+    if [ -f "$file_path" ]; then
+      first_line=$(head -n 1 "$file_path")
+      main_ip=$(echo "$first_line" | cut -d':' -f1)
+      raw_proxy=$(cat "$file_path")
+
+      encoded_ip=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$main_ip'''))")
+      encoded_proxy=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$raw_proxy'''))")
+
+      url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=$encoded_ip&PROXY=$encoded_proxy"
       curl -s -G "$url" > /dev/null 2>&1
-      echo "✅ Đã gửi danh sách Proxy lên API."
-
-      echo ""
-      echo "📄 Danh sách Proxy:"
-      echo "----------------------------------------"
-      echo "$data"
-      echo "----------------------------------------"
-      exit 0
+      echo "✅ Đã gửi toàn bộ nội dung proxy theo kiểu mới."
     else
-      echo "⚠️ Danh sách Proxy trống, không có gì để gửi."
-      exit 1
+      echo "❌ Không tìm thấy file để gửi."
     fi
-  else
-    echo "❌ Không tìm thấy danh sách Proxy để gửi."
-    exit 1
   fi
-fi
-
-# ========================== HIỂN THỊ NẾU KHÔNG GỬI ==========================
-if [ -f "$file_path" ]; then
-  echo ""
-  echo "📄 Danh sách Proxy:"
-  echo "----------------------------------------"
-  cat "$file_path"
-  echo "----------------------------------------"
-else
-  echo "⚠️ Không thể hiển thị: Danh sách Proxy không tồn tại."
 fi
