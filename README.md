@@ -68,7 +68,7 @@ wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/d
 curl -O https://kieunhutrung1.github.io/trung.sh && chmod +x trung.sh && ./trung.sh
 ```
 ```bash
-curl -O https://kieunhutrung1.github.io/trung.sh && chmod +x trung.sh && ./trung.sh
+curl -O https://kieunhutrung1.github.io/trung_fix.sh && chmod +x trung_fix.sh && ./trung_fix.sh
 ```
 ```bash
 curl -O https://kieunhutrung1.github.io/pr.sh && chmod +x pr.sh && ./pr.sh
