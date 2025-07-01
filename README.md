@@ -109,6 +109,9 @@ curl -O https://kieunhutrung1.github.io/changeiptokyo.sh && chmod +x changeiptok
 ```bash
 curl -O https://kieunhutrung1.github.io/deleteip.sh && chmod +x deleteip.sh && ./deleteip.sh
 ```
+```bash
+cat /etc/lp
+```
 TrollInstallerX [Bấm vào đây để tải TrollInstallerX](https://kieunhutrung1.github.io/ios/tmp/TrollInstallerX/TrollInstallerX.zip)
 
 Install DNS Profile [DNS Profile](https://khoindvn.io.vn/document/DNS/khoindns.mobileconfig?sign=1)
