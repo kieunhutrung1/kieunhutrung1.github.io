@@ -10,7 +10,6 @@ if [[ "$update_ans" =~ ^[Yy]$ ]]; then
 else
   echo "⏩ Bỏ qua bước cập nhật."
 fi
-read -p "👉 Nhập Tên SEVER: " user_input
 # 🧠 Hiển thị và chọn cấu hình TCP/IP hợp lệ (1–9)
 echo ""
 echo "1) iOS 1440 generic tunnel or VPN (4G-5G)"
@@ -39,8 +38,8 @@ chmod +x /usr/local/bin/createprx
 # Truyền dữ liệu vào createprx (dòng 2 bạn nhập tay), cách nhau 2 giây
 {
   echo "Tienmaster@123"
-  echo "$user_input"
-  echo "kieunhutrung1.github.io"
+  echo ""
+  echo ""
   sleep 2
 
   echo "$config_option"
