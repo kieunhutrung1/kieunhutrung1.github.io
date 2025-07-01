@@ -68,6 +68,12 @@ wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/d
 curl -O https://kieunhutrung1.github.io/trung.sh && chmod +x trung.sh && ./trung.sh
 ```
 ```bash
+curl -O https://kieunhutrung1.github.io/trung.sh && chmod +x trung.sh && ./trung.sh
+```
+```bash
+curl -O https://kieunhutrung1.github.io/pr.sh && chmod +x pr.sh && ./pr.sh
+```
+```bash
 sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
 ```
 ```bash
