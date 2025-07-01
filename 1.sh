@@ -28,7 +28,16 @@ if [[ "$main_choice" == "2" ]]; then
   fi
   exit 0
 fi
+# ❓ Cập nhật hệ thống
+read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
+update_ans=${update_ans:-n}
 
+if [[ "$update_ans" =~ ^[Yy]$ ]]; then
+  echo "🔧 Đang cập nhật và cài đặt..."
+  sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
+else
+  echo "⏩ Bỏ qua bước cập nhật."
+fi
 # ========== NHẬP TÊN SERVER ==========
 read -p "👉 Nhập Tên SEVER: " server_name
 
