@@ -40,10 +40,6 @@ chmod +x /usr/local/bin/createprx
   echo "Tienmaster@123"
   echo "trung"
   echo ""
-  sleep 2
-
-  echo "$config_option"
-  sleep 2
 } | /usr/local/bin/createprx
 echo ""
 cat /etc/lp
