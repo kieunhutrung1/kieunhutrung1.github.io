@@ -41,8 +41,8 @@ if [[ "$send_api_ans" == "y" ]]; then
   echo "1) Gửi tách từng loại proxy (cũ)"
   echo "2) Gửi toàn bộ nội dung file (mới)"
   while true; do
-    read -p "👉 Nhập lựa chọn (1 hoặc 2, Enter = 2): " api_mode
-    api_mode=${api_mode:-2}
+    read -p "👉 Nhập lựa chọn (1 hoặc 2, Enter = 1): " api_mode
+    api_mode=${api_mode:-1}
     if [[ "$api_mode" == "1" || "$api_mode" == "2" ]]; then
       break
     else
@@ -101,8 +101,11 @@ if [[ "$send_api_ans" == "y" ]]; then
   elif [[ "$api_mode" == "2" ]]; then
     # ==== GỬI KIỂU MỚI ====
     if [ -f "$file_path" ]; then
-      first_line=$(head -n 1 "$file_path")
-      main_ip=$(echo "$first_line" | cut -d':' -f1)
+      while IFS= read -r line; do
+      IFS=':' read -r ip _ <<< "$line"
+      main_ip="$ip"
+      break
+done < "$file_path"
       raw_proxy=$(cat "$file_path")
 
       encoded_ip=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$main_ip'''))")
