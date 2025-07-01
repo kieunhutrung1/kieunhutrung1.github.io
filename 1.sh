@@ -35,6 +35,8 @@ show_proxy() {
         echo "⚠️ Không xác định: $entry"
         ;;
     esac
+    echo "🧾 Dòng đầy đủ:  $entry"
+    echo ""
   done
   echo "----------------------------------------"
 }
