@@ -21,11 +21,11 @@ show_proxy() {
     case "$proto" in
       socks5)
         IFS=':' read -r _ ip port user pass <<< "$entry"
-        echo "🔐 SOCKS5:        $ip:$port:$user:$pass)"
+        echo "🔐 SOCKS5:      $ip:$port:$user:$pass)"
         ;;
       http)
         IFS=':' read -r _ ip port user pass <<< "$entry"
-        echo "🌐 HTTP:          $ip:$port:$user:$pass)"
+        echo "🌐 HTTP:        $ip:$port:$user:$pass)"
         ;;
       shadowsocks)
         IFS=':' read -r _ ip port method pass tag <<< "$entry"
@@ -37,7 +37,7 @@ show_proxy() {
     esac
   done
   echo "----------------------------------------"
-  echo "📄 Dòng đầy đủ trong file /etc/lp:"
+  echo "📄 Proxy đầy đủ :"
   echo "$(cat "$file_path")"
   echo "----------------------------------------"
 }
