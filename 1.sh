@@ -13,11 +13,6 @@ main_choice=${main_choice:-1}
 # ========== HIỂN THỊ PROXY FUNCTION ==========
 show_proxy() {
   echo ""
-  echo "📄 Danh sách Proxy:"
-  echo "----------------------------------------"
-  while IFS= read -r line; do
-    echo "$line"
-  done < "$file_path"
   echo "----------------------------------------"
   echo "📄 Proxy đầy đủ:"
   cat "$file_path"
