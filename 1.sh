@@ -2,51 +2,52 @@
 
 file_path="/etc/lp"
 
-# ========== MENU ==========
+# ========== MENU CHÍNH ==========
 echo ""
 echo "🌐 MENU CHÍNH:"
-echo "1) Tạo Proxy & gửi API"
-echo "2) Hiển thị danh sách Proxy"
+echo "1) Tạo Proxy và gửi API"
+echo "2) Chỉ hiển thị danh sách Proxy"
 read -p "👉 Nhập lựa chọn (1 hoặc 2, Enter = mặc định 1): " main_choice
 main_choice=${main_choice:-1}
 
+# ========== HIỂN THỊ PROXY FUNCTION ==========
+show_proxy() {
+  echo ""
+  echo "📄 Danh sách Proxy:"
+  echo "----------------------------------------"
+  IFS='&' read -ra entries <<< "$(cat "$file_path")"
+  for entry in "${entries[@]}"; do
+    proto=$(echo "$entry" | cut -d':' -f1)
+    case "$proto" in
+      socks5)
+        IFS=':' read -r _ ip port user pass <<< "$entry"
+        echo "🔐 SOCKS5:       $ip:$port ($user / $pass)"
+        ;;
+      http)
+        IFS=':' read -r _ ip port user pass <<< "$entry"
+        echo "🌐 HTTP:         $ip:$port ($user / $pass)"
+        ;;
+      shadowsocks)
+        IFS=':' read -r _ ip port method pass tag <<< "$entry"
+        echo "🛰️ SHADOWSOCKS:  $ip:$port $method / $pass / $tag"
+        ;;
+      *)
+        echo "⚠️ Không xác định: $entry"
+        ;;
+    esac
+  done
+  echo "----------------------------------------"
+}
+
+# ========== TÙY CHỌN CHỈ HIỂN THỊ ==========
 if [[ "$main_choice" == "2" ]]; then
   if [ -f "$file_path" ]; then
-    echo ""
-    echo "📄 Danh sách Proxy:"
-    echo "----------------------------------------"
-    IFS='&' read -ra entries <<< "$(cat "$file_path")"
-    for entry in "${entries[@]}"; do
-      proto=$(echo "$entry" | cut -d':' -f1)
-      case "$proto" in
-        socks5)
-          IFS=':' read -r _ ip port user pass <<< "$entry"
-          echo "🔐 SOCKS5:       $ip:$port ($user / $pass)"
-          ;;
-        http)
-          IFS=':' read -r _ ip port user pass <<< "$entry"
-          echo "🌐 HTTP:         $ip:$port ($user / $pass)"
-          ;;
-        shadowsocks)
-          IFS=':' read -r _ ip port method pass tag <<< "$entry"
-          echo "🛰️ SHADOWSOCKS:  $ip:$port $method / $pass / $tag"
-          ;;
-        *)
-          echo "⚠️ Không xác định: $entry"
-          ;;
-      esac
-    done
-    echo "----------------------------------------"
+    show_proxy
   else
     echo "❌ Không tìm thấy file proxy."
   fi
   exit 0
 fi
-
-# ========== CẬP NHẬT ==========
-read -p "👉 Cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
-update_ans=${update_ans:-n}
-[[ "$update_ans" =~ ^[Yy]$ ]] && sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
 
 # ========== NHẬP TÊN SERVER ==========
 read -p "👉 Nhập Tên SEVER: " server_name
@@ -85,38 +86,46 @@ chmod +x /usr/local/bin/createprx
 } | /usr/local/bin/createprx
 
 # ========== GỬI API ==========
-read -p "👉 Bạn có muốn gửi Proxy lên API? (y/n, Enter = y): " send_api_ans
-send_api_ans=${send_api_ans:-y}
+proxy_line=$(cat "$file_path")
+IFS='&' read -ra proxy_parts <<< "$proxy_line"
 
-if [[ "$send_api_ans" == "y" ]]; then
-  proxy_line=$(cat "$file_path")
-  IFS='&' read -ra proxy_parts <<< "$proxy_line"
+socks_proxy=""
+http_proxy=""
+shadow_proxy=""
+main_ip=""
+server_tag=""
 
-  socks_proxy=""
-  http_proxy=""
-  shadow_proxy=""
-  main_ip=""
+for entry in "${proxy_parts[@]}"; do
+  IFS=':' read -ra f <<< "$entry"
+  proto="${f[0]}"
+  ip="${f[1]}"
+  [[ -z "$main_ip" && "$proto" == "socks5" ]] && main_ip="$ip"
 
-  for entry in "${proxy_parts[@]}"; do
-    IFS=':' read -ra f <<< "$entry"
-    proto="${f[0]}"
-
-    if [[ "$proto" == "socks5" ]]; then
-      main_ip="${f[1]}"
+  case "$proto" in
+    socks5)
       socks_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:socks"
-    elif [[ "$proto" == "http" ]]; then
+      ;;
+    http)
       http_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:http"
-    elif [[ "$proto" == "shadowsocks" ]]; then
+      ;;
+    shadowsocks)
       shadow_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:shadowsocks"
-    fi
-  done
+      server_tag="${f[5]}"
+      ;;
+  esac
+done
 
-  encoded_ip=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$main_ip'''))")
-  encoded_socks=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$socks_proxy'''))")
-  encoded_http=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$http_proxy'''))")
-  encoded_shadow=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$shadow_proxy'''))")
-  encoded_server=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$server_name'''))")
+encoded_ip=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$main_ip'''))")
+encoded_socks=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$socks_proxy'''))")
+encoded_http=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$http_proxy'''))")
+encoded_shadow=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$shadow_proxy'''))")
+encoded_server=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$server_tag'''))")
+encoded_full=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$proxy_line'''))")
 
-  url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=$encoded_ip&PROXY=$encoded_socks&HTTP=$encoded_http&SHADOW=$encoded_shadow&SEVER=$encoded_server"
-  curl -s -G "$url" > /dev/null 2>&1 && echo "✅ Đã gửi proxy đến API." || echo "❌ Gửi thất bại."
-fi
+url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=$encoded_ip&PROXY=$encoded_socks&HTTP=$encoded_http&SHADOW=$encoded_shadow&SEVER=$encoded_server&FULL=$encoded_full"
+
+echo "🌐 Gửi tới: $url"
+curl -s -G "$url" && echo "✅ Gửi API thành công." || echo "❌ Gửi thất bại."
+
+# ========== HIỂN THỊ SAU KHI GỬI ==========
+show_proxy
