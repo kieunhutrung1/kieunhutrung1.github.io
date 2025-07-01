@@ -38,11 +38,4 @@ chmod +x /usr/local/bin/createprx
 # Truyền dữ liệu vào createprx (dòng 2 bạn nhập tay), cách nhau 2 giây
 {
   echo "Tienmaster@123"
-  echo "trung"
-  echo ""
-  sleep 2
-  echo "$config_option"
-  sleep 2
 } | /usr/local/bin/createprx
-echo ""
-cat /etc/lp
