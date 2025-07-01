@@ -21,15 +21,15 @@ show_proxy() {
     case "$proto" in
       socks5)
         IFS=':' read -r _ ip port user pass <<< "$entry"
-        echo "🔐 SOCKS5:       $ip:$port ($user / $pass)"
+        echo "🔐 SOCKS5:       $ip:$port:$user:$pass)"
         ;;
       http)
         IFS=':' read -r _ ip port user pass <<< "$entry"
-        echo "🌐 HTTP:         $ip:$port ($user / $pass)"
+        echo "🌐 HTTP:         $ip:$port:$user:$pass)"
         ;;
       shadowsocks)
         IFS=':' read -r _ ip port method pass tag <<< "$entry"
-        echo "🛰️ SHADOWSOCKS:  $ip:$port $method / $pass / $tag"
+        echo "🛰️ SHADOWSOCKS:  $ip:$port:$method:$pass"
         ;;
       *)
         echo "⚠️ Không xác định: $entry"
