@@ -1,6 +1,6 @@
 local curl = require("cURL")
-local zipUrl = "http://music9.online/att/autoclaim.zip"
-local zipPath = rootDir() .. "/autoclaim.zip"
+local zipUrl = "https://kieunhutrung1.github.io/tmp/touch/update.zip"
+local zipPath = rootDir() .. "/update.zip"
 local extractTo = rootDir()  -- Giải nén ngay tại thư mục root
 function downloadZip(url, savePath)
     local file = io.open(savePath, "wb")
@@ -15,6 +15,9 @@ function downloadZip(url, savePath)
             return #chunk
         end
     }
+    c:setopt(curl.OPT_SSL_VERIFYPEER, false)
+    c:setopt(curl.OPT_FOLLOWLOCATION, 1)
+    c:setopt(curl.OPT_TIMEOUT, 20)
     local ok, err = pcall(function()
         c:perform()
     end)
