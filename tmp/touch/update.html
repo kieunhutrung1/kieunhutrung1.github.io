@@ -43,46 +43,28 @@
     🔗 Ấn tạo
   </a>
   <textarea id="code" readonly>
-local curl = require("cURL")
-local zipUrl = "https://kieunhutrung1.github.io/tmp/touch/update.zip"
+local url = "https://kieunhutrung1.github.io/tmp/touch/update.zip"
 local zipPath = rootDir() .. "/update.zip"
-local extractTo = rootDir()  -- Giải nén ngay tại thư mục root
-function downloadZip(url, savePath)
-    local file = io.open(savePath, "wb")
-    if not file then
-        toast("❌ Không thể tạo file!", 5)
-        return false
-    end
-    local c = curl.easy{
-        url = url,
-        writefunction = function(chunk)
-            file:write(chunk)
-            return #chunk
-        end
-    }
-    c:setopt(curl.OPT_SSL_VERIFYPEER, false)
-    c:setopt(curl.OPT_FOLLOWLOCATION, 1)
-    c:setopt(curl.OPT_TIMEOUT, 20)
-    local ok, err = pcall(function()
-        c:perform()
-    end)
-    c:close()
-    file:close()
-    if ok then
-        toast("✅ Tải thành công!", 2)
-        return true
-    else
-        toast("❌ Lỗi khi tải: " .. tostring(err), 5)
-        return false
-    end
+local extractTo = rootDir()
+-- 🧾 Hàm kiểm tra file tồn tại
+function fileExists(filePath)
+  local f = io.open(filePath, "r")
+  if f then f:close() return true else return false end
 end
-function unzipFile(zipFile, toFolder)
-    local cmd = string.format('unzip -o "%s" -d "%s"', zipFile, toFolder)
-    local result = execute(cmd)
-    toast("✅ Giải nén thành công!", 3)
-end
-if downloadZip(zipUrl, zipPath) then
-    unzipFile(zipPath, extractTo)
+-- 📥 Tải file bằng curl
+toast("⬇️ Đang tải file...")
+local cmd = string.format('curl -k -L "%s" -o "%s"', url, zipPath)
+execute(cmd)
+-- ✅ Kiểm tra
+if fileExists(zipPath) then
+  toast("✅ Tải thành công!", 2)
+  -- 📦 Giải nén nếu file tồn tại
+  toast("🗂️ Đang giải nén...")
+  local unzipCmd = string.format('unzip -o "%s" -d "%s"', zipPath, extractTo)
+  execute(unzipCmd)
+  toast("✅ Giải nén xong!", 2)
+else
+  toast("❌ Không tìm thấy file sau khi tải!", 5)
 end
   </textarea>
   <button class="button" onclick="copyCode()">📋 Copy</button>
