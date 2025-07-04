@@ -169,12 +169,27 @@ new Clipboard('.btn');
             }
         }
     </script>
+
+  <button onclick="getIP()">Check My IP</button><br>
+  <input type="text" id="ip_" placeholder="IP will appear here" readonly>
+
+  <script>
+    function getIP() {
+      fetch('https://api64.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('ip_').value = data.ip;
+        })
+        .catch(error => {
+          document.getElementById('ip_').value = 'Error fetching IP';
+          console.error(error);
+        });
+    }
+  </script>
+
+	
 <body>
 	<font color="red"> Khu Vực Proxy</font>
-    <div>
-        <label for="IP">IP :</label>
-        <input type="text" id="ip_" placeholder="Nhập IP">
-    </div>
     <div>
         <label for="MAC">MAC :</label>
         <input type="text" id="mac_" placeholder="Nhập MAC">
