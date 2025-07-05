@@ -474,242 +474,83 @@ v1.onclick=function(){if([0,1][Math.floor(Math.random()*[0,1].length)]>0){v1.val
 v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length)];v2.select();document.execCommand("copy");window.getSelection().removeAllRanges();};
 </script>
 </block>
-	<block>
-	  <script>
-        async function fetchData() {
-            const apiUrl = "https://script.google.com/macros/s/AKfycbyRRal4gWPKAXs8Yp3Zt8tjq2RwbCHstJZPDSPRSe1LgzTd6q81NpCwVWyK1dCb7fNqig/exec"; // URL giả lập, thay bằng API của bạn
-
-            try {
-                // Gọi đến API
-                let response = await fetch(apiUrl);
-                if (!response.ok) {
-                    throw new Error('Lỗi: ' + response.status);
-                }
-
-                let data = await response.json();
-                
-                // Giả sử API trả về một đối tượng có thuộc tính "title"
-                // Cập nhật dữ liệu vào ô input
-                document.getElementById("dataInputsheets").value = data.content.names[0] || 'Không có dữ liệu';
-				document.getElementById("dataInputsheets1").value = data.content.names[1] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets2").value = data.content.names[2] || 'Không có dữ liệu';
-				document.getElementById("dataInputsheets3").value = data.content.names[3] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets4").value = data.content.names[4] || 'Không có dữ liệu';
-				document.getElementById("dataInputsheets5").value = data.content.names[5] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets6").value = data.content.names[6] || 'Không có dữ liệu';
-				document.getElementById("dataInputsheets7").value = data.content.names[7] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets8").value = data.content.names[8] || 'Không có dữ liệu';
-				document.getElementById("dataInputsheets9").value = data.content.names[9] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets10").value = data.content.names[10] || 'Không có dữ liệu';
-				document.getElementById("dataInputsheets11").value = data.content.names[11] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets12").value = data.content.names[12] || 'Không có dữ liệu';
-				document.getElementById("dataInputsheets13").value = data.content.names[13] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets14").value = data.content.names[14] || 'Không có dữ liệu';
-				document.getElementById("dataInputsheets15").value = data.content.names[15] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets16").value = data.content.names[16] || 'Không có dữ liệu';
-				document.getElementById("dataInputsheets17").value = data.content.names[17] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets18").value = data.content.names[18] || 'Không có dữ liệu';
-				document.getElementById("dataInputsheets19").value = data.content.names[19] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets20").value = data.content.names[20] || 'Không có dữ liệu';
-                document.getElementById("dataInputsheets21").value = data.content.names[21] || 'Không có dữ liệu';
-            } catch (error) {
-                console.error('Có lỗi xảy ra:', error);
-                alert("Có lỗi xảy ra: " + error.message);
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        div {
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
+	
 <body>
 
-    <div>
-		<block>
-        <input type="text" id="dataInputsheets" placeholder="Dsữ liệu sẽ xuất hiện ở đây"  readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-		<block>
-        <input type="text" id="dataInputsheets1" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets1').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets1> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        <block>
-        <input type="text" id="dataInputsheets2" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets2').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets2> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        <block>
-        <input type="text" id="dataInputsheets3" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets3').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets3> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-		<block>
-        <input type="text" id="dataInputsheets4" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets4').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets4> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        		<block>
-        <input type="text" id="dataInputsheets5" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets5').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets5> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        <block>
-        <input type="text" id="dataInputsheets6" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets6').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets6> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-		<block>
-        <input type="text" id="dataInputsheets7" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets7').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets7> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        		<block>
-        <input type="text" id="dataInputsheets8" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets8').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets8> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        <block>
-        <input type="text" id="dataInputsheets9" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets9').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets9> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-		<block>
-        <input type="text" id="dataInputsheets10" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets10').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets10> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        		<block>
-        <input type="text" id="dataInputsheets11" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets11').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets11> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        <block>
-        <input type="text" id="dataInputsheets12" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets12').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets12> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        <block>
-        <input type="text" id="dataInputsheets13" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets13').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets13> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-		<block>
-        <input type="text" id="dataInputsheets14" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets14').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets14> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        		<block>
-        <input type="text" id="dataInputsheets15" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets15').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets15> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        <block>
-        <input type="text" id="dataInputsheets16" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets16').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets16> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-		<block>
-        <input type="text" id="dataInputsheets17" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets17').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets17> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        		<block>
-        <input type="text" id="dataInputsheets18" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets18').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets18> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        <block>
-        <input type="text" id="dataInputsheets19" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets19').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets19> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-		<block>
-        <input type="text" id="dataInputsheets20" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets20').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets20> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-        		<block>
-        <input type="text" id="dataInputsheets21" placeholder="Dữ liệu sẽ xuất hiện ở đây" readonly /> <input type="button" id="btn" value="open" onClick="window.location = document.getElementById('dataInputsheets21').value;" />
-        <button class="btn" data-clipboard-target=#dataInputsheets21> Coppy</button>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.6.1/clipboard.min.js"></script>
-        <script type="text/javascript">
-        new Clipboard('.btn');
-        </script>
-        </block>
-    </div>
-	</block>
-    <button onclick="fetchData()">Lấy Dữ liệu</button>
+  <h2>📩 Nhận OTP TikTok</h2>
+
+  <!-- Email -->
+  <label>📧 Nhập email hoặc tạo mới:</label><br>
+  <input type="text" id="emailInput" placeholder="Nhập hoặc nhấn 'Tạo email'">
+  <button onclick="getEmail()">Tạo email</button>
+
+  <!-- OTP -->
+  <button onclick="getOtp()">Lấy OTP</button>
+  <input type="text" id="otpInput" placeholder="OTP sẽ hiển thị ở đây..." readonly>
+
+  <!-- Copy -->
+  <button id="copyBtn" onclick="copyOtp()">📋 Sao chép OTP</button>
+
+  <!-- Hiển thị nội dung thư -->
+  <div id="bodyContent">📝 Nội dung thư sẽ hiển thị tại đây...</div>
+
+  <script>
+    const apiUrl = "https://script.google.com/macros/s/AKfycbyoOiwYSBl7IA3q9eAwMDP4kb8_edHtrpjfjOl7Cbw6yHcDx6M5LX9F6hlsZ-a18gv6-w/exec"; // ← Thay bằng Web App URL thật
+
+    function getEmail() {
+      fetch(apiUrl + "?action=email")
+        .then(res => res.text())
+        .then(email => {
+          document.getElementById("emailInput").value = email;
+          document.getElementById("otpInput").value = "";
+          document.getElementById("bodyContent").textContent = "📝 Nội dung thư sẽ hiển thị tại đây...";
+        })
+        .catch(err => alert("Lỗi khi tạo email: " + err));
+    }
+
+    function getOtp() {
+      const email = document.getElementById("emailInput").value.trim();
+      if (!email || !email.includes("@")) {
+        alert("Vui lòng nhập địa chỉ email hợp lệ.");
+        return;
+      }
+
+      const [prefix, domain] = email.split("@");
+      const url = `${apiUrl}?action=otp&email=${encodeURIComponent(prefix)}&domain=${encodeURIComponent(domain)}`;
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          if (data.length === 0 || !data[0].code) {
+            document.getElementById("otpInput").value = "Không tìm thấy mã OTP.";
+            document.getElementById("bodyContent").textContent = "Không tìm thấy nội dung thư.";
+            return;
+          }
+
+          const otp = data[0].code;
+          const body = data[0].body;
+
+          document.getElementById("otpInput").value = otp;
+          document.getElementById("bodyContent").textContent = body || "Không có nội dung.";
+        })
+        .catch(err => alert("Lỗi khi lấy OTP: " + err));
+    }
+
+    function copyOtp() {
+      const otpInput = document.getElementById("otpInput");
+      if (!otpInput.value || otpInput.value.includes("Không")) {
+        alert("Chưa có OTP để sao chép.");
+        return;
+      }
+
+      otpInput.select();
+      otpInput.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("✅ Đã sao chép mã OTP!");
+    }
+  </script>
+
+</body>
 
 <footer> &copy; 2025 KNT All Rights Reserved.
 	<p><a href="http://thong123.fun/">*</a></p>
