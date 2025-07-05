@@ -474,7 +474,7 @@ v1.onclick=function(){if([0,1][Math.floor(Math.random()*[0,1].length)]>0){v1.val
 v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length)];v2.select();document.execCommand("copy");window.getSelection().removeAllRanges();};
 </script>
 </block>
-	
+<block>	
 <body>
 
   <h2>📩 Nhận OTP TikTok</h2>
@@ -485,17 +485,18 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
   <button onclick="getEmail()">Tạo email</button>
 
   <!-- OTP -->
-  
   <input type="text" id="otpInput" placeholder="OTP sẽ hiển thị ở đây..." readonly>
-<button onclick="getOtp()">Lấy OTP</button>
-  <!-- Copy -->
+  <button onclick="getOtp()">Lấy OTP</button>
   <button id="copyBtn" onclick="copyOtp()">📋 Sao chép OTP</button>
 
-  <!-- Hiển thị nội dung thư -->
+  <!-- Dòng "Đã sao chép" -->
+  <div id="copyStatus">✅ Đã sao chép</div>
+
+  <!-- Nội dung thư -->
   <div id="bodyContent">📝 Nội dung thư sẽ hiển thị tại đây...</div>
 
   <script>
-    const apiUrl = "https://script.google.com/macros/s/AKfycbyoOiwYSBl7IA3q9eAwMDP4kb8_edHtrpjfjOl7Cbw6yHcDx6M5LX9F6hlsZ-a18gv6-w/exec"; // ← Thay bằng Web App URL thật
+    const apiUrl = "https://script.google.com/macros/s/AKfycbyoOiwYSBl7IA3q9eAwMDP4kb8_edHtrpjfjOl7Cbw6yHcDx6M5LX9F6hlsZ-a18gv6-w/exec"; // Thay bằng URL Web App thật
 
     function getEmail() {
       fetch(apiUrl + "?action=email")
@@ -521,17 +522,20 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
       fetch(url)
         .then(res => res.json())
         .then(data => {
-          if (data.length === 0 || !data[0].code) {
-            document.getElementById("otpInput").value = "Không tìm thấy mã OTP.";
-            document.getElementById("bodyContent").textContent = "Không tìm thấy nội dung thư.";
-            return;
+          document.getElementById("otpInput").value = "";
+          document.getElementById("bodyContent").textContent = "📝 Không tìm thấy thư.";
+
+          if (!data || data.length === 0) return;
+
+          const firstMail = data[0];
+          const otp = firstMail.code?.trim() || "";
+          const body = firstMail.body?.trim() || "Không có nội dung thư.";
+
+          document.getElementById("bodyContent").textContent = body;
+
+          if (otp) {
+            document.getElementById("otpInput").value = otp;
           }
-
-          const otp = data[0].code;
-          const body = data[0].body;
-
-          document.getElementById("otpInput").value = otp;
-          document.getElementById("bodyContent").textContent = body || "Không có nội dung.";
         })
         .catch(err => alert("Lỗi khi lấy OTP: " + err));
     }
@@ -546,12 +550,18 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
       otpInput.select();
       otpInput.setSelectionRange(0, 99999);
       document.execCommand("copy");
-      alert("✅ Đã sao chép mã OTP!");
+
+      // Hiển thị dòng "Đã sao chép"
+      const status = document.getElementById("copyStatus");
+      status.style.display = "block";
+      setTimeout(() => {
+        status.style.display = "none";
+      }, 1000);
     }
   </script>
 
 </body>
-
+</block>
 <footer> &copy; 2025 KNT All Rights Reserved.
 	<p><a href="http://thong123.fun/">*</a></p>
 </panel>
