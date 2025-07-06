@@ -454,36 +454,44 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
 </script>
 </block>
 <block>	
+
 <body>
   <label>📧 Nhập email hoặc tạo mới:</label><br>
   <input type="text" id="emailInput" placeholder="Nhập hoặc nhấn 'Tạo email'">
   <button onclick="getEmail()">Tạo email</button>
+
   <!-- OTP -->
   <input type="text" id="otpInput" placeholder="OTP sẽ hiển thị ở đây..." readonly onclick="copyOtp()">
   <button onclick="getOtp()">Lấy OTP</button>
   <button onclick="copyEmail()">📋 Sao chép Email</button>
+
   <!-- Ghi chú và lưu -->
   <input type="text" id="noteInput" placeholder="📝 Ghi chú (ví dụ: TikTok tài khoản 1)">
   <button onclick="saveEmail()">💾 Lưu Email</button>
+
   <!-- Dòng trạng thái -->
   <label id="statusLabel"></label>
 
   <!-- Nội dung thư -->
   <div id="bodyContent">📝 Nội dung thư sẽ hiển thị tại đây...</div>
+
   <script>
     const apiOtpUrl = "https://script.google.com/macros/s/AKfycbyoOiwYSBl7IA3q9eAwMDP4kb8_edHtrpjfjOl7Cbw6yHcDx6M5LX9F6hlsZ-a18gv6-w/exec";
-    const apiSaveUrl = "https://script.google.com/macros/s/AKfycbzKC8_aVaDWpnJAV9JP7T447P25cOu5DUscK6Dt5t5V5tXsSOf4TixgtwzoaPwiaNoW/exec";
+    const apiSaveUrl = "https://script.google.com/macros/s/AKfycbz3l9qX0AFPmGBIsaziaMOsPLyBKAzydpsNbOS0rbbfk3cpQWR9DysThw9IT8v5mEtj/exec?sheet=DOMAIL&";
+
     function showStatus(message, type = "info") {
       const label = document.getElementById("statusLabel");
       label.style.display = "block";
       label.style.color = type === "error" ? "red" : (type === "success" ? "green" : "#333");
       label.textContent = message;
+
       clearTimeout(label._timeout);
       label._timeout = setTimeout(() => {
         label.style.display = "none";
         label.textContent = "";
       }, 30000); // 30 giây
     }
+
     function getEmail() {
       fetch(apiOtpUrl + "?action=email")
         .then(res => res.text())
@@ -495,16 +503,20 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
         })
         .catch(err => showStatus("Lỗi tạo email: " + err, "error"));
     }
+
     function getOtp() {
       const email = document.getElementById("emailInput").value.trim();
       if (!email || !email.includes("@")) {
         showStatus("Vui lòng nhập địa chỉ email hợp lệ.", "error");
         return;
       }
+
       document.getElementById("otpInput").value = "";
       document.getElementById("bodyContent").textContent = "";
+
       const [prefix, domain] = email.split("@");
       const url = `${apiOtpUrl}?action=otp&email=${encodeURIComponent(prefix)}&domain=${encodeURIComponent(domain)}`;
+
       fetch(url)
         .then(res => res.json())
         .then(data => {
@@ -512,10 +524,13 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
             showStatus("❌ Không tìm thấy thư.", "error");
             return;
           }
+
           const firstMail = data[0];
           const otp = firstMail.code?.trim() || "";
           const body = firstMail.body?.trim() || "Không có nội dung thư.";
+
           document.getElementById("bodyContent").textContent = body;
+
           if (otp) {
             document.getElementById("otpInput").value = otp;
             showStatus("✅ Mã OTP đã lấy thành công.", "success");
@@ -525,18 +540,21 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
         })
         .catch(err => showStatus("Lỗi khi lấy OTP: " + err, "error"));
     }
+
     function copyOtp() {
       const otpInput = document.getElementById("otpInput");
       if (!otpInput.value || otpInput.value.includes("Không")) {
         showStatus("Chưa có OTP để sao chép.", "error");
         return;
       }
+
       otpInput.select();
       otpInput.setSelectionRange(0, 99999);
       document.execCommand("copy");
 
       showStatus("✅ Đã sao chép mã OTP!", "success");
     }
+
     function copyEmail() {
       const emailInput = document.getElementById("emailInput");
       const email = emailInput.value.trim();
@@ -544,17 +562,19 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
         showStatus("Email không hợp lệ để sao chép.", "error");
         return;
       }
+
       emailInput.select();
       emailInput.setSelectionRange(0, 99999);
       document.execCommand("copy");
 
       showStatus("✅ Đã sao chép email!", "success");
     }
+
     function saveEmail() {
       const email = document.getElementById("emailInput").value.trim();
       const note = document.getElementById("noteInput").value.trim();
 
-      const fullUrl = `${apiSaveUrl}?mail_domain=${encodeURIComponent(email)}&note_domain=${encodeURIComponent(note)}`;
+      const fullUrl = `${apiSaveUrl}mail_domain=${encodeURIComponent(email)}&note_domain=${encodeURIComponent(note)}`;
 
       fetch(fullUrl)
         .then(res => {
@@ -574,6 +594,7 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
     }
   </script>
 </body>
+
 
 </block>
 <footer> &copy; 2025 KNT All Rights Reserved.
