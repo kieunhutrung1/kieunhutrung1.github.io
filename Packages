@@ -602,21 +602,20 @@ Tag: role::hacker, purpose::library
 dev: KNT ios
 
 Package: com.ccteam.ccinfo
-Version: 0.0.2
 Architecture: iphoneos-arm64e
-Maintainer: CCinfo <cydia.pl@relay.howett.net>
-Depends: firmware (>= 11.0)
+Version: 0.0.2
+Section: Tweaks
+Maintainer: Repo Cydia BVN
+Installed-Size: 2186070
+Pre-Depends: rootless-compat(>= 0.1)
+Depends: firmware (>= 15.0)
+Conflicts: com.ccteam.ccinfo
 Filename: ./debs/clean.deb
 Size: 2186070
 MD5sum: 91b31e045b04faa21a6264937278725e
 SHA1: 502f74eb9c64f5574b85b7e082dbd740b1a33505
 SHA256: 15111018f21135f867f0d4cdd68717f7f1b525f040d63618054571fdafbdeb74
-Section: Tweaks
-Description: load preferences in style
-Author: CCinfo <cydia.pl@relay.howett.net>
-Depiction: https://apt.touchsprite.com/index.php
-Homepage: https://apt.touchsprite.com/index.php
-Icon: ./assets/touchsprite.png
+SHA512: ea46ed8aac3051bcc18b8dab7f71619a200960890d7ac6c8ae8b124f18ed06a3b5a83bfc69321294cf7ff2ca5223cedf71189687d68371f4eb00cbac4fb89210
+Description: Hiệu ứng cuộn trang màn hình chính như Barrel.Hỗ trợ từ Ios 15.0 tới ios 16.x
 Name: CCinfo
-Tag: role::hacker, purpose::library
-dev: KNT ios
+Author: Ryan Nair
