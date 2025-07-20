@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="UTF-8">
   <title>Copy AutoTouch Script</title>
@@ -21,7 +21,7 @@
       background: #fdfdfd;
     }
     .button {
-      margin: 10px 0;
+      margin: 10px 5px 10px 0;
       padding: 10px 20px;
       font-size: 14px;
       background: #007bff;
@@ -35,13 +35,26 @@
     .button:hover {
       background: #0056b3;
     }
+    #copyMsg {
+      margin-left: 10px;
+      color: green;
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <!-- 🔗 ẤN tạo update.lua -->
+
+  <!-- 🔗 Nút tạo file update.lua -->
   <a href="http://127.0.0.1:8080/file/new?path=%2F%2Fupdate.lua" class="button" target="_blank">
     🔗 Ấn tạo
   </a>
+
+  <!-- ❌ Nút xóa file update.lua -->
+  <a href="http://127.0.0.1:8080/file/delete?path=%2Fupdate.lua" class="button" target="_blank" style="background: #dc3545;">
+    ❌ Xoá file
+  </a>
+
+  <!-- Vùng hiển thị mã Lua -->
   <textarea id="code" readonly>
 local url = "https://kieunhutrung1.github.io/hide/debs/update.zip"
 local zipPath = rootDir() .. "/update.zip"
@@ -71,16 +84,25 @@ if fileExists(zipPath) then
 else
   toast("Không tìm thấy file sau khi tải!", 5)
 end
-
   </textarea>
+
+  <!-- 📋 Nút sao chép -->
   <button class="button" onclick="copyCode()">📋 Copy</button>
+  <span id="copyMsg">✔ Đã sao chép!</span>
 
   <script>
     function copyCode() {
-      const textArea = document.getElementById("code");
-      textArea.select();
-      document.execCommand("copy");
+      const code = document.getElementById("code").value;
+      navigator.clipboard.writeText(code).then(() => {
+        const msg = document.getElementById("copyMsg");
+        msg.style.display = "inline";
+        setTimeout(() => msg.style.display = "none", 2000);
+      }).catch(err => {
+        alert("❌ Lỗi khi sao chép!");
+        console.error(err);
+      });
     }
   </script>
+
 </body>
 </html>
