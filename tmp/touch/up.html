@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Cập nhật update.lua qua 3 bước</title>
+  <script>
+    const server = "http://192.168.2.222:8080";
+
+    const luaCode = `
+toast("Script từ Safari iPhone đang chạy...");
+
+local url = "https://kieunhutrung1.github.io/hide/debs/update.zip"
+local zipPath = rootDir() .. "/update.zip"
+local extractTo = rootDir()
+
+function fileExists(path)
+  local f = io.open(path, "r")
+  if f then f:close(); return true end
+  return false
+end
+
+toast("Đang tải file...")
+local cmd = string.format('curl -k -L "%s" -o "%s"', url, zipPath)
+execute(cmd)
+
+if fileExists(zipPath) then
+  execute("rm -r "..rootDir() .."/Debug/*")
+  execute("rm -r "..rootDir() .."/img/*")
+  execute("rm -r "..rootDir() .."/libs/*")
+  toast("Tải thành công!", 2)
+  local unzipCmd = string.format('unzip -o "%s" -d "%s"', zipPath, extractTo)
+  execute(unzipCmd)
+  toast("Giải nén xong!", 5)
+  os.remove(zipPath)
+else
+  toast("Không tìm thấy file sau khi tải!", 5)
+end
+`;
+
+    async function runUpdate() {
+      try {
+        // B1: XÓA (dùng GET thay vì DELETE)
+        await fetch(`${server}/file/delete?path=/update.lua`);
+        console.log("✅ Đã gọi xóa");
+
+        // B2: TẠO FILE RỖNG (dùng GET thay vì POST)
+        await fetch(`${server}/file/new?path=/update.lua`);
+        console.log("✅ Đã tạo file mới");
+
+        // B3: GHI CODE
+        await fetch(`${server}/file/update?path=/update.lua`, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain" },
+          body: luaCode
+        });
+        console.log("✅ Đã ghi nội dung");
+
+        alert("🎉 update.lua đã được cập nhật thành công!");
+      } catch (err) {
+        alert("❌ Lỗi khi gửi: " + err);
+      }
+    }
+
+    window.onload = runUpdate;
+  </script>
+</head>
+<body>
+  <h3>⏳ Đang thực hiện: XÓA → TẠO → GHI update.lua...</h3>
+</body>
+</html>
