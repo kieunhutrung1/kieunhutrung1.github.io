@@ -458,6 +458,7 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
 </block>
 <block>	
 	
+
 <body>
   <label>📧 Nhập email hoặc tạo mới:</label><br>
   <input type="text" id="emailInput" placeholder="Nhập hoặc nhấn 'Tạo email'">
@@ -616,7 +617,7 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
       }
 
       const [prefix, domain] = email.split("@");
-      const url = `https://ssms.hpmegagoal.com/mail/newmail.php?domain=${encodeURIComponent(domain)}&prefix=${encodeURIComponent(prefix)}`;
+      const url = `https://ssms.hpmegagoal.com/mail/getotp.php?domain=${encodeURIComponent(domain)}&email=${encodeURIComponent(prefix)}`;
       window.open(url, "_blank");
     }
 
@@ -629,6 +630,7 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
     }
   </script>
 </body>
+
 
 
 </block>
