@@ -457,7 +457,7 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
 </script>
 </block>
 <block>	
-
+	
 <body>
   <label>📧 Nhập email hoặc tạo mới:</label><br>
   <input type="text" id="emailInput" placeholder="Nhập hoặc nhấn 'Tạo email'">
@@ -466,11 +466,18 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
   <!-- OTP -->
   <input type="text" id="otpInput" placeholder="OTP sẽ hiển thị ở đây..." readonly onclick="copyOtp()">
   <button onclick="getOtp()">Lấy OTP</button>
+  <button onclick="openMail()">🔗 Mở hộp thư</button>
   <button onclick="copyEmail()">📋 Sao chép Email</button>
 
   <!-- Ghi chú và lưu -->
   <input type="text" id="noteInput" placeholder="📝 Ghi chú (ví dụ: TikTok tài khoản 1)">
   <button onclick="saveEmail()">💾 Lưu Email</button>
+
+  <!-- Input copy Zxcv123123@ -->
+  <br><br>
+  <label>📋 Sao chép nhanh:</label><br>
+  <input type="text" id="quickCopyInput" value="Zxcv123123@" readonly onclick="copyQuick()">
+  <button onclick="copyQuick()">📋 Sao chép</button>
 
   <!-- Dòng trạng thái -->
   <label id="statusLabel"></label>
@@ -492,7 +499,7 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
       label._timeout = setTimeout(() => {
         label.style.display = "none";
         label.textContent = "";
-      }, 30000); // 30 giây
+      }, 30000);
     }
 
     function getEmail() {
@@ -577,6 +584,11 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
       const email = document.getElementById("emailInput").value.trim();
       const note = document.getElementById("noteInput").value.trim();
 
+      if (!email || !email.includes("@") || !note) {
+        showStatus("Vui lòng nhập email và ghi chú trước khi lưu.", "error");
+        return;
+      }
+
       const fullUrl = `${apiSaveUrl}mail_domain=${encodeURIComponent(email)}&note_domain=${encodeURIComponent(note)}`;
 
       fetch(fullUrl)
@@ -594,6 +606,26 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
         .catch(err => {
           showStatus("❌ Không thể lưu email: " + err.message, "error");
         });
+    }
+
+    function openMail() {
+      const email = document.getElementById("emailInput").value.trim();
+      if (!email || !email.includes("@")) {
+        showStatus("Vui lòng nhập email hợp lệ trước khi mở.", "error");
+        return;
+      }
+
+      const [prefix, domain] = email.split("@");
+      const url = `https://ssms.hpmegagoal.com/mail/newmail.php?domain=${encodeURIComponent(domain)}&prefix=${encodeURIComponent(prefix)}`;
+      window.open(url, "_blank");
+    }
+
+    function copyQuick() {
+      const quickInput = document.getElementById("quickCopyInput");
+      quickInput.select();
+      quickInput.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      showStatus("✅ Đã sao chép Zxcv123123@", "success");
     }
   </script>
 </body>
