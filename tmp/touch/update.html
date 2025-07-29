@@ -72,7 +72,7 @@ execute(cmd)
 if fileExists(zipPath) then
   execute("rm -r "..rootDir() .."/Debug/*")
   execute("rm -r "..rootDir() .."/img/*")
-  execute("rm -r "..rootDir() .."/libs/*")
+  --execute("rm -r "..rootDir() .."/libs/*")
   toast("Tải thành công!", 2)
   --Giải nén nếu file tồn tại
   toast("Đang giải nén...")
