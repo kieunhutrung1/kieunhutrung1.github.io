@@ -77,6 +77,34 @@ new Clipboard('.btn');
 <block>
 <p><a href="https://www.icloud.com/shortcuts/879f63a25d314634b3d50b51a519e063">Language</a>----<a href="https://www.icloud.com/shortcuts/4e0d005d3e3b4370a3cac2ef48b7902d">Time</a>----<a href="https://www.icloud.com/shortcuts/272470d40c2f4c2cb5dd5dea7ede2a61">Region</a>----<a href="https://www.icloud.com/shortcuts/f35570dac0f04288b162af64051ea9e0">Bluetooth</a>---<a href="https://www.icloud.com/shortcuts/409220c7da0f485ab3059b2cd45bb724">Location</a>---<a href="https://www.icloud.com/shortcuts/6532327e623946809f0e3f15e11b8c93">lock</a></p>
 </block>
+<body>
+
+  <h3>Nhập địa chỉ MAC:</h3>
+  <input type="text" id="macInput" value="" />
+
+  <h3>Nhập thông tin Proxy:</h3>
+  <input type="text" id="proxyInput" value="as.lunaproxy.com:12233:user-TrungJP_B8oeC-region-jp-st-tokyo:Zxcv123123:socks" />
+
+  <br><br>
+  <button onclick="openLink()">Mở link</button>
+
+  <script>
+    function openLink() {
+      const mac = document.getElementById("macInput").value.trim();
+      const proxy = document.getElementById("proxyInput").value.trim();
+
+      if (!mac || !proxy) {
+        alert("Vui lòng nhập đầy đủ địa chỉ MAC và Proxy.");
+        return;
+      }
+
+      const fullUrl = `http://192.168.2.1:8683/api/update?proxy=${mac}|${proxy}`;
+      window.open(fullUrl, "_blank");
+    }
+  </script>
+
+</body>
+
 <fieldset>
 	<a href="https://kieunhutrung1.github.io/ios/tmp/TrollInstallerX/TrollInstallerX.zip"><img src="./icon/dw.png" class="icon"><div><div><label><p>Link dowload Dylib</p></label><label class="url"><p></p></label></div></div></a>
 </fieldset>
