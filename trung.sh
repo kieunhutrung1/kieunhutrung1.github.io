@@ -40,6 +40,33 @@ create_ip_batch() {
     fi
   done
 }
+# ======================== CHỨC NĂNG TẠO fw ========================
+create_firewall_rule_random() {
+  echo -e "\n🌐 Đang tạo firewall rule..."
+
+  read -p "🔐 Nhập port cần mở (ví dụ: 22 hoặc 22,80,443): " PORTS
+  if [[ -z "$PORTS" ]]; then
+    echo "❌ Bạn chưa nhập port."
+    return
+  fi
+
+  RULE_NAME="fw-rule-$(date +%Y%m%d-%H%M%S)-$RANDOM"
+  echo "⚙️ Đang tạo rule có tên: $RULE_NAME"
+
+  gcloud compute --project=proxygen-11869 firewall-rules create "$RULE_NAME" \
+    --direction=INGRESS \
+    --priority=1000 \
+    --network=default \
+    --action=ALLOW \
+    --rules="tcp:$PORTS" \
+    --source-ranges=0.0.0.0/0
+
+  if [ $? -eq 0 ]; then
+    echo "✅ Đã tạo firewall rule: $RULE_NAME cho port: $PORTS"
+  else
+    echo "❌ Lỗi khi tạo firewall rule."
+  fi
+}
 
 # ======================== CHỨC NĂNG TẠO VM ========================
 create_vm_flow() {
@@ -263,6 +290,7 @@ echo "2) Đổi IP VM"
 echo "3) Xoá tất cả IP tĩnh không dùng (toàn bộ dự án)"
 echo "4) Xoá IP khỏi 1 VM đang gán IP"
 echo "5) Tạo nhiều IP tĩnh (STANDARD hoặc PREMIUM)"
+echo "6) Tạo firewall rule mở port (tên random)"
 read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 4): " MAIN_CHOICE
 MAIN_CHOICE=${MAIN_CHOICE:-4}
 
@@ -272,5 +300,6 @@ case "$MAIN_CHOICE" in
   3) cleanup_global_ips_direct ;;
   4) remove_ip_from_vm ;;
   5) create_ip_batch ;;
+  6) create_firewall_rule_random ;;
   *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
 esac
