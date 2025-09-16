@@ -245,8 +245,8 @@ echo "2) Đổi IP VM"
 echo "3) Xoá tất cả IP tĩnh không dùng (toàn bộ dự án)"
 echo "4) Xoá IP khỏi 1 VM đang gán IP"
 echo "5) Tạo nhiều IP tĩnh (STANDARD hoặc PREMIUM)"
-read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 4): " MAIN_CHOICE
-MAIN_CHOICE=${MAIN_CHOICE:-4}
+read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 1): " MAIN_CHOICE
+MAIN_CHOICE=${MAIN_CHOICE:-1}
 
 case "$MAIN_CHOICE" in
   1) create_vm_flow ;;
