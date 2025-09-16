@@ -46,19 +46,18 @@ create_vm_flow() {
   zones_tokyo=("asia-northeast1-a" "asia-northeast1-b" "asia-northeast1-c")
   zones_osaka=("asia-northeast2-a" "asia-northeast2-b" "asia-northeast2-c")
 
-  echo -e "\n🌐 Tạo VM đồng thời cho 2 vùng: Tokyo và Osaka"
+echo -e "\n🌐 Tạo VM đồng thời cho 2 vùng: Tokyo và Osaka"
 
-  # Nhập số lượng VM cho mỗi vùng, mặc định 4
-  read -p "🔢 Nhập số lượng VM tạo cho Tokyo (mặc định 4): " COUNT_TOKYO
+  read -p "🔢 Nhập số lượng VM tạo cho Tokyo (nhập 0 để bỏ qua, mặc định 4): " COUNT_TOKYO
   COUNT_TOKYO=${COUNT_TOKYO:-4}
-  if ! [[ "$COUNT_TOKYO" =~ ^[0-9]+$ ]] || [ "$COUNT_TOKYO" -le 0 ]; then
+  if ! [[ "$COUNT_TOKYO" =~ ^[0-9]+$ ]] || [ "$COUNT_TOKYO" -lt 0 ]; then
     echo "❌ Số lượng không hợp lệ. Mặc định là 4"
     COUNT_TOKYO=4
   fi
 
-  read -p "🔢 Nhập số lượng VM tạo cho Osaka (mặc định 4): " COUNT_OSAKA
+  read -p "🔢 Nhập số lượng VM tạo cho Osaka (nhập 0 để bỏ qua, mặc định 4): " COUNT_OSAKA
   COUNT_OSAKA=${COUNT_OSAKA:-4}
-  if ! [[ "$COUNT_OSAKA" =~ ^[0-9]+$ ]] || [ "$COUNT_OSAKA" -le 0 ]; then
+  if ! [[ "$COUNT_OSAKA" =~ ^[0-9]+$ ]] || [ "$COUNT_OSAKA" -lt 0 ]; then
     echo "❌ Số lượng không hợp lệ. Mặc định là 4"
     COUNT_OSAKA=4
   fi
