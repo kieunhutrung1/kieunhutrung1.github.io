@@ -1,5 +1,13 @@
 #!/bin/bash
+# ===== HỎI CHUYỂN SANG ROOT =====
+read -p "👉 Bạn có muốn chuyển sang quyền root (sudo -i)? (y/N): " root_choice
+root_choice=${root_choice:-n}  # Mặc định là 'n' nếu người dùng nhấn Enter
 
+if [[ "$root_choice" =~ ^[Yy]$ ]]; then
+  echo "🔐 Đang chuyển sang quyền root..."
+  sudo -i
+  exit 0
+fi
 file_path="/etc/lp"
 
 # ========== MENU CHÍNH ==========
