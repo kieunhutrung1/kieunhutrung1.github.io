@@ -41,34 +41,43 @@ create_ip_batch() {
   done
 }
 
-# ======================== CHỨC NĂNG TẠO VM (CẬP NHẬT) ========================
+# ======================== CHỨC NĂNG TẠO VM ========================
 create_vm_flow() {
   zones_tokyo=("asia-northeast1-a" "asia-northeast1-b" "asia-northeast1-c")
   zones_osaka=("asia-northeast2-a" "asia-northeast2-b" "asia-northeast2-c")
 
-  echo -e "\n🌐 Tạo VM đồng thời cho 2 vùng: Tokyo và Osaka"
-
-  read -p "🔢 Nhập số lượng VM tạo cho Tokyo (nhập 0 để bỏ qua, mặc định 4): " COUNT_TOKYO
+  echo -e "\n🌏 Nhập số lượng VM Tokyo muốn tạo (0 để bỏ, mặc định 4): "
+  read -p "Tokyo: " COUNT_TOKYO
   COUNT_TOKYO=${COUNT_TOKYO:-4}
-  if ! [[ "$COUNT_TOKYO" =~ ^[0-9]+$ ]] || [ "$COUNT_TOKYO" -lt 0 ]; then
-    echo "❌ Số lượng không hợp lệ. Mặc định là 4"
+  if ! [[ "$COUNT_TOKYO" =~ ^[0-9]+$ ]]; then
+    echo "❌ Số lượng Tokyo không hợp lệ. Đặt mặc định 4."
     COUNT_TOKYO=4
   fi
 
-  read -p "✏️ Nhập prefix đặt tên VM cho Tokyo (mặc định: tokyo): " PREFIX_TOKYO
-  PREFIX_TOKYO=${PREFIX_TOKYO:-tokyo}
-
-  read -p "🔢 Nhập số lượng VM tạo cho Osaka (nhập 0 để bỏ qua, mặc định 4): " COUNT_OSAKA
+  echo -e "\n🌏 Nhập số lượng VM Osaka muốn tạo (0 để bỏ, mặc định 4): "
+  read -p "Osaka: " COUNT_OSAKA
   COUNT_OSAKA=${COUNT_OSAKA:-4}
-  if ! [[ "$COUNT_OSAKA" =~ ^[0-9]+$ ]] || [ "$COUNT_OSAKA" -lt 0 ]; then
-    echo "❌ Số lượng không hợp lệ. Mặc định là 4"
+  if ! [[ "$COUNT_OSAKA" =~ ^[0-9]+$ ]]; then
+    echo "❌ Số lượng Osaka không hợp lệ. Đặt mặc định 4."
     COUNT_OSAKA=4
   fi
 
-  read -p "✏️ Nhập prefix đặt tên VM cho Osaka (mặc định: osaka): " PREFIX_OSAKA
-  PREFIX_OSAKA=${PREFIX_OSAKA:-osaka}
+  if [ "$COUNT_TOKYO" -eq 0 ] && [ "$COUNT_OSAKA" -eq 0 ]; then
+    echo "❌ Cần tạo ít nhất VM ở 1 vùng. Thoát."
+    return
+  fi
 
-  echo -e "\n🌐 Chọn loại IP (áp dụng cho cả 2 vùng):"
+  # Prefix mặc định
+  PREFIX_TOKYO="tokyo"
+  PREFIX_OSAKA="osaka"
+
+  read -p "✏️ Nhập prefix tên VM Tokyo (mặc định: $PREFIX_TOKYO): " CUSTOM_PREFIX_TOKYO
+  PREFIX_TOKYO=${CUSTOM_PREFIX_TOKYO:-$PREFIX_TOKYO}
+
+  read -p "✏️ Nhập prefix tên VM Osaka (mặc định: $PREFIX_OSAKA): " CUSTOM_PREFIX_OSAKA
+  PREFIX_OSAKA=${CUSTOM_PREFIX_OSAKA:-$PREFIX_OSAKA}
+
+  echo "🌐 Chọn loại IP:"
   echo "1) Có IP công cộng (Public IP – sẽ gán IP tĩnh riêng)"
   echo "2) Không có IP công cộng (Private only)"
   read -p "🔌 Nhập lựa chọn [1-2] (mặc định: 1): " IP_OPTION
@@ -87,21 +96,15 @@ create_vm_flow() {
     fi
   fi
 
-  create_vms_in_region() {
-    local REGION=$1
-    local ZONES=("${!2}")
-    local COUNT=$3
-    local PREFIX=$4
-
-    if [ "$COUNT" -eq 0 ]; then
-      echo "⚠️ Bỏ qua tạo VM tại vùng $REGION (số lượng = 0)"
-      return
-    fi
-
-    echo -e "\n🚀 Đang tạo $COUNT VM tại vùng: $REGION với prefix tên: $PREFIX"
+  # Hàm tạo VM tại vùng cụ thể
+  create_vms_in_zone() {
+    local COUNT=$1
+    local PREFIX=$2
+    local ZONES=("${!3}")
 
     for ((i=1; i<=COUNT; i++)); do
       ZONE="${ZONES[((i-1)%${#ZONES[@]})]}"
+      REGION=$(echo "$ZONE" | rev | cut -d'-' -f2- | rev)
       num=$(printf "%02d" $((RANDOM % 100)))
       name="${PREFIX}${num}"
 
@@ -143,8 +146,15 @@ create_vm_flow() {
     done
   }
 
-  create_vms_in_region "asia-northeast1" zones_tokyo[@] "$COUNT_TOKYO" "$PREFIX_TOKYO"
-  create_vms_in_region "asia-northeast2" zones_osaka[@] "$COUNT_OSAKA" "$PREFIX_OSAKA"
+  if [ "$COUNT_TOKYO" -gt 0 ]; then
+    create_vms_in_zone "$COUNT_TOKYO" "$PREFIX_TOKYO" zones_tokyo[@]
+  fi
+
+  if [ "$COUNT_OSAKA" -gt 0 ]; then
+    create_vms_in_zone "$COUNT_OSAKA" "$PREFIX_OSAKA" zones_osaka[@]
+  fi
+
+  echo "🚀 Hoàn thành tạo VM."
 }
 
 # ======================== CHỨC NĂNG ĐỔI IP ========================
@@ -222,28 +232,45 @@ remove_ip_from_vm() {
 
   echo "❌ Đang xoá IP khỏi [$INSTANCE_NAME]..."
   gcloud compute instances delete-access-config "$INSTANCE_NAME" --access-config-name="external-nat" --zone="$ZONE"
-  echo "✅ Đã xoá IP khỏi VM [$INSTANCE_NAME]"
+  echo "✅ Đã xoá IP khỏi VM [$INSTANCE_NAME]."
+}
+
+# ======================== XOÁ TOÀN BỘ IP KHÔNG DÙNG ========================
+cleanup_global_ips_direct() {
+  echo "
+🧨 Đang kiểm tra và xoá IP không dùng toàn bộ dự án..."
+  mapfile -t IP_ENTRIES < <(gcloud compute addresses list --filter="status=RESERVED" --format="value(name,region)")
+  if [ ${#IP_ENTRIES[@]} -eq 0 ]; then echo "✅ Không có IP nào cần xoá."; return; fi
+
+  read -p "⚠️ Sẽ xoá ${#IP_ENTRIES[@]} IP không dùng. Xác nhận? [Y/n]: " confirm
+  confirm=${confirm,,}
+  if [[ "$confirm" == "n" || "$confirm" == "no" ]]; then echo "🚫 Huỷ thao tác."; return; fi
+
+  for entry in "${IP_ENTRIES[@]}"; do
+    IP_NAME=$(echo "$entry" | awk '{print $1}')
+    REGION_URL=$(echo "$entry" | awk '{print $2}')
+    REGION_NAME=$(basename "$REGION_URL")
+    echo "❌ Đang xoá IP [$IP_NAME] tại vùng [$REGION_NAME]..."
+    gcloud compute addresses delete "$IP_NAME" --region="$REGION_NAME" --quiet
+  done
+  echo "✅ Đã xoá toàn bộ IP không dùng."
 }
 
 # ======================== MENU CHÍNH ========================
-while true; do
-  clear
-  echo "==================== QUẢN LÝ VM GCP ===================="
-  echo "1) Tạo VM Tokyo & Osaka"
-  echo "2) Tạo IP tĩnh"
-  echo "3) Đổi IP tĩnh cho VM"
-  echo "4) Xoá IP công cộng khỏi VM"
-  echo "5) Thoát"
-  read -p "Chọn chức năng [1-5]: " CHOICE
+echo -e "\n🌐 Chọn thao tác:"
+echo "1) Tạo nhiều VM"
+echo "2) Đổi IP VM"
+echo "3) Xoá tất cả IP tĩnh không dùng (toàn bộ dự án)"
+echo "4) Xoá IP khỏi 1 VM đang gán IP"
+echo "5) Tạo nhiều IP tĩnh (STANDARD hoặc PREMIUM)"
+read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 4): " MAIN_CHOICE
+MAIN_CHOICE=${MAIN_CHOICE:-4}
 
-  case $CHOICE in
-    1) create_vm_flow ;;
-    2) create_ip_batch ;;
-    3) change_ip_flow ;;
-    4) remove_ip_from_vm ;;
-    5) echo "👋 Bye!"; exit 0 ;;
-    *) echo "❌ Lựa chọn không hợp lệ." ; sleep 1 ;;
-  esac
-  echo -e "\nNhấn Enter để tiếp tục..."
-  read
-done
+case "$MAIN_CHOICE" in
+  1) create_vm_flow ;;
+  2) change_ip_flow ;;
+  3) cleanup_global_ips_direct ;;
+  4) remove_ip_from_vm ;;
+  5) create_ip_batch ;;
+  *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
+esac
