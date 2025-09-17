@@ -428,34 +428,39 @@ new Clipboard('.btn');
 </figure>
 </block>
 
-
-<body>
-    <!-- Nút để ẩn/hiện hình ảnh -->
-    <button id="toggleButton">Hiện Qr Wifi</button>
-
-    <!-- Sử dụng <figure> để nhóm hình ảnh và chú thích -->
-    <figure id="imageWrapper">
-        <img id="myImage" src="./icon/wf.png" alt="Trulli" style="width:100%">
-    </figure>
 <block>
-    <script>
-        // Lấy phần tử nút và hình ảnh
-        const button = document.getElementById('toggleButton');
-        const image = document.getElementById('myImage');
-	image.style.display = 'none'; // Hiện ảnh nếu đang ẩn
+<body>
+  <input type="text" id="wifi_input" value="WIFI-A3AA|66666666">
 
-        // Hàm để ẩn/hiện hình ảnh
-        button.onclick = function() {
-            if (image.style.display === 'none') {
-                image.style.display = 'block'; // Hiện ảnh nếu đang ẩn
-                button.textContent = 'Ẩn QR Wifi '; // Thay đổi văn bản của nút
-            } else {
-                image.style.display = 'none'; // Ẩn ảnh nếu đang hiện
-                button.textContent = 'Hiện thị QR Wifi '; // Thay đổi văn bản của nút
-            }
-        };
-    </script>
+  <button onclick="generateWiFiQR()">Tạo QR</button>
 
+  <div id="wifi_qr_result"></div>
+
+  <script>
+    function generateWiFiQR() {
+      const input = document.getElementById("wifi_input").value.trim();
+
+      const [ssid, password] = input.split('|');
+
+      if (!ssid) {
+        alert("⚠️ Vui lòng nhập theo định dạng: TEN_WIFI|MATKHAU");
+        return;
+      }
+
+      const encryption = password ? "WPA" : "nopass";
+      const qrData = `WIFI:T:${encryption};S:${ssid};P:${password || ''};;`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(qrData)}&size=200x200`;
+
+      document.getElementById("wifi_qr_result").innerHTML = `
+        <img src="${qrUrl}" alt="Wi-Fi QR Code">
+      `;
+    }
+
+    // Gọi tự động khi trang load
+  </script>
+
+</body>
+</block>
 
 <input id="name_boy" placeholder="Coppy Nam" readonly="true">
 <input id="name_girl" placeholder="Coppy Nữ" readonly="true">
