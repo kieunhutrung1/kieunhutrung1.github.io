@@ -84,6 +84,7 @@ new Clipboard('.btn');
 
 <block>
 <body>
+
   <!-- Nút lấy IP -->
   <button onclick="getIP()">Check My IP</button><br>
   <input type="text" id="ip_" placeholder="IP sẽ hiện ở đây" readonly>
@@ -146,7 +147,6 @@ new Clipboard('.btn');
     function open2FALink() {
       const key = document.getElementById("note_").value.trim();
       const url = "https://2fa.live/tok/" + encodeURIComponent(key);
-      document.getElementById("otpLabel").textContent = "Mở: " + url;
       window.open(url, "_blank");
     }
   </script>
