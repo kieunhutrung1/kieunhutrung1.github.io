@@ -174,39 +174,38 @@ new Clipboard('.btn');
 	
 </block>
 
-<block>
-    <script>
-        async function sendRequestip() {
-            // Lấy giá trị từ các input
-            var ip_ = document.getElementById("ip_").value;
-            var mac_ = document.getElementById("mac_").value;
-            var note_ = document.getElementById("note_").value;
 
-            // Ghép các input lại thành URL
-            var urlip = "https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=" + ip_ + "&MAC=" + mac_ + "&NOTE=" + note_;
-
-            try {
-                // Gọi đến API đã ghép URL
-                let response = await fetch(urlip);
-                if (!response.ok) {
-                    throw new Error('Lỗi: ' + response.status);
-                }
-                let data = await response.json();
-
-                // Hiển thị dữ liệu nhận được trong một thông báo
-                alert("Dữ liệu nhận được: " + JSON.stringify(data, null, 2));
-            } catch (error) {
-                console.error('Có lỗi xảy ra:', error);
-                alert("Có lỗi xảy ra: " + error.message);
-            }
-        }
-    </script>
-	
 <body>
-<button onclick="getIP()">Check My IP</button><br>
-  <input type="text" id="ip_" placeholder="IP will appear here" readonly>
+
+  <h2>Proxy + OTP Tool</h2>
+
+  <!-- Nút lấy IP -->
+  <button onclick="getIP()">Check My IP</button><br>
+  <input type="text" id="ip_" placeholder="IP sẽ hiện ở đây" readonly>
+
+  <!-- Nhập MAC -->
+  <div>
+    <label for="mac_">MAC:</label>
+    <input type="text" id="mac_" placeholder="Nhập MAC (không bắt buộc)">
+  </div>
+
+  <!-- Nhập 2FA Key -->
+  <div>
+    <label for="note_">2FA Key (NOTE):</label>
+    <input type="text" id="note_" placeholder="Nhập 2FA Secret Key (không bắt buộc)">
+  </div>
+
+  <!-- Nút gửi dữ liệu -->
+  <button onclick="sendRequestip()">Lưu PROXY</button>
+
+  <!-- Nút mở trang OTP -->
+  <button onclick="open2FALink()">Mở trang OTP</button>
+
+  <!-- Hiển thị đường dẫn OTP -->
+  <label id="otpLabel">OTP sẽ hiển thị khi mở trang.</label>
 
   <script>
+    // Lấy IP công cộng
     function getIP() {
       fetch('https://api64.ipify.org?format=json')
         .then(response => response.json())
@@ -214,23 +213,43 @@ new Clipboard('.btn');
           document.getElementById('ip_').value = data.ip;
         })
         .catch(error => {
-          document.getElementById('ip_').value = 'Error fetching IP';
+          document.getElementById('ip_').value = 'Không thể lấy IP';
           console.error(error);
         });
     }
+
+    // Gửi dữ liệu IP, MAC, NOTE lên Google Apps Script
+    async function sendRequestip() {
+      const ip_ = document.getElementById("ip_").value;
+      const mac_ = document.getElementById("mac_").value;
+      const note_ = document.getElementById("note_").value;
+
+      const urlip = "https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=" +
+                    encodeURIComponent(ip_) + "&MAC=" + encodeURIComponent(mac_) + "&NOTE=" + encodeURIComponent(note_);
+
+      console.log("Gửi dữ liệu:", { ip_, mac_, note_ });
+
+      try {
+        const response = await fetch(urlip);
+        if (!response.ok) throw new Error('Lỗi kết nối: ' + response.status);
+        const data = await response.json();
+        alert("Dữ liệu nhận được:\n" + JSON.stringify(data, null, 2));
+      } catch (error) {
+        console.error('Lỗi khi gửi:', error);
+        alert("Có lỗi xảy ra khi gửi: " + error.message);
+      }
+    }
+
+    // Mở trang OTP từ 2fa.live
+    function open2FALink() {
+      const key = document.getElementById("note_").value.trim();
+      const url = "https://2fa.live/tok/" + encodeURIComponent(key);
+      document.getElementById("otpLabel").textContent = "Mở: " + url;
+      window.open(url, "_blank");
+    }
   </script>
-	
-    <div>
-        <label for="MAC">MAC :</label>
-        <input type="text" id="mac_" placeholder="Nhập MAC">
-    </div>
-    <div>
-        <label for="NOTE">NOTE      :</label>
-        <input type="text" id="note_" placeholder="Nhập NOTE">
-    </div>
-    <button onclick="sendRequestip()">Lưu PROXY</button>
+
 </body>
-</block>
 
 
 	
