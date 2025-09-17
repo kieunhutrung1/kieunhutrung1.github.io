@@ -106,7 +106,7 @@ curl -O https://kieunhutrung1.github.io/x86-image.sh && chmod +x x86-image.sh &&
 supert1.routermmo.net
 ```
 ```bash
-curl -O https://kieunhutrung1.github.io/addgl.sh && chmod +x addgl.sh && ./addgl.sh
+curl -O https://kieunhutrung1.github.io/googleCL.sh && chmod +x googleCL.sh && ./googleCL.sh
 ```
 
 ```bash
