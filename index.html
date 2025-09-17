@@ -74,6 +74,82 @@ new Clipboard('.btn');
 <block>
 <p><a href="sileo://source/https://kieunhutrung1.github.io/hide/">HIDE</a>----<a href="sileo://package/me.autotouch.autotouch.ios8.inputtext">8.5.5</a>----<a href="sileo://package/me.autotouch.autotouch.ios8.inputtext1">8.5.4</a>----<a href="https://kieunhutrung1.github.io/hide/debs/roothide-Dopamine2-v15.tipa">Dopamine2-v15</a>----<a href="https://kieunhutrung1.github.io/hide/debs/TrollVNC_2.0.tipa">TrollVNC</a>----<a href="https://kieunhutrung1.github.io/tmp/touch/update.html">update</a>----<a href="https://accounts.google.com/Login?btmpl=mobile_tier2&hl=vi&service=mail">Gmail</a>----<a href="https://picsum.photos/400">avarta</a>----<a href="https://kieunhutrung1.github.io/hide/debs/piavpn.ipa">PiaVPN</a></p>
 </block>
+
+<block>
+<body>
+  <!-- Nút lấy IP -->
+  <button onclick="getIP()">Check My IP</button><br>
+  <input type="text" id="ip_" placeholder="IP sẽ hiện ở đây" readonly>
+
+  <!-- Nhập MAC -->
+  <div>
+    <label for="mac_">MAC:</label>
+    <input type="text" id="mac_" placeholder="Nhập MAC-ACC">
+  </div>
+
+  <!-- Nhập 2FA Key -->
+  <div>
+    <label for="note_">NOTE:</label>
+    <input type="text" id="note_" placeholder="2FA-NOTE">
+  </div>
+
+  <!-- Nút gửi dữ liệu -->
+  <button onclick="sendRequestip()">Lưu PROXY</button>
+
+  <!-- Nút mở trang OTP -->
+  <button onclick="open2FALink()">Mở trang OTP</button>
+
+  <!-- Hiển thị đường dẫn OTP -->
+  <label id="otpLabel">OTP sẽ hiển thị khi mở trang.</label>
+
+  <script>
+    // Lấy IP công cộng
+    function getIP() {
+      fetch('https://api64.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('ip_').value = data.ip;
+        })
+        .catch(error => {
+          document.getElementById('ip_').value = 'Không thể lấy IP';
+          console.error(error);
+        });
+    }
+
+    // Gửi dữ liệu IP, MAC, NOTE lên Google Apps Script
+    async function sendRequestip() {
+      const ip_ = document.getElementById("ip_").value;
+      const mac_ = document.getElementById("mac_").value;
+      const note_ = document.getElementById("note_").value;
+
+      const urlip = "https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=" +
+                    encodeURIComponent(ip_) + "&MAC=" + encodeURIComponent(mac_) + "&NOTE=" + encodeURIComponent(note_);
+
+      console.log("Gửi dữ liệu:", { ip_, mac_, note_ });
+
+      try {
+        const response = await fetch(urlip);
+        if (!response.ok) throw new Error('Lỗi kết nối: ' + response.status);
+        const data = await response.json();
+        alert("Dữ liệu nhận được:\n" + JSON.stringify(data, null, 2));
+      } catch (error) {
+        console.error('Lỗi khi gửi:', error);
+        alert("Có lỗi xảy ra khi gửi: " + error.message);
+      }
+    }
+
+    // Mở trang OTP từ 2fa.live
+    function open2FALink() {
+      const key = document.getElementById("note_").value.trim();
+      const url = "https://2fa.live/tok/" + encodeURIComponent(key);
+      document.getElementById("otpLabel").textContent = "Mở: " + url;
+      window.open(url, "_blank");
+    }
+  </script>
+
+</body>
+</block>
+	
 <block>
 <p><a href="https://www.icloud.com/shortcuts/879f63a25d314634b3d50b51a519e063">Language</a>----<a href="https://www.icloud.com/shortcuts/4e0d005d3e3b4370a3cac2ef48b7902d">Time</a>----<a href="https://www.icloud.com/shortcuts/272470d40c2f4c2cb5dd5dea7ede2a61">Region</a>----<a href="https://www.icloud.com/shortcuts/f35570dac0f04288b162af64051ea9e0">Bluetooth</a>---<a href="https://www.icloud.com/shortcuts/409220c7da0f485ab3059b2cd45bb724">Location</a>---<a href="https://www.icloud.com/shortcuts/6532327e623946809f0e3f15e11b8c93">lock</a></p>
 </block>
@@ -174,79 +250,6 @@ new Clipboard('.btn');
 	
 </block>
 
-
-<body>
-  <!-- Nút lấy IP -->
-  <button onclick="getIP()">Check My IP</button><br>
-  <input type="text" id="ip_" placeholder="IP sẽ hiện ở đây" readonly>
-
-  <!-- Nhập MAC -->
-  <div>
-    <label for="mac_">MAC:</label>
-    <input type="text" id="mac_" placeholder="Nhập MAC-ACC">
-  </div>
-
-  <!-- Nhập 2FA Key -->
-  <div>
-    <label for="note_">NOTE:</label>
-    <input type="text" id="note_" placeholder="2FA-NOTE">
-  </div>
-
-  <!-- Nút gửi dữ liệu -->
-  <button onclick="sendRequestip()">Lưu PROXY</button>
-
-  <!-- Nút mở trang OTP -->
-  <button onclick="open2FALink()">Mở trang OTP</button>
-
-  <!-- Hiển thị đường dẫn OTP -->
-  <label id="otpLabel">OTP sẽ hiển thị khi mở trang.</label>
-
-  <script>
-    // Lấy IP công cộng
-    function getIP() {
-      fetch('https://api64.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => {
-          document.getElementById('ip_').value = data.ip;
-        })
-        .catch(error => {
-          document.getElementById('ip_').value = 'Không thể lấy IP';
-          console.error(error);
-        });
-    }
-
-    // Gửi dữ liệu IP, MAC, NOTE lên Google Apps Script
-    async function sendRequestip() {
-      const ip_ = document.getElementById("ip_").value;
-      const mac_ = document.getElementById("mac_").value;
-      const note_ = document.getElementById("note_").value;
-
-      const urlip = "https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=" +
-                    encodeURIComponent(ip_) + "&MAC=" + encodeURIComponent(mac_) + "&NOTE=" + encodeURIComponent(note_);
-
-      console.log("Gửi dữ liệu:", { ip_, mac_, note_ });
-
-      try {
-        const response = await fetch(urlip);
-        if (!response.ok) throw new Error('Lỗi kết nối: ' + response.status);
-        const data = await response.json();
-        alert("Dữ liệu nhận được:\n" + JSON.stringify(data, null, 2));
-      } catch (error) {
-        console.error('Lỗi khi gửi:', error);
-        alert("Có lỗi xảy ra khi gửi: " + error.message);
-      }
-    }
-
-    // Mở trang OTP từ 2fa.live
-    function open2FALink() {
-      const key = document.getElementById("note_").value.trim();
-      const url = "https://2fa.live/tok/" + encodeURIComponent(key);
-      document.getElementById("otpLabel").textContent = "Mở: " + url;
-      window.open(url, "_blank");
-    }
-  </script>
-
-</body>
 
 
 	
