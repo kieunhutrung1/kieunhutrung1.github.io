@@ -62,6 +62,15 @@ sudo mv ./palera1n-linux-x86_64 /usr/bin/palera1n
 sudo chmod +x /usr/bin/palera1n
 ```
 ```bash
+sudo palera1n -cfv
+```
+```bash
+sudo palera1n -fv
+```
+```bash
+sudo palera1n --force-revert
+```
+```bash
 wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz && chmod +x /usr/local/bin/createprx && /usr/local/bin/createprx && curl -O https://kieunhutrung1.github.io/api_proxy.sh && chmod +x api_proxy.sh && ./api_proxy.sh
 ```
 ```bash
