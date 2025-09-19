@@ -71,6 +71,13 @@ sudo palera1n -fv
 sudo palera1n --force-revert
 ```
 ```bash
+sudo passwd root
+```
+```bash
+alpine
+```
+
+```bash
 wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz && chmod +x /usr/local/bin/createprx && /usr/local/bin/createprx && curl -O https://kieunhutrung1.github.io/api_proxy.sh && chmod +x api_proxy.sh && ./api_proxy.sh
 ```
 ```bash
