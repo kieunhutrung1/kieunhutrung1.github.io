@@ -47,8 +47,6 @@ Linux
 Mở một cửa sổ terminal
 ```bash
 sudo systemctl stop usbmuxd
-```
-```bash
 sudo usbmuxd -f -p
 ```
 Mở một cửa sổ terminal mới và cdtới thư mục mà palera1n đã được tải xuống (thường là cd ~/Downloads).
