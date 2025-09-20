@@ -74,7 +74,10 @@ sudo passwd root
 ```bash
 alpine
 ```
-
+```bash
+sudo apt update
+sudo apt install git curl python3 python3-pip usbmuxd libimobiledevice6 libimobiledevice-utils
+```
 ```bash
 wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz && chmod +x /usr/local/bin/createprx && /usr/local/bin/createprx && curl -O https://kieunhutrung1.github.io/api_proxy.sh && chmod +x api_proxy.sh && ./api_proxy.sh
 ```
