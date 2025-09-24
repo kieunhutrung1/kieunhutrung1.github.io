@@ -242,8 +242,8 @@ echo "3) Xoá tất cả IP không dùng (toàn bộ dự án)"
 echo "4) Xoá IP khỏi 1 VM"
 echo "5) Tạo nhiều IP tĩnh"
 echo "6) Tạo firewall rule (tên random)"
-read -p "👉 Nhập lựa chọn (1-6) (mặc định: 4): " MAIN_CHOICE
-MAIN_CHOICE=${MAIN_CHOICE:-4}
+read -p "👉 Nhập lựa chọn (1-6) (mặc định: 1): " MAIN_CHOICE
+MAIN_CHOICE=${MAIN_CHOICE:-1}
 
 case "$MAIN_CHOICE" in
   1) create_vm_flow ;;
