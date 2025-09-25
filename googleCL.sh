@@ -324,30 +324,71 @@ create_proxy_and_send_api() {
   echo "8) Windows 1492 PPPoE (wifi)"
   echo "9) Windows 1440 generic tunnel or VPN (4G-5G)"
 
-  clear
-echo "=============================="
-echo "         🌐 MENU CHÍNH         "
-echo "=============================="
-echo "1) Tạo Proxy và gửi API"
-echo "2) Chỉ hiển thị danh sách Proxy"
-echo "3) Tạo nhiều VM"
-echo "4) Đổi IP VM"
-echo "5) Xoá tất cả IP không dùng (toàn bộ dự án)"
-echo "6) Xoá IP khỏi 1 VM"
-echo "7) Tạo nhiều IP tĩnh"
-echo "8) Tạo firewall rule (tên random)"
-echo "0) Thoát"
-read -p "👉 Nhập lựa chọn (Enter = mặc định 1): " choice
-choice=${choice:-1}
-case "$choice" in
-  1) create_proxy_and_send_api ;;
-  2) show_proxy_file ;;
-  3) create_vm_flow ;;
-  4) change_ip_flow ;;
-  5) cleanup_global_ips_direct ;;
-  6) remove_ip_from_vm ;;
-  7) create_ip_batch ;;
-  8) create_firewall_rule_random ;;
-  0) echo "👋 Tạm biệt!"; exit 0 ;;
-  *) echo "❌ Lựa chọn không hợp lệ." ;;
-esac
+  while true; do
+    read -p "👉 Chọn cấu hình TCP/IP (1-9, Enter = mặc định 7): " config_option
+    config_option=${config_option:-7}
+    [[ "$config_option" =~ ^[1-9]$ ]] && break
+    echo "❌ Vui lòng nhập số 1–9."
+  done
+
+  need_cmd curl || true
+  need_cmd python3 || true
+  sudo mkdir -p /usr/local/bin
+  sudo wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz
+  sudo chmod +x /usr/local/bin/createprx
+
+  {
+    echo "Tienmaster@123"
+    echo "$server_name"
+    echo "kieunhutrung1.github.io"
+    sleep 2
+    echo "$config_option"
+    sleep 2
+  } | /usr/local/bin/createprx
+
+  if [ ! -f "$file_path" ]; then
+    echo "❌ Không tìm thấy file $file_path"
+    return
+  fi
+
+  while IFS= read -r proxy_line; do
+    IFS='&' read -ra proxy_parts <<< "$proxy_line"
+
+    socks_proxy=""
+    http_proxy=""
+    shadow_proxy=""
+    main_ip=""
+    server_tag=""
+
+    for entry in "${proxy_parts[@]}"; do
+      IFS=':' read -ra f <<< "$entry"
+      proto="${f[0]}"
+      ip="${f[1]}"
+      if [[ -z "$main_ip" && "$proto" == "socks5" ]]; then
+        main_ip="$ip"
+      fi
+      case "$proto" in
+        socks5) socks_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:socks" ;;
+        http) http_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:http" ;;
+        shadowsocks)
+          shadow_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:shadowsocks"
+          server_tag="${f[5]}"
+          ;;
+      esac
+    done
+
+    encoded_ip=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$main_ip'''))")
+    encoded_socks=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$socks_proxy'''))")
+    encoded_http=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$http_proxy'''))")
+    encoded_shadow=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$shadow_proxy'''))")
+    encoded_server=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$server_tag'''))")
+    encoded_full=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$proxy_line'''))")
+
+    url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=$encoded_ip&PROXY=$encoded_socks&HTTP=$encoded_http&SHADOW=$encoded_shadow&SEVER=$encoded_server&FULL=$encoded_full"
+    echo ""
+    echo "🌐 Gửi dòng: $proxy_line"
+    curl -s -L -G "$url" > /dev/null 2>&1 || true
+  done < "$file_path"
+
+  echo "✅ Hoàn tất gửi API."
+}
