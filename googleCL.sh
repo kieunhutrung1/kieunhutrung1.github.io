@@ -1,6 +1,24 @@
 #!/bin/bash
+# merged-tool.sh — Menu tổng hợp (Google Cloud + Proxy/API)
+# Yêu cầu: bash, gcloud (đã auth), curl, python3
+# Tác giả: hợp nhất từ googleCL.sh và trung-fix.sh
 
-# ======================== CHỨC NĂNG TẠO IP ========================
+set -euo pipefail
+
+# ======================== TIỆN ÍCH CHUNG ========================
+pause() {
+  read -rp $'\nNhấn Enter để tiếp tục...' _
+}
+
+need_cmd() {
+  command -v "$1" >/dev/null 2>&1 || {
+    echo "⚠️ Thiếu lệnh: $1. Vui lòng cài đặt trước khi dùng chức năng liên quan."
+    return 1
+  }
+}
+
+# ======================== PHẦN GOOGLE CLOUD ========================
+# ---- create_ip_batch (từ googleCL.sh) ----
 create_ip_batch() {
   echo -e "\n🌍 Chọn khu vực tạo IP:"
   echo "1) Tokyo (asia-northeast1)"
@@ -38,7 +56,7 @@ create_ip_batch() {
   done
 }
 
-# ======================== CHỨC NĂNG TẠO FIREWALL ========================
+# ---- create_firewall_rule_random (từ googleCL.sh) ----
 create_firewall_rule_random() {
   echo -e "\n🌐 Đang tạo firewall rule..."
   read -p "🔐 Nhập port cần mở (ví dụ: 22 hoặc 22,80,443): " PORTS
@@ -64,7 +82,7 @@ create_firewall_rule_random() {
   fi
 }
 
-# ======================== CHỨC NĂNG TẠO VM ========================
+# ---- create_vm_flow (từ googleCL.sh) ----
 create_vm_flow() {
   zones_tokyo=("asia-northeast1-a" "asia-northeast1-b" "asia-northeast1-c")
   zones_osaka=("asia-northeast2-a" "asia-northeast2-b" "asia-northeast2-c")
@@ -159,11 +177,11 @@ create_vm_flow() {
   echo "🚀 Hoàn thành tạo VM."
 }
 
-# ======================== ĐỔI IP VM ========================
+# ---- change_ip_flow (từ googleCL.sh) ----
 change_ip_flow() {
   echo "📦 Lấy danh sách VM..."
   INSTANCES=($(gcloud compute instances list --format="value(name)"))
-  [ ${#INSTANCES[@]} -eq 0 ] && echo "❌ Không có VM nào." && exit 1
+  [ ${#INSTANCES[@]} -eq 0 ] && echo "❌ Không có VM nào." && return
 
   echo "💻 Chọn VM để đổi IP:"
   select INSTANCE_NAME in "${INSTANCES[@]}"; do
@@ -185,13 +203,13 @@ change_ip_flow() {
   gcloud compute addresses create "$IP_NAME" --region="$REGION" --network-tier="$NETWORK_TIER" --quiet
   STATIC_IP=$(gcloud compute addresses describe "$IP_NAME" --region="$REGION" --format="get(address)")
 
-  gcloud compute instances delete-access-config "$INSTANCE_NAME" --access-config-name="external-nat" --zone="$ZONE" &>/dev/null
+  gcloud compute instances delete-access-config "$INSTANCE_NAME" --access-config-name="external-nat" --zone="$ZONE" &>/dev/null || true
   gcloud compute instances add-access-config "$INSTANCE_NAME" --zone="$ZONE" --address="$STATIC_IP" --network-tier="$NETWORK_TIER"
 
   echo "✅ Đã gán IP mới [$STATIC_IP] cho [$INSTANCE_NAME]"
 }
 
-# ======================== XOÁ IP KHỎI VM ========================
+# ---- remove_ip_from_vm (từ googleCL.sh) ----
 remove_ip_from_vm() {
   echo "📦 Lấy danh sách VM..."
   INSTANCES=($(gcloud compute instances list --format="value(name)"))
@@ -214,7 +232,7 @@ remove_ip_from_vm() {
   echo "✅ Đã xoá IP khỏi [$INSTANCE_NAME]"
 }
 
-# ======================== XOÁ TOÀN BỘ IP KHÔNG DÙNG ========================
+# ---- cleanup_global_ips_direct (từ googleCL.sh) ----
 cleanup_global_ips_direct() {
   echo "🧨 Kiểm tra IP không dùng..."
   mapfile -t IP_ENTRIES < <(gcloud compute addresses list --filter="status=RESERVED" --format="value(name,region)")
@@ -234,23 +252,105 @@ cleanup_global_ips_direct() {
   echo "✅ Đã xoá toàn bộ IP không dùng."
 }
 
-# ======================== MENU CHÍNH ========================
-echo -e "\n🌐 Chọn thao tác:"
-echo "1) Tạo nhiều VM"
-echo "2) Đổi IP VM"
-echo "3) Xoá tất cả IP không dùng (toàn bộ dự án)"
-echo "4) Xoá IP khỏi 1 VM"
-echo "5) Tạo nhiều IP tĩnh"
-echo "6) Tạo firewall rule (tên random)"
-read -p "👉 Nhập lựa chọn (1-6) (mặc định: 1): " MAIN_CHOICE
-MAIN_CHOICE=${MAIN_CHOICE:-1}
+google_cloud_menu() {
+  need_cmd gcloud || true
+  echo -e "\n=== 🌥️  GOOGLE CLOUD MENU ==="
+  echo "1) Tạo nhiều VM"
+  echo "2) Đổi IP VM"
+  echo "3) Xoá tất cả IP không dùng (toàn bộ dự án)"
+  echo "4) Xoá IP khỏi 1 VM"
+  echo "5) Tạo nhiều IP tĩnh"
+  echo "6) Tạo firewall rule (tên random)"
+  echo "0) Quay lại"
+  read -p "👉 Nhập lựa chọn (0-6, mặc định: 1): " MAIN_CHOICE
+  MAIN_CHOICE=${MAIN_CHOICE:-1}
 
-case "$MAIN_CHOICE" in
-  1) create_vm_flow ;;
-  2) change_ip_flow ;;
-  3) cleanup_global_ips_direct ;;
-  4) remove_ip_from_vm ;;
-  5) create_ip_batch ;;
-  6) create_firewall_rule_random ;;
-  *) echo "❌ Lựa chọn không hợp lệ. Thoát." && exit 1 ;;
-esac
+  case "$MAIN_CHOICE" in
+    1) create_vm_flow ;;
+    2) change_ip_flow ;;
+    3) cleanup_global_ips_direct ;;
+    4) remove_ip_from_vm ;;
+    5) create_ip_batch ;;
+    6) create_firewall_rule_random ;;
+    0) return ;;
+    *) echo "❌ Lựa chọn không hợp lệ." ;;
+  esac
+  pause
+}
+show_proxy_file() {
+  local file_path="/etc/lp"
+  echo ""
+  echo "----------------------------------------"
+  echo "📄 Proxy đầy đủ:"
+  if [ -f "$file_path" ]; then
+    cat "$file_path"
+  else
+    echo "❌ Không tìm thấy file proxy ở $file_path"
+  fi
+  echo "----------------------------------------"
+}
+
+create_proxy_and_send_api() {
+  local file_path="/etc/lp"
+
+  read -p "👉 Bạn có muốn chuyển sang quyền root (sudo -i)? (y/N): " root_choice
+  root_choice=${root_choice:-n}
+  if [[ "$root_choice" =~ ^[Yy]$ ]]; then
+    echo "🔐 Đang chuyển sang quyền root..."
+    sudo -i
+    return
+  fi
+
+  read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
+  update_ans=${update_ans:-n}
+  if [[ "$update_ans" =~ ^[Yy]$ ]]; then
+    echo "🔧 Đang cập nhật và cài đặt..."
+    sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
+  else
+    echo "⏩ Bỏ qua bước cập nhật."
+  fi
+
+  read -p "👉 Nhập Tên SEVER: " server_name
+
+  echo ""
+  echo "📡 Cấu hình TCP/IP:"
+  echo "1) iOS 1440 generic tunnel or VPN (4G-5G)"
+  echo "2) iOS 1450 generic tunnel or VPN (4G-5G)"
+  echo "3) iOS 1492 PPPoE (wifi)"
+  echo "4) Android 1440 generic tunnel or VPN (4G-5G)"
+  echo "5) Android 1450 generic tunnel or VPN (4G-5G)"
+  echo "6) Android 1492 PPPoE (wifi)"
+  echo "7) macOS 1492 PPPoE (wifi)"
+  echo "8) Windows 1492 PPPoE (wifi)"
+  echo "9) Windows 1440 generic tunnel or VPN (4G-5G)"
+
+  while true; do
+  clear
+  echo "=============================="
+  echo "         🌐 MENU CHÍNH         "
+  echo "=============================="
+  echo "1) Tạo Proxy và gửi API"
+  echo "2) Chỉ hiển thị danh sách Proxy"
+  echo "3) Tạo nhiều VM"
+  echo "4) Đổi IP VM"
+  echo "5) Xoá tất cả IP không dùng (toàn bộ dự án)"
+  echo "6) Xoá IP khỏi 1 VM"
+  echo "7) Tạo nhiều IP tĩnh"
+  echo "8) Tạo firewall rule (tên random)"
+  echo "0) Thoát"
+  read -p "👉 Nhập lựa chọn (Enter = mặc định 1): " choice
+  choice=${choice:-1}
+  case "$choice" in
+    1) create_proxy_and_send_api ;;
+    2) show_proxy_file ;;
+    3) create_vm_flow ;;
+    4) change_ip_flow ;;
+    5) cleanup_global_ips_direct ;;
+    6) remove_ip_from_vm ;;
+    7) create_ip_batch ;;
+    8) create_firewall_rule_random ;;
+    0) echo "👋 Tạm biệt!"; exit 0 ;;
+    *) echo "❌ Lựa chọn không hợp lệ.";;
+  esac
+  pause
+done
