@@ -324,33 +324,30 @@ create_proxy_and_send_api() {
   echo "8) Windows 1492 PPPoE (wifi)"
   echo "9) Windows 1440 generic tunnel or VPN (4G-5G)"
 
-  while true; do
   clear
-  echo "=============================="
-  echo "         🌐 MENU CHÍNH         "
-  echo "=============================="
-  echo "1) Tạo Proxy và gửi API"
-  echo "2) Chỉ hiển thị danh sách Proxy"
-  echo "3) Tạo nhiều VM"
-  echo "4) Đổi IP VM"
-  echo "5) Xoá tất cả IP không dùng (toàn bộ dự án)"
-  echo "6) Xoá IP khỏi 1 VM"
-  echo "7) Tạo nhiều IP tĩnh"
-  echo "8) Tạo firewall rule (tên random)"
-  echo "0) Thoát"
-  read -p "👉 Nhập lựa chọn (Enter = mặc định 1): " choice
-  choice=${choice:-1}
-  case "$choice" in
-    1) create_proxy_and_send_api ;;
-    2) show_proxy_file ;;
-    3) create_vm_flow ;;
-    4) change_ip_flow ;;
-    5) cleanup_global_ips_direct ;;
-    6) remove_ip_from_vm ;;
-    7) create_ip_batch ;;
-    8) create_firewall_rule_random ;;
-    0) echo "👋 Tạm biệt!"; exit 0 ;;
-    *) echo "❌ Lựa chọn không hợp lệ.";;
-  esac
-  pause
-done
+echo "=============================="
+echo "         🌐 MENU CHÍNH         "
+echo "=============================="
+echo "1) Tạo Proxy và gửi API"
+echo "2) Chỉ hiển thị danh sách Proxy"
+echo "3) Tạo nhiều VM"
+echo "4) Đổi IP VM"
+echo "5) Xoá tất cả IP không dùng (toàn bộ dự án)"
+echo "6) Xoá IP khỏi 1 VM"
+echo "7) Tạo nhiều IP tĩnh"
+echo "8) Tạo firewall rule (tên random)"
+echo "0) Thoát"
+read -p "👉 Nhập lựa chọn (Enter = mặc định 1): " choice
+choice=${choice:-1}
+case "$choice" in
+  1) create_proxy_and_send_api ;;
+  2) show_proxy_file ;;
+  3) create_vm_flow ;;
+  4) change_ip_flow ;;
+  5) cleanup_global_ips_direct ;;
+  6) remove_ip_from_vm ;;
+  7) create_ip_batch ;;
+  8) create_firewall_rule_random ;;
+  0) echo "👋 Tạm biệt!"; exit 0 ;;
+  *) echo "❌ Lựa chọn không hợp lệ." ;;
+esac
