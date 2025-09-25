@@ -124,11 +124,12 @@ new Clipboard('.btn');
     // Gửi dữ liệu IP, MAC, NOTE lên Google Apps Script
     async function sendRequestip() {
       const ip_ = document.getElementById("ip_").value;
+		const acc_ = document.getElementById("acc_").value;
       const mac_ = document.getElementById("mac_").value;
       const note_ = document.getElementById("note_").value;
 
       const urlip = "https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=" +
-                    encodeURIComponent(ip_) + "&MAC=" + encodeURIComponent(mac_) + "&NOTE=" + encodeURIComponent(note_);
+                    encodeURIComponent(ip_) + "&FULL=" + encodeURIComponent(acc_) + "&MAC=" + encodeURIComponent(mac_) + "&NOTE=" + encodeURIComponent(note_);
 
       console.log("Gửi dữ liệu:", { ip_, mac_, note_ });
 
