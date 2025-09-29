@@ -158,6 +158,42 @@ new Clipboard('.btn');
 
 </body>
 </block>
+<block>
+<img id="avatar" src="" width="300" style="display:none; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.2);"/>
+  <br><br>
+  <button onclick="loadAnimeAvatar()">Đổi ảnh</button>
+  <button onclick="downloadAnimeAvatar()" disabled id="downloadBtn">Tải ảnh</button>
+
+  <script>
+    let currentUrl = "";
+
+    async function loadAnimeAvatar() {
+      try {
+        const res = await fetch("https://api.waifu.pics/sfw/waifu");
+        const data = await res.json();
+        currentUrl = data.url;
+        
+        const img = document.getElementById("avatar");
+        img.src = currentUrl;
+        img.style.display = "inline"; // hiện ảnh khi có link
+        
+        document.getElementById("downloadBtn").disabled = false; // bật nút tải
+      } catch (e) {
+        console.error("Lỗi khi tải ảnh:", e);
+      }
+    }
+
+    function downloadAnimeAvatar() {
+      if (!currentUrl) return;
+      const link = document.createElement("a");
+      link.href = currentUrl;
+      link.download = "anime-avatar.jpg";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</block>
 	
 <block>
 <p><a href="https://www.icloud.com/shortcuts/879f63a25d314634b3d50b51a519e063">Language</a>----<a href="https://www.icloud.com/shortcuts/4e0d005d3e3b4370a3cac2ef48b7902d">Time</a>----<a href="https://www.icloud.com/shortcuts/272470d40c2f4c2cb5dd5dea7ede2a61">Region</a>----<a href="https://www.icloud.com/shortcuts/f35570dac0f04288b162af64051ea9e0">Bluetooth</a>---<a href="https://www.icloud.com/shortcuts/409220c7da0f485ab3059b2cd45bb724">Location</a>---<a href="https://www.icloud.com/shortcuts/6532327e623946809f0e3f15e11b8c93">lock</a>---<a href="https://www.icloud.com/shortcuts/552cb41ebc18433ca565604f525d7382">150p-WF</a>---<a href="https://www.icloud.com/shortcuts/6d643999721347abaf9e3728d0491adc">Play-off-50</a></p>
