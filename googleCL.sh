@@ -302,7 +302,7 @@ create_proxy_and_send_api() {
   fi
 
   read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
-  update_ans=${update_ans:-n}
+  update_ans=${update_ans:-y}
   if [[ "$update_ans" =~ ^[Yy]$ ]]; then
     echo "🔧 Đang cập nhật và cài đặt..."
     sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
