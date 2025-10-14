@@ -203,19 +203,26 @@ new Clipboard('.btn');
 <body>
 
   <h3>Nhập địa chỉ MAC:</h3>
-  <input type="text" id="macInput" value="" />
+  <input type="text" id="macInput" placeholder="VD: AA:BB:CC:DD:EE:FF" />
 
   <h3>Nhập thông tin Proxy:</h3>
-  <input type="text" id="proxyInput" value="" />
+  <input type="text" id="proxyInput" placeholder="VD: 1.2.3.4:8080" />
 
   <br><br>
   <button onclick="openLink()">Update</button>
 
   <script>
     function openLink() {
-      const mac = document.getElementById("macInput").value.trim();
+      let mac = document.getElementById("macInput").value.trim().toLowerCase();
       const proxy = document.getElementById("proxyInput").value.trim();
-      const fullUrl = `http://192.168.2.1:8683/api/update?proxy=${mac}|${proxy}`;
+
+      if (!mac) {
+        alert("Vui lòng nhập đầy đủ thông tin MAC và Proxy!");
+        return;
+      }
+
+      // Mã hóa URL để an toàn
+      const fullUrl = `http://192.168.2.1:8683/api/update?proxy=${encodeURIComponent(mac + "|" + proxy)}`;
       window.open(fullUrl, "_blank");
     }
   </script>
