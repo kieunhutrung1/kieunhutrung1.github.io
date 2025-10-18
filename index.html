@@ -202,27 +202,24 @@ new Clipboard('.btn');
 <block>
 <body>
 
-  <h3>Nhập địa chỉ MAC:</h3>
-  <input type="text" id="macInput" placeholder="VD: AA:BB:CC:DD:EE:FF" />
+  <div class="row">
+    <label for="macInput">MAC:</label>
+    <input type="text" id="macInput" placeholder="VD: AA:BB:CC:DD:EE:FF" />
+  </div>
 
-  <h3>Nhập thông tin Proxy:</h3>
-  <input type="text" id="proxyInput" placeholder="VD: 1.2.3.4:8080" />
+  <div class="row">
+    <label for="proxyInput">Proxy:</label>
+    <input type="text" id="proxyInput" placeholder="VD: 1.2.3.4:8080" />
+  </div>
 
-  <br><br>
   <button onclick="openLink()">Update</button>
 
   <script>
     function openLink() {
       let mac = document.getElementById("macInput").value.trim().toLowerCase();
-      const proxy = document.getElementById("proxyInput").value.trim();
-
-      if (!mac) {
-        alert("Vui lòng nhập đầy đủ thông tin MAC và Proxy!");
-        return;
-      }
-
-      // Mã hóa URL để an toàn
-      const fullUrl = `http://192.168.2.1:8683/api/update?proxy=${encodeURIComponent(mac + "|" + proxy)}`;
+      let proxy = document.getElementById("proxyInput").value.trim();
+      // Tạo URL an toàn
+      const fullUrl = `http://192.168.2.1:8683/api/update?proxy=${encodeURIComponent(mac)}|${encodeURIComponent(proxy)}`;
       window.open(fullUrl, "_blank");
     }
   </script>
@@ -506,7 +503,7 @@ new Clipboard('.btn');
 
 </body>
 </block>
-
+<block>
 <input id="name_boy" placeholder="Coppy Nam" readonly="true">
 <input id="name_girl" placeholder="Coppy Nữ" readonly="true">
 <script>const last_name = [
@@ -559,7 +556,7 @@ v2.onclick=function(){v2.value=lastName[Math.floor(Math.random()*lastName.length
 </script>
 </block>
 <block>	
-	
+</block>
 
 <body>
   <label>📧 Nhập email hoặc tạo mới:</label><br>
