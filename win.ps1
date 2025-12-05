@@ -95,9 +95,13 @@ function Install-Roblox {
     Write-Host "[SYS] Dang tai Roblox Client..." -ForegroundColor Cyan
     curl.exe -L "https://www.roblox.com/vi/download/client?os=win" -o $RobloxFile
 
-    if (Test-Path $RobloxFile -and (Get-Item $RobloxFile).Length -gt 0) {
-        Start-Process $RobloxFile
-        Write-Host "Da chay Roblox installer." -ForegroundColor Green
+    if (Test-Path $RobloxFile) {
+        if ((Get-Item $RobloxFile).Length -gt 0) {
+            Start-Process $RobloxFile
+            Write-Host "Da chay Roblox installer." -ForegroundColor Green
+        } else {
+            Write-Host "❌ File Roblox rong." -ForegroundColor Red
+        }
     } else {
         Write-Host "❌ Tai Roblox that bai." -ForegroundColor Red
     }
@@ -123,9 +127,13 @@ function Install-WaveBootstrapper {
     Write-Host "[SYS] Dang tai WaveBootstrapper..." -ForegroundColor Cyan
     curl.exe -L "https://cdn.wavify.cc/v3/WaveBootstrapper.exe" -o $WaveFile
 
-    if (Test-Path $WaveFile -and (Get-Item $WaveFile).Length -gt 0) {
-        Start-Process $WaveFile
-        Write-Host "Da chay WaveBootstrapper." -ForegroundColor Green
+    if (Test-Path $WaveFile) {
+        if ((Get-Item $WaveFile).Length -gt 0) {
+            Start-Process $WaveFile
+            Write-Host "Da chay WaveBootstrapper." -ForegroundColor Green
+        } else {
+            Write-Host "❌ File WaveBootstrapper rong." -ForegroundColor Red
+        }
     } else {
         Write-Host "❌ Tai Wave that bai." -ForegroundColor Red
     }
@@ -152,9 +160,13 @@ function Install-Fishstrap {
     Write-Host "[SYS] Dang tai Fishstrap..." -ForegroundColor Cyan
     curl.exe -L $Url -o $File
 
-    if (Test-Path $File -and (Get-Item $File).Length -gt 0) {
-        Start-Process $File
-        Write-Host "Da chay Fishstrap installer." -ForegroundColor Green
+    if (Test-Path $File) {
+        if ((Get-Item $File).Length -gt 0) {
+            Start-Process $File
+            Write-Host "Da chay Fishstrap installer." -ForegroundColor Green
+        } else {
+            Write-Host "❌ File Fishstrap rong." -ForegroundColor Red
+        }
     } else {
         Write-Host "❌ Tai Fishstrap that bai." -ForegroundColor Red
     }
@@ -178,9 +190,13 @@ function Install-UltraViewer {
     Write-Host "[SYS] Dang tai UltraViewer..." -ForegroundColor Cyan
     curl.exe -L $Url -o $Out
 
-    if (Test-Path $Out -and (Get-Item $Out).Length -gt 0) {
-        Start-Process $Out
-        Write-Host "Da chay UltraViewer installer." -ForegroundColor Green
+    if (Test-Path $Out) {
+        if ((Get-Item $Out).Length -gt 0) {
+            Start-Process $Out
+            Write-Host "Da chay UltraViewer installer." -ForegroundColor Green
+        } else {
+            Write-Host "❌ File UltraViewer rong." -ForegroundColor Red
+        }
     } else {
         Write-Host "❌ Tai UltraViewer that bai." -ForegroundColor Red
     }
@@ -204,9 +220,13 @@ function Install-WinRAR {
     Write-Host "[SYS] Dang tai WinRAR..." -ForegroundColor Cyan
     curl.exe -L $Url -o $Out
 
-    if (Test-Path $Out -and (Get-Item $Out).Length -gt 0) {
-        Start-Process $Out
-        Write-Host "Da chay WinRAR installer." -ForegroundColor Green
+    if (Test-Path $Out) {
+        if ((Get-Item $Out).Length -gt 0) {
+            Start-Process $Out
+            Write-Host "Da chay WinRAR installer." -ForegroundColor Green
+        } else {
+            Write-Host "❌ File WinRAR rong." -ForegroundColor Red
+        }
     } else {
         Write-Host "❌ Tai WinRAR that bai." -ForegroundColor Red
     }
@@ -230,9 +250,13 @@ function Install-ChromeFromGH {
     Write-Host "[SYS] Dang tai ChromeSetup.exe..." -ForegroundColor Cyan
     curl.exe -L $Url -o $Out
 
-    if (Test-Path $Out -and (Get-Item $Out).Length -gt 0) {
-        Start-Process $Out
-        Write-Host "Da chay Chrome installer." -ForegroundColor Green
+    if (Test-Path $Out) {
+        if ((Get-Item $Out).Length -gt 0) {
+            Start-Process $Out
+            Write-Host "Da chay Chrome installer." -ForegroundColor Green
+        } else {
+            Write-Host "❌ File Chrome rong." -ForegroundColor Red
+        }
     } else {
         Write-Host "❌ Tai Chrome that bai." -ForegroundColor Red
     }
@@ -254,9 +278,13 @@ function Install-RobloxWave {
     $Roblox = "$env:TEMP\Roblox_All.exe"
     Write-Host "[SYS] Dang tai Roblox..." -ForegroundColor Cyan
     curl.exe -L "https://www.roblox.com/vi/download/client?os=win" -o $Roblox
-    if (Test-Path $Roblox -and (Get-Item $Roblox).Length -gt 0) {
-        Start-Process $Roblox
-        Write-Host "Da chay Roblox installer." -ForegroundColor Green
+    if (Test-Path $Roblox) {
+        if ((Get-Item $Roblox).Length -gt 0) {
+            Start-Process $Roblox
+            Write-Host "Da chay Roblox installer." -ForegroundColor Green
+        } else {
+            Write-Host "❌ File Roblox rong." -ForegroundColor Red
+        }
     } else {
         Write-Host "❌ Tai Roblox that bai." -ForegroundColor Red
     }
@@ -265,9 +293,13 @@ function Install-RobloxWave {
     $Wave = "$env:TEMP\WaveBootstrapper.exe"
     Write-Host "[SYS] Dang tai WaveBootstrapper..." -ForegroundColor Cyan
     curl.exe -L "https://cdn.wavify.cc/v3/WaveBootstrapper.exe" -o $Wave
-    if (Test-Path $Wave -and (Get-Item $Wave).Length -gt 0) {
-        Start-Process $Wave
-        Write-Host "Da chay WaveBootstrapper." -ForegroundColor Green
+    if (Test-Path $Wave) {
+        if ((Get-Item $Wave).Length -gt 0) {
+            Start-Process $Wave
+            Write-Host "Da chay WaveBootstrapper." -ForegroundColor Green
+        } else {
+            Write-Host "❌ File WaveBootstrapper rong." -ForegroundColor Red
+        }
     } else {
         Write-Host "❌ Tai Wave that bai." -ForegroundColor Red
     }
@@ -306,10 +338,14 @@ function Install-NetDesktop-6-9 {
     Write-Host "`nDang tai .NET Desktop Runtime 6.0.36..." -ForegroundColor Yellow
     curl.exe -L $Url6 -o $Out6
 
-    if (Test-Path $Out6 -and (Get-Item $Out6).Length -gt 0) {
-        Write-Host "Cai .NET 6.0.36..." -ForegroundColor Cyan
-        Start-Process $Out6 -ArgumentList "/passive","/norestart" -Wait
-        Write-Host "✅ Da cai xong .NET Desktop Runtime 6.0.36." -ForegroundColor Green
+    if (Test-Path $Out6) {
+        if ((Get-Item $Out6).Length -gt 0) {
+            Write-Host "Cai .NET 6.0.36..." -ForegroundColor Cyan
+            Start-Process $Out6 -ArgumentList "/passive","/norestart" -Wait
+            Write-Host "✅ Da cai xong .NET Desktop Runtime 6.0.36." -ForegroundColor Green
+        } else {
+            Write-Host "❌ File .NET 6.0.36 rong." -ForegroundColor Red
+        }
     } else {
         Write-Host "❌ Tai .NET 6.0.36 that bai hoac file rong." -ForegroundColor Red
     }
@@ -321,10 +357,14 @@ function Install-NetDesktop-6-9 {
     Write-Host "`nDang tai .NET Desktop Runtime 9.0.11..." -ForegroundColor Yellow
     curl.exe -L $Url9 -o $Out9
 
-    if (Test-Path $Out9 -and (Get-Item $Out9).Length -gt 0) {
-        Write-Host "Cai .NET 9.0.11..." -ForegroundColor Cyan
-        Start-Process $Out9 -ArgumentList "/passive","/norestart" -Wait
-        Write-Host "✅ Da cai xong .NET Desktop Runtime 9.0.11." -ForegroundColor Green
+    if (Test-Path $Out9) {
+        if ((Get-Item $Out9).Length -gt 0) {
+            Write-Host "Cai .NET 9.0.11..." -ForegroundColor Cyan
+            Start-Process $Out9 -ArgumentList "/passive","/norestart" -Wait
+            Write-Host "✅ Da cai xong .NET Desktop Runtime 9.0.11." -ForegroundColor Green
+        } else {
+            Write-Host "❌ File .NET 9.0.11 rong." -ForegroundColor Red
+        }
     } else {
         Write-Host "❌ Tai .NET 9.0.11 that bai hoac file rong." -ForegroundColor Red
     }
