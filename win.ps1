@@ -3,8 +3,6 @@
     Menu tiện ích
 
     1) Fix Wave
-       - Tải bin.rar bằng curl.exe
-       - Giải nén vào %USERPROFILE%\AppData\Local\Wave
 #>
 
 # ========== HÀM: FIX WAVE ==========
