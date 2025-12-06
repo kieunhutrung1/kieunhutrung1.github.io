@@ -484,21 +484,51 @@ function Install-FarmSyncClient {
     $desktop = [Environment]::GetFolderPath('Desktop')
     $base    = Join-Path $desktop "CLIEN"
 
-    New-Item -ItemType Directory -Force -Path $base | Out-Null
+    # 2 thu muc rieng cho WEB va LD
+    $webDir = Join-Path $base "WEB"
+    $ldDir  = Join-Path $base "LD"
 
-    $webPath = Join-Path $base "client_web.exe"
-    $ldPath  = Join-Path $base "client_ld.exe"
+    New-Item -ItemType Directory -Force -Path $webDir | Out-Null
+    New-Item -ItemType Directory -Force -Path $ldDir  | Out-Null
+
+    $webPath = Join-Path $webDir "client_web.exe"
+    $ldPath  = Join-Path $ldDir  "client_ld.exe"
 
     $urlWeb = "https://cdn.farmsync.cloud/files/client_web.exe"
     $urlLD  = "https://cdn.farmsync.cloud/files/client_ld.exe"
 
-    Write-Host "[SYS] Dang tai client_web.exe..."
-    curl.exe -L $urlWeb -o $webPath
+    Write-Host "Muon tai gi?" -ForegroundColor Yellow
+    Write-Host "1) Chi client_web"
+    Write-Host "2) Chi client_ld"
+    Write-Host "3) Ca 2 (web + ld)"
+    $choice = Read-Host "Chon (1/2/3)"
 
-    Write-Host "[SYS] Dang tai client_ld.exe..."
-    curl.exe -L $urlLD -o $ldPath
+    switch ($choice) {
+        '1' {
+            Write-Host "[SYS] Dang tai client_web.exe vao $webDir ..."
+            curl.exe -L $urlWeb -o $webPath
+        }
+        '2' {
+            Write-Host "[SYS] Dang tai client_ld.exe vao $ldDir ..."
+            curl.exe -L $urlLD -o $ldPath
+        }
+        '3' {
+            Write-Host "[SYS] Dang tai client_web.exe vao $webDir ..."
+            curl.exe -L $urlWeb -o $webPath
 
-    Write-Host "`nDa luu file vao: $base" -ForegroundColor Green
+            Write-Host "[SYS] Dang tai client_ld.exe vao $ldDir ..."
+            curl.exe -L $urlLD -o $ldPath
+        }
+        default {
+            Write-Host "Lua chon khong hop le." -ForegroundColor Red
+            Pause
+            return
+        }
+    }
+
+    Write-Host "`nDa luu file vao:" -ForegroundColor Green
+    Write-Host " - $webDir"
+    Write-Host " - $ldDir"
     Pause
 }
 
@@ -507,7 +537,8 @@ function Install-WEAO-Fixed {
     Clear-Host
     Write-Host "=== WEAO INSTALL (GIAI NEN ZIP VAO VERSION CO DINH) ===" -ForegroundColor Cyan
 
-    $zip    = "C:\Users\ADMIN\Downloads\WEAO-LIVE-WindowsPlayer-version-e380c8edc8f6477c.zip"
+    # Tu dong lay user hien tai, khong fix C:\Users\ADMIN nua
+    $zip    = Join-Path $env:USERPROFILE "Downloads\WEAO-LIVE-WindowsPlayer-version-e380c8edc8f6477c.zip"
     $verDir = Join-Path $env:LOCALAPPDATA "Roblox\Versions\version-1849ecbff0824113"
 
     $rar = "$env:ProgramFiles\WinRAR\winrar.exe"
