@@ -14,6 +14,9 @@
     11) Tweak Windows (UI & tiện ích)
     12) Mở thư mục %localappdata%
     13) Dọn file rác hệ thống
+    14) Tải client_web.exe + client_ld.exe (lưu vào CLIEN trên Desktop)
+    15) WEAO Install (giải nén ZIP vào version Roblox cố định)
+    16) Chạy MAS (Microsoft Activation Scripts)
 
     0) Thoát
 #>
@@ -467,6 +470,216 @@ function Clean-SystemJunk {
     Pause
 }
 
+# ========== 14) TAI FARMSYNC CLIENT_WEB + CLIENT_LD VAO CLIEN (DESKTOP) ==========
+function Install-FarmSyncClient {
+    Clear-Host
+    Write-Host "=== TAI FARMSYNC CLIENT (WEB + LD) VAO CLIEN (DESKTOP) ===" -ForegroundColor Cyan
+
+    if (-not (Get-Command curl.exe -ErrorAction SilentlyContinue)) {
+        Write-Host "Khong tim thay curl.exe." -ForegroundColor Red
+        Pause
+        return
+    }
+
+    $desktop = [Environment]::GetFolderPath('Desktop')
+    $base    = Join-Path $desktop "CLIEN"
+
+    New-Item -ItemType Directory -Force -Path $base | Out-Null
+
+    $webPath = Join-Path $base "client_web.exe"
+    $ldPath  = Join-Path $base "client_ld.exe"
+
+    $urlWeb = "https://cdn.farmsync.cloud/files/client_web.exe"
+    $urlLD  = "https://cdn.farmsync.cloud/files/client_ld.exe"
+
+    Write-Host "[SYS] Dang tai client_web.exe..."
+    curl.exe -L $urlWeb -o $webPath
+
+    Write-Host "[SYS] Dang tai client_ld.exe..."
+    curl.exe -L $urlLD -o $ldPath
+
+    Write-Host "`nDa luu file vao: $base" -ForegroundColor Green
+    Pause
+}
+
+# ========== 15) WEAO INSTALL (GIAI NEN ZIP VAO VERSION CO DINH) ==========
+function Install-WEAO-Fixed {
+    Clear-Host
+    Write-Host "=== WEAO INSTALL (GIAI NEN ZIP VAO VERSION CO DINH) ===" -ForegroundColor Cyan
+
+    $zip    = "C:\Users\ADMIN\Downloads\WEAO-LIVE-WindowsPlayer-version-e380c8edc8f6477c.zip"
+    $verDir = Join-Path $env:LOCALAPPDATA "Roblox\Versions\version-1849ecbff0824113"
+
+    $rar = "$env:ProgramFiles\WinRAR\winrar.exe"
+    if (!(Test-Path $rar)) { $rar = "$env:ProgramFiles\WinRAR\rar.exe" }
+
+    if (-not (Test-Path $rar)) {
+        Write-Host "Khong tim thay WinRAR (winrar.exe / rar.exe)." -ForegroundColor Red
+        Pause
+        return
+    }
+
+    if (-not (Test-Path $zip)) {
+        Write-Host "Khong tim thay file ZIP: $zip" -ForegroundColor Red
+        Pause
+        return
+    }
+
+    Write-Host "Xoa thu muc cu: $verDir"
+    Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $verDir
+    New-Item -ItemType Directory -Force -Path $verDir | Out-Null
+
+    Write-Host "Dang giai nen..."
+    & $rar x -y "$zip" "$verDir\"
+
+    Write-Host "Done!" -ForegroundColor Green
+    Pause
+}
+
+# ========== 16) RUN MAS (MICROSOFT ACTIVATION SCRIPTS) ==========
+function Run-MAS {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]]$args
+    )
+
+    if (-not $args) {
+        Write-Host ''
+        Write-Host 'Need help? Check our homepage: ' -NoNewline
+        Write-Host 'https://massgrave.dev' -ForegroundColor Green
+        Write-Host ''
+    }
+
+    & {
+        $psv = (Get-Host).Version.Major
+        $troubleshoot = 'https://massgrave.dev/troubleshoot'
+
+        if ($ExecutionContext.SessionState.LanguageMode.value__ -ne 0) {
+            $ExecutionContext.SessionState.LanguageMode
+            Write-Host "PowerShell is not running in Full Language Mode."
+            Write-Host "Help - https://gravesoft.dev/fix_powershell" -ForegroundColor White -BackgroundColor Blue
+            return
+        }
+
+        try {
+            [void][System.AppDomain]::CurrentDomain.GetAssemblies(); [void][System.Math]::Sqrt(144)
+        }
+        catch {
+            Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+            Write-Host "Powershell failed to load .NET command."
+            Write-Host "Help - https://gravesoft.dev/in-place_repair_upgrade" -ForegroundColor White -BackgroundColor Blue
+            return
+        }
+
+        function Check3rdAV {
+            $cmd = if ($psv -ge 3) { 'Get-CimInstance' } else { 'Get-WmiObject' }
+            $avList = & $cmd -Namespace root\SecurityCenter2 -Class AntiVirusProduct | Where-Object { $_.displayName -notlike '*windows*' } | Select-Object -ExpandProperty displayName
+
+            if ($avList) {
+                Write-Host '3rd party Antivirus might be blocking the script - ' -ForegroundColor White -BackgroundColor Blue -NoNewline
+                Write-Host " $($avList -join ', ')" -ForegroundColor DarkRed -BackgroundColor White
+            }
+        }
+
+        function CheckFile {
+            param ([string]$FilePath)
+            if (-not (Test-Path $FilePath)) {
+                Check3rdAV
+                Write-Host "Failed to create MAS file in temp folder, aborting!"
+                Write-Host "Help - $troubleshoot" -ForegroundColor White -BackgroundColor Blue
+                throw
+            }
+        }
+
+        try { [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 } catch {}
+
+        $URLs = @(
+            'https://raw.githubusercontent.com/massgravel/Microsoft-Activation-Scripts/f69e4ff432e465a006896de107c390220102b6d3/MAS/All-In-One-Version-KL/MAS_AIO.cmd',
+            'https://dev.azure.com/massgrave/Microsoft-Activation-Scripts/_apis/git/repositories/Microsoft-Activation-Scripts/items?path=/MAS/All-In-One-Version-KL/MAS_AIO.cmd&versionType=Commit&version=f69e4ff432e465a006896de107c390220102b6d3',
+            'https://git.activated.win/Microsoft-Activation-Scripts/plain/MAS/All-In-One-Version-KL/MAS_AIO.cmd?id=f69e4ff432e465a006896de107c390220102b6d3'
+        )
+        Write-Progress -Activity "Downloading..." -Status "Please wait"
+        $errors = @()
+        foreach ($URL in $URLs | Sort-Object { Get-Random }) {
+            try {
+                if ($psv -ge 3) {
+                    $response = Invoke-RestMethod $URL
+                }
+                else {
+                    $w = New-Object Net.WebClient
+                    $response = $w.DownloadString($URL)
+                }
+                break
+            }
+            catch {
+                $errors += $_
+            }
+        }
+        Write-Progress -Activity "Downloading..." -Status "Done" -Completed
+
+        if (-not $response) {
+            Check3rdAV
+            foreach ($err in $errors) {
+                Write-Host "Error: $($err.Exception.Message)" -ForegroundColor Red
+            }
+            Write-Host "Failed to retrieve MAS from any of the available repositories, aborting!"
+            Write-Host "Check if antivirus or firewall is blocking the connection."
+            Write-Host "Help - $troubleshoot" -ForegroundColor White -BackgroundColor Blue
+            return
+        }
+
+        # Verify script integrity
+        $releaseHash = 'ABB331EDDCA1036EC2C2CE81D74A4644E86347EF06DC4842D34AA9C030E11EDF'
+        $stream = New-Object IO.MemoryStream
+        $writer = New-Object IO.StreamWriter $stream
+        $writer.Write($response)
+        $writer.Flush()
+        $stream.Position = 0
+        $hash = [BitConverter]::ToString([Security.Cryptography.SHA256]::Create().ComputeHash($stream)) -replace '-'
+        if ($hash -ne $releaseHash) {
+            Write-Warning "Hash ($hash) mismatch, aborting!`nReport this issue at $troubleshoot"
+            $response = $null
+            return
+        }
+
+        # Check for AutoRun registry which may create issues with CMD
+        $paths = "HKCU:\SOFTWARE\Microsoft\Command Processor", "HKLM:\SOFTWARE\Microsoft\Command Processor"
+        foreach ($path in $paths) {
+            if (Get-ItemProperty -Path $path -Name "Autorun" -ErrorAction SilentlyContinue) {
+                Write-Warning "Autorun registry found, CMD may crash! `nManually copy-paste the below command to fix...`nRemove-ItemProperty -Path '$path' -Name 'Autorun'"
+            }
+        }
+
+        $rand = [Guid]::NewGuid().Guid
+        $isAdmin = [bool]([Security.Principal.WindowsIdentity]::GetCurrent().Groups -match 'S-1-5-32-544')
+        $FilePath = if ($isAdmin) { "$env:SystemRoot\Temp\MAS_$rand.cmd" } else { "$env:USERPROFILE\AppData\Local\Temp\MAS_$rand.cmd" }
+        Set-Content -Path $FilePath -Value "@::: $rand `r`n$response"
+        CheckFile $FilePath
+
+        $env:ComSpec = "$env:SystemRoot\system32\cmd.exe"
+        $chkcmd = & $env:ComSpec /c "echo CMD is working"
+        if ($chkcmd -notcontains "CMD is working") {
+            Write-Warning "cmd.exe is not working.`nReport this issue at $troubleshoot"
+        }
+
+        if ($psv -lt 3) {
+            if (Test-Path "$env:SystemRoot\Sysnative") {
+                Write-Warning "Command is running with x86 Powershell, run it with x64 Powershell instead..."
+                return
+            }
+            $p = saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el -qedit $args""" -Verb RunAs -PassThru
+            $p.WaitForExit()
+        }
+        else {
+            saps -FilePath $env:ComSpec -ArgumentList "/c """"$FilePath"" -el $args""" -Wait -Verb RunAs
+        }
+        CheckFile $FilePath
+
+        $FilePaths = @("$env:SystemRoot\Temp\MAS*.cmd", "$env:USERPROFILE\AppData\Local\Temp\MAS*.cmd")
+        foreach ($FilePath in $FilePaths) { Get-Item $FilePath -ErrorAction SilentlyContinue | Remove-Item }
+    } @args
+}
+
 # ========== MENU ==========
 function Show-Menu {
     while ($true) {
@@ -485,6 +698,9 @@ function Show-Menu {
         Write-Host "11) Tweak Windows (UI & tien ich)"
         Write-Host "12) Mo thu muc %localappdata%"
         Write-Host "13) Don file rac he thong"
+        Write-Host "14) Tai client_web + client_ld (CLIEN tren Desktop)"
+        Write-Host "15) WEAO Install (giai nen ZIP vao version co dinh)"
+        Write-Host "16) Chay MAS (Microsoft Activation Scripts)"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
@@ -503,6 +719,9 @@ function Show-Menu {
             '11' { Tweak-Windows-UI }
             '12' { Open-LocalAppData }
             '13' { Clean-SystemJunk }
+            '14' { Install-FarmSyncClient }
+            '15' { Install-WEAO-Fixed }
+            '16' { Run-MAS }
             '0'  { return }
             default {
                 Write-Host "Lua chon khong hop le." -ForegroundColor Red
