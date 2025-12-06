@@ -12,6 +12,8 @@
     9) Mở URL thư viện (Wave Library + Visual C++ AIO)
     10) Tải + cài .NET Desktop Runtime 6.0.36 + 9.0.11 (x64)
     11) Tweak Windows (UI & tiện ích)
+    12) Mở thư mục %localappdata%
+    13) Dọn file rác hệ thống
 
     0) Thoát
 #>
@@ -414,6 +416,57 @@ function Tweak-Windows-UI {
     Pause
 }
 
+# ========== 12) OPEN LOCALAPPDATA ==========
+function Open-LocalAppData {
+    Clear-Host
+    Write-Host "=== MO THU MUC %LOCALAPPDATA% ===" -ForegroundColor Cyan
+
+    Start-Process $env:LOCALAPPDATA
+
+    Write-Host "Da mo thu muc: $env:LOCALAPPDATA" -ForegroundColor Green
+    Pause
+}
+
+# ========== 13) DON FILE RAC HE THONG ==========
+function Clean-SystemJunk {
+    Clear-Host
+    Write-Host "=== DON FILE RAC HE THONG ===" -ForegroundColor Cyan
+
+    $paths = @()
+
+    if ($env:TEMP) {
+        $paths += $env:TEMP
+    }
+    if ($env:LOCALAPPDATA) {
+        $paths += (Join-Path $env:LOCALAPPDATA "Temp")
+    }
+    if ($env:WINDIR) {
+        $paths += (Join-Path $env:WINDIR "Temp")
+    }
+
+    foreach ($p in $paths) {
+        if (-not (Test-Path $p)) { continue }
+
+        Write-Host "Don thu muc: $p" -ForegroundColor Yellow
+        try {
+            Get-ChildItem $p -Recurse -Force -ErrorAction SilentlyContinue |
+                Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+        } catch {
+            # Bo qua neu co file khong xoa duoc
+        }
+    }
+
+    Write-Host "Don Recycle Bin..." -ForegroundColor Yellow
+    try {
+        Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+    } catch {
+        # Neu loi (PowerShell cu), bo qua
+    }
+
+    Write-Host "`n✅ Da don file rac co ban (Temp + Recycle Bin)." -ForegroundColor Green
+    Pause
+}
+
 # ========== MENU ==========
 function Show-Menu {
     while ($true) {
@@ -430,6 +483,8 @@ function Show-Menu {
         Write-Host "9) Mo URL thu vien (Wave + Visual C++ AIO)"
         Write-Host "10) Tai + cai .NET Desktop Runtime 6.0.36 + 9.0.11"
         Write-Host "11) Tweak Windows (UI & tien ich)"
+        Write-Host "12) Mo thu muc %localappdata%"
+        Write-Host "13) Don file rac he thong"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
@@ -446,6 +501,8 @@ function Show-Menu {
             '9'  { Open-LibraryURLs }
             '10' { Install-NetDesktop-6-9 }
             '11' { Tweak-Windows-UI }
+            '12' { Open-LocalAppData }
+            '13' { Clean-SystemJunk }
             '0'  { return }
             default {
                 Write-Host "Lua chon khong hop le." -ForegroundColor Red
