@@ -539,8 +539,8 @@ function Install-WEAO-Fixed {
 
     # Tu dong lay user hien tai, khong fix C:\Users\ADMIN nua
     $zip    = Join-Path $env:USERPROFILE "Downloads\WEAO-LIVE-WindowsPlayer-version-e380c8edc8f6477c.zip"
-    $verDir = Join-Path $env:LOCALAPPDATA "Roblox\Versions\version-1849ecbff0824113"
-
+    $pf86   = [Environment]::GetFolderPath("ProgramFilesX86")
+    $verDir = Join-Path $pf86 "Roblox\Versions\version-1849ecbff0824113"
     $rar = "$env:ProgramFiles\WinRAR\winrar.exe"
     if (!(Test-Path $rar)) { $rar = "$env:ProgramFiles\WinRAR\rar.exe" }
 
