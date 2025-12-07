@@ -14,9 +14,10 @@
     11) Tweak Windows (UI & tiện ích)
     12) Mở thư mục %localappdata%
     13) Dọn file rác hệ thống
-    14) Tải client_web.exe + client_ld.exe (lưu vào CLIEN trên Desktop)
+    14) Tải client_web.exe + client_ld.exe (lưu vào CLIEN\WEB & CLIEN\LD trên Desktop)
     15) WEAO Install (giải nén ZIP vào version Roblox cố định)
     16) Chạy MAS (Microsoft Activation Scripts)
+    17) Edit Roblox Settings (FPS + Volume + ReadOnly)
 
     0) Thoát
 #>
@@ -537,10 +538,13 @@ function Install-WEAO-Fixed {
     Clear-Host
     Write-Host "=== WEAO INSTALL (GIAI NEN ZIP VAO VERSION CO DINH) ===" -ForegroundColor Cyan
 
-    # Tu dong lay user hien tai, khong fix C:\Users\ADMIN nua
-    $zip    = Join-Path $env:USERPROFILE "Downloads\WEAO-LIVE-WindowsPlayer-version-e380c8edc8f6477c.zip"
+    # ZIP trong Downloads cua user hien tai
+    $zip  = Join-Path $env:USERPROFILE "Downloads\WEAO-LIVE-WindowsPlayer-version-e380c8edc8f6477c.zip"
+
+    # Thu muc dich: C:\Program Files (x86)\Roblox\Versions\version-1849ecbff0824113
     $pf86   = [Environment]::GetFolderPath("ProgramFilesX86")
     $verDir = Join-Path $pf86 "Roblox\Versions\version-1849ecbff0824113"
+
     $rar = "$env:ProgramFiles\WinRAR\winrar.exe"
     if (!(Test-Path $rar)) { $rar = "$env:ProgramFiles\WinRAR\rar.exe" }
 
@@ -560,7 +564,7 @@ function Install-WEAO-Fixed {
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $verDir
     New-Item -ItemType Directory -Force -Path $verDir | Out-Null
 
-    Write-Host "Dang giai nen..."
+    Write-Host "Dang giai nen vao: $verDir ..."
     & $rar x -y "$zip" "$verDir\"
 
     Write-Host "Done!" -ForegroundColor Green
@@ -711,6 +715,70 @@ function Run-MAS {
     } @args
 }
 
+# ========== 17) EDIT ROBLOX SETTINGS (FPS + VOLUME + READ-ONLY) ==========
+function Edit-RobloxSettings {
+    Clear-Host
+    Write-Host "=== EDIT Roblox GlobalBasicSettings_13.xml (FPS + Volume) ===" -ForegroundColor Cyan
+
+    $file = Join-Path $env:LOCALAPPDATA "Roblox\GlobalBasicSettings_13.xml"
+
+    if (-not (Test-Path $file)) {
+        Write-Host "Khong tim thay file: $file" -ForegroundColor Red
+        Pause
+        return
+    }
+
+    # Lấy thuộc tính gốc của file (để biết ban đầu có read-only không)
+    $item = Get-Item $file
+    $origAttrs   = $item.Attributes
+    $wasReadOnly = [bool]($origAttrs -band [IO.FileAttributes]::ReadOnly)
+
+    # Tạm tắt read-only nếu đang bật
+    if ($wasReadOnly) {
+        $item.Attributes = $origAttrs -band (-bnot [IO.FileAttributes]::ReadOnly)
+        Write-Host "Tat tam READ-ONLY de cho phep sua..." -ForegroundColor Yellow
+    }
+
+    # Backup file
+    $backup = "$file.bak"
+    Copy-Item $file $backup -Force
+    Write-Host "Da tao backup: $backup" -ForegroundColor DarkGray
+
+    # Đọc nội dung hiện tại
+    $content    = Get-Content $file -Raw
+    $newContent = $content
+
+    # ==== THAY FPS ====
+    $newContent = $newContent -replace '<int name="FramerateCap">-1</int>', '<int name="FramerateCap">15</int>'
+
+    # ==== THAY VOLUME ====
+    $newContent = $newContent -replace '<float name="MasterVolume">1</float>',       '<float name="MasterVolume">0</float>'
+    $newContent = $newContent -replace '<float name="MasterVolumeStudio">1</float>', '<float name="MasterVolumeStudio">0</float>'
+    $newContent = $newContent -replace '<float name="PartyVoiceVolume">1</float>',   '<float name="PartyVoiceVolume">0</float>'
+
+    if ($content -eq $newContent) {
+        Write-Host "Khong co gi de sua (noi dung giong nhau)." -ForegroundColor Yellow
+
+        # Không sửa gì, trả lại trạng thái read-only như ban đầu nếu có
+        if ($wasReadOnly) {
+            (Get-Item $file).Attributes = $origAttrs
+            Write-Host "Khoi phuc lai READ-ONLY nhu ban dau." -ForegroundColor DarkGray
+        }
+
+        Pause
+        return
+    }
+
+    # Ghi nội dung mới
+    Set-Content -Path $file -Value $newContent -Encoding UTF8
+
+    # Sau khi CÓ SỬA thì kích hoạt READ-ONLY
+    (Get-Item $file).Attributes = [IO.FileAttributes]::ReadOnly
+    Write-Host "✅ Da sua FPS + Volume va 🔒 kich hoat READ-ONLY cho file." -ForegroundColor Green
+
+    Pause
+}
+
 # ========== MENU ==========
 function Show-Menu {
     while ($true) {
@@ -732,6 +800,7 @@ function Show-Menu {
         Write-Host "14) Tai client_web + client_ld (CLIEN tren Desktop)"
         Write-Host "15) WEAO Install (giai nen ZIP vao version co dinh)"
         Write-Host "16) Chay MAS (Microsoft Activation Scripts)"
+        Write-Host "17) Edit Roblox Settings (FPS + Volume + ReadOnly)"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
@@ -753,6 +822,7 @@ function Show-Menu {
             '14' { Install-FarmSyncClient }
             '15' { Install-WEAO-Fixed }
             '16' { Run-MAS }
+            '17' { Edit-RobloxSettings }
             '0'  { return }
             default {
                 Write-Host "Lua chon khong hop le." -ForegroundColor Red
