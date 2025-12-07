@@ -18,6 +18,7 @@
     15) WEAO Install (giải nén ZIP vào version Roblox cố định)
     16) Chạy MAS (Microsoft Activation Scripts)
     17) Edit Roblox Settings (FPS + Volume + ReadOnly)
+    18) Edit Wave config.json (instance settings)
 
     0) Thoát
 #>
@@ -779,6 +780,53 @@ function Edit-RobloxSettings {
     Pause
 }
 
+# ========== 18) EDIT WAVE CONFIG.JSON ==========
+function Edit-WaveConfig {
+    Clear-Host
+    Write-Host "=== EDIT Wave config.json ===" -ForegroundColor Cyan
+
+    $jsonPath = Join-Path $env:LOCALAPPDATA "Wave\config.json"
+
+    if (-not (Test-Path $jsonPath)) {
+        Write-Host "Khong tim thay Wave config: $jsonPath" -ForegroundColor Red
+        Pause
+        return
+    }
+
+    # Backup
+    Copy-Item $jsonPath "$jsonPath.bak" -Force
+    Write-Host "Da tao backup: $jsonPath.bak" -ForegroundColor DarkGray
+
+    # Đọc JSON
+    $config = Get-Content $jsonPath -Raw | ConvertFrom-Json -Depth 50
+
+    if (-not $config.configuration) { $config.configuration = @{} }
+    if (-not $config.configuration.instance) { $config.configuration.instance = @{} }
+
+    foreach ($key in @(
+        'cpu','error_redirection','local_host_warnings','fflag_warnings',
+        'multi_instance','replicated_first','websocket'
+    )) {
+        if (-not $config.configuration.instance.$key) {
+            $config.configuration.instance.$key = @{}
+        }
+    }
+
+    # Set đúng giá trị bạn yêu cầu
+    $config.configuration.instance.cpu.max                  = 50
+    $config.configuration.instance.error_redirection.bool   = $false
+    $config.configuration.instance.local_host_warnings.bool = $false
+    $config.configuration.instance.fflag_warnings.bool      = $false
+    $config.configuration.instance.multi_instance.bool      = $true
+    $config.configuration.instance.replicated_first.bool    = $false
+    $config.configuration.instance.websocket.bool           = $false
+
+    $config | ConvertTo-Json -Depth 50 | Set-Content $jsonPath -Encoding UTF8
+
+    Write-Host "✅ Da sua Wave config.json thanh cong!" -ForegroundColor Green
+    Pause
+}
+
 # ========== MENU ==========
 function Show-Menu {
     while ($true) {
@@ -801,6 +849,7 @@ function Show-Menu {
         Write-Host "15) WEAO Install (giai nen ZIP vao version co dinh)"
         Write-Host "16) Chay MAS (Microsoft Activation Scripts)"
         Write-Host "17) Edit Roblox Settings (FPS + Volume + ReadOnly)"
+        Write-Host "18) Edit Wave config.json (instance settings)"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
@@ -823,6 +872,7 @@ function Show-Menu {
             '15' { Install-WEAO-Fixed }
             '16' { Run-MAS }
             '17' { Edit-RobloxSettings }
+            '18' { Edit-WaveConfig }
             '0'  { return }
             default {
                 Write-Host "Lua chon khong hop le." -ForegroundColor Red
