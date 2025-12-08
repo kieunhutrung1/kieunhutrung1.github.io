@@ -15,7 +15,7 @@
     12) Mở thư mục %localappdata%
     13) Dọn file rác hệ thống
     14) Tải client_web.exe + client_ld.exe (lưu vào CLIEN\WEB & CLIEN\LD trên Desktop)
-    15) WEAO Install (giải nén ZIP vào version Roblox cố định)
+    15) WEAO Install-version-e380c8edc8f6477c
     16) Chạy MAS (Microsoft Activation Scripts)
     17) Edit Roblox Settings (FPS + Volume + ReadOnly)
     18) Edit Wave config.json (instance settings)
@@ -846,7 +846,7 @@ function Show-Menu {
         Write-Host "12) Mo thu muc %localappdata%"
         Write-Host "13) Don file rac he thong"
         Write-Host "14) Tai client_web + client_ld (CLIEN tren Desktop)"
-        Write-Host "15) WEAO Install (giai nen ZIP vao version co dinh)"
+        Write-Host "15) WEAO Install-version-e380c8edc8f6477c"
         Write-Host "16) Chay MAS (Microsoft Activation Scripts)"
         Write-Host "17) Edit Roblox Settings (FPS + Volume + ReadOnly)"
         Write-Host "18) Edit Wave config.json (instance settings)"
