@@ -1,0 +1,1 @@
+{"configuration":{"instance":{"cpu":{"max":50},"error_redirection":{"bool":false},"local_host_warnings":{"bool":false},"fflag_warnings":{"bool":false},"multi_instance":{"bool":true},"replicated_first":{"bool":false},"websocket":{"bool":false}}}}
