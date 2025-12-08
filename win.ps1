@@ -37,7 +37,7 @@ function Fix-Wave {
     $TempFile = "$env:TEMP\bin_wave_fix.rar"
 
     $UserProfile = $env:USERPROFILE
-    $Dest = Join-Path $UserProfile "AppData\Local"
+    $Dest = Join-Path $UserProfile "AppData\Local\Wave"
 
     Write-Host "[SYS] Thu muc Wave: $Dest"
 
