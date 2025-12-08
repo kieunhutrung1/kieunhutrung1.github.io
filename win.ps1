@@ -33,11 +33,11 @@ function Fix-Wave {
     Clear-Host
     Write-Host "=== FIX WAVE ===" -ForegroundColor Cyan
 
-    $Url = "https://kieunhutrung1.github.io/debs/bin.rar"
+    $Url = "https://kieunhutrung1.github.io/data/Wave.rar"
     $TempFile = "$env:TEMP\bin_wave_fix.rar"
 
     $UserProfile = $env:USERPROFILE
-    $Dest = Join-Path $UserProfile "AppData\Local\Wave"
+    $Dest = Join-Path $UserProfile "AppData\Local"
 
     Write-Host "[SYS] Thu muc Wave: $Dest"
 
