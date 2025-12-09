@@ -851,6 +851,7 @@ function alll {
 	Install-WEAO-Fixed
 	Edit-RobloxSettings
 	memreduct
+	Install-FarmSyncClient
 }
 
 
