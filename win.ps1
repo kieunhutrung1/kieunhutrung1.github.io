@@ -1,3 +1,4 @@
+
 <#
     win.ps1 - Windows Utility Menu
 
@@ -329,54 +330,92 @@ function Open-LibraryURLs {
 
 # ========== 10) INSTALL .NET DESKTOP 6.0.36 + 9.0.11 ==========
 function Install-NetDesktop-6-9 {
-    Clear-Host
-    Write-Host "=== CAI .NET DESKTOP RUNTIME 6.0.36 + 9.0.11 (x64) ===" -ForegroundColor Cyan
+   Clear-Host
+    Write-Host "=== CAI FULL RUNTIME (.NET + VC++) ONLINE ===" -ForegroundColor Cyan
 
-    if (-not (Get-Command curl.exe -ErrorAction SilentlyContinue)) {
-        Write-Host "Khong tim thay curl.exe." -ForegroundColor Red
-        Pause
-        return
-    }
+    # ==========================
+    #   DANH SÁCH VC++ x64 ONLINE
+    # ==========================
 
-    # .NET 6.0.36
-    $Url6 = "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/6.0.36/windowsdesktop-runtime-6.0.36-win-x64.exe"
-    $Out6 = "$env:TEMP\windowsdesktop-runtime-6.0.36-win-x64.exe"
+    $VCBase = "https://kieunhutrung1.github.io/data/"
+    $VCFiles = @(
+        "vcredist2005_x64.exe",
+        "vcredist2008_x64.exe",
+        "vcredist2010_x64.exe",
+        "vcredist2012_x64.exe",
+        "vcredist2013_x64.exe",
+        "vcredist2015_2017_2019_2022_x64.exe"
+    )
 
-    Write-Host "`nDang tai .NET Desktop Runtime 6.0.36..." -ForegroundColor Yellow
-    curl.exe -L $Url6 -o $Out6
+    # ==========================
+    #   DANH SÁCH .NET RUNTIME ONLINE
+    # ==========================
 
-    if (Test-Path $Out6) {
-        if ((Get-Item $Out6).Length -gt 0) {
-            Write-Host "Cai .NET 6.0.36..." -ForegroundColor Cyan
-            Start-Process $Out6 -ArgumentList "/passive","/norestart" -Wait
-            Write-Host "✅ Da cai xong .NET Desktop Runtime 6.0.36." -ForegroundColor Green
-        } else {
-            Write-Host "❌ File .NET 6.0.36 rong." -ForegroundColor Red
+    $DotNetUrls = @(
+        "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/6.0.36/windowsdesktop-runtime-6.0.36-win-x64.exe",
+        "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/9.0.11/windowsdesktop-runtime-9.0.11-win-x64.exe"
+    )
+
+    # ==========================
+    #   CAI VC++ ONLINE
+    # ==========================
+
+    Write-Host "`n=== VC++ X64 ===" -ForegroundColor Magenta
+
+    foreach ($file in $VCFiles) {
+
+        $Url = $VCBase + $file
+        $Out = "$env:TEMP\$file"
+
+        Write-Host "`n📥 Dang tai: $file" -ForegroundColor Yellow
+        Invoke-WebRequest -Uri $Url -OutFile $Out -ErrorAction SilentlyContinue
+
+        if (!(Test-Path $Out) -or ((Get-Item $Out).Length -eq 0)) {
+            Write-Host "❌ Tai that bai: $file" -ForegroundColor Red
+            continue
         }
-    } else {
-        Write-Host "❌ Tai .NET 6.0.36 that bai hoac file rong." -ForegroundColor Red
-    }
 
-    # .NET 9.0.11
-    $Url9 = "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/9.0.11/windowsdesktop-runtime-9.0.11-win-x64.exe"
-    $Out9 = "$env:TEMP\windowsdesktop-runtime-9.0.11-win-x64.exe"
+        Write-Host "🔧 Cai dat (NO WAIT): $file ..." -ForegroundColor Cyan
 
-    Write-Host "`nDang tai .NET Desktop Runtime 9.0.11..." -ForegroundColor Yellow
-    curl.exe -L $Url9 -o $Out9
-
-    if (Test-Path $Out9) {
-        if ((Get-Item $Out9).Length -gt 0) {
-            Write-Host "Cai .NET 9.0.11..." -ForegroundColor Cyan
-            Start-Process $Out9 -ArgumentList "/passive","/norestart" -Wait
-            Write-Host "✅ Da cai xong .NET Desktop Runtime 9.0.11." -ForegroundColor Green
-        } else {
-            Write-Host "❌ File .NET 9.0.11 rong." -ForegroundColor Red
+        if ($file -like "*2005*") {
+            Start-Process $Out -ArgumentList "/q"
         }
-    } else {
-        Write-Host "❌ Tai .NET 9.0.11 that bai hoac file rong." -ForegroundColor Red
+        elseif ($file -like "*2008*") {
+            Start-Process $Out -ArgumentList "/qb"
+        }
+        else {
+            Start-Process $Out -ArgumentList "/passive","/norestart"
+        }
+
+        Write-Host "▶ Da goi cai dat: $file" -ForegroundColor Green
     }
 
-    Write-Host "`nHoan tat xu ly .NET 6 + 9." -ForegroundColor Magenta
+    # ==========================
+    #   CAI .NET DESKTOP RUNTIME ONLINE
+    # ==========================
+
+    Write-Host "`n=== .NET DESKTOP RUNTIME ===" -ForegroundColor Magenta
+
+    foreach ($url in $DotNetUrls) {
+
+        $File = "$env:TEMP\" + [System.IO.Path]::GetFileName($url)
+
+        Write-Host "`n📥 Dang tai .NET: $File" -ForegroundColor Yellow
+        Invoke-WebRequest -Uri $url -OutFile $File -ErrorAction SilentlyContinue
+
+        if (!(Test-Path $File) -or ((Get-Item $File).Length -eq 0)) {
+            Write-Host "❌ Tai that bai .NET: $File" -ForegroundColor Red
+            continue
+        }
+
+        Write-Host "🔧 Cai dat (NO WAIT): $File ..." -ForegroundColor Cyan
+        Start-Process $File -ArgumentList "/passive","/norestart"
+
+        Write-Host "▶ Da goi cai dat: $File" -ForegroundColor Green
+    }
+
+    # ==========================
+    Write-Host "`n🎉 DA GOI CAI FULL RUNTIME ONLINE (installer sẽ tự chạy nền)." -ForegroundColor Magenta
     Pause
 }
 
@@ -781,51 +820,22 @@ function Edit-RobloxSettings {
 }
 
 # ========== 18) EDIT WAVE CONFIG.JSON ==========
-function Edit-WaveConfig {
-    Clear-Host
-    Write-Host "=== EDIT Wave config.json ===" -ForegroundColor Cyan
+function memreduct {
+    $url  = "https://github.com/henrypp/memreduct/releases/download/v.3.5.2/memreduct-3.5.2-setup.exe"
+    $file = "$env:TEMP\memreduct_setup.exe"
 
-    $jsonPath = Join-Path $env:LOCALAPPDATA "Wave\config.json"
+    Write-Host "`n[1] Downloading Mem Reduct..." -ForegroundColor Cyan
+    Invoke-WebRequest -Uri $url -OutFile $file
 
-    if (-not (Test-Path $jsonPath)) {
-        Write-Host "Khong tim thay Wave config: $jsonPath" -ForegroundColor Red
-        Pause
-        return
-    }
+    Write-Host "[2] Installing silently..." -ForegroundColor Cyan
+    Start-Process $file -ArgumentList "/SP- /VERYSILENT /NORESTART"
 
-    # Backup
-    Copy-Item $jsonPath "$jsonPath.bak" -Force
-    Write-Host "Da tao backup: $jsonPath.bak" -ForegroundColor DarkGray
-
-    # Đọc JSON
-    $config = Get-Content $jsonPath -Raw | ConvertFrom-Json -Depth 50
-
-    if (-not $config.configuration) { $config.configuration = @{} }
-    if (-not $config.configuration.instance) { $config.configuration.instance = @{} }
-
-    foreach ($key in @(
-        'cpu','error_redirection','local_host_warnings','fflag_warnings',
-        'multi_instance','replicated_first','websocket'
-    )) {
-        if (-not $config.configuration.instance.$key) {
-            $config.configuration.instance.$key = @{}
-        }
-    }
-
-    # Set đúng giá trị bạn yêu cầu
-    $config.configuration.instance.cpu.max                  = 50
-    $config.configuration.instance.error_redirection.bool   = $false
-    $config.configuration.instance.local_host_warnings.bool = $false
-    $config.configuration.instance.fflag_warnings.bool      = $false
-    $config.configuration.instance.multi_instance.bool      = $true
-    $config.configuration.instance.replicated_first.bool    = $false
-    $config.configuration.instance.websocket.bool           = $false
-
-    $config | ConvertTo-Json -Depth 50 | Set-Content $jsonPath -Encoding UTF8
-
-    Write-Host "✅ Da sua Wave config.json thanh cong!" -ForegroundColor Green
-    Pause
+    Write-Host "`n✔ Mem Reduct installed successfully!" -ForegroundColor Green
+Pause
 }
+
+
+
 
 # ========== MENU ==========
 function Show-Menu {
@@ -833,23 +843,23 @@ function Show-Menu {
         Clear-Host
         Write-Host "=========== WINDOWS UTILITY ===========" -ForegroundColor Cyan
         Write-Host "1) Fix Wave"
-        Write-Host "2) Tai + chay Roblox"
-        Write-Host "3) Tai + chay WaveBootstrapper"
-        Write-Host "4) Tai + chay Fishstrap"
-        Write-Host "5) Tai + cai UltraViewer"
-        Write-Host "6) Tai + cai WinRAR"
-        Write-Host "7) Tai + cai Chrome"
-        Write-Host "8) Tai + cai Roblox + Wave"
+        Write-Host "2) Tai Roblox"
+        Write-Host "3) Tai WaveBootstrapper"
+        Write-Host "4) Tai Fishstrap"
+        Write-Host "5) Tai UltraViewer"
+        Write-Host "6) Tai cai WinRAR"
+        Write-Host "7) Tai Chrome"
+        Write-Host "8) Tai Roblox + Wave"
         Write-Host "9) Mo URL thu vien (Wave + Visual C++ AIO)"
         Write-Host "10) Tai + cai .NET Desktop Runtime 6.0.36 + 9.0.11"
-        Write-Host "11) Tweak Windows (UI & tien ich)"
+        Write-Host "11) Tweak Windows"
         Write-Host "12) Mo thu muc %localappdata%"
         Write-Host "13) Don file rac he thong"
         Write-Host "14) Tai client_web + client_ld (CLIEN tren Desktop)"
-        Write-Host "15) WEAO Install-version-e380c8edc8f6477c"
+        Write-Host "15) Ha-version-e380c8edc8f6477c"
         Write-Host "16) Chay MAS (Microsoft Activation Scripts)"
-        Write-Host "17) Edit Roblox Settings (FPS + Volume + ReadOnly)"
-        Write-Host "18) Edit Wave config.json (instance settings)"
+        Write-Host "17) ERoblox Settings (FPS + Volume + ReadOnly)"
+        Write-Host "18) Mem Reduct"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
@@ -872,7 +882,7 @@ function Show-Menu {
             '15' { Install-WEAO-Fixed }
             '16' { Run-MAS }
             '17' { Edit-RobloxSettings }
-            '18' { Edit-WaveConfig }
+            '18' { memreduct }
             '0'  { return }
             default {
                 Write-Host "Lua chon khong hop le." -ForegroundColor Red
