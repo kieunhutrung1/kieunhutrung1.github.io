@@ -851,7 +851,7 @@ function Show-Menu {
         Write-Host "7) Tai Chrome"
         Write-Host "8) Tai Roblox + Wave"
         Write-Host "9) Mo URL thu vien (Wave + Visual C++ AIO)"
-        Write-Host "10) Tai + cai .NET Desktop Runtime 6.0.36 + 9.0.11"
+        Write-Host "10) Tai C++ cai .NET Desktop Runtime 6.0.36 + 9.0.11"
         Write-Host "11) Tweak Windows"
         Write-Host "12) Mo thu muc %localappdata%"
         Write-Host "13) Don file rac he thong"
