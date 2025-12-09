@@ -320,7 +320,7 @@ function Open-LibraryURLs {
     Clear-Host
     Write-Host "=== MO URL THU VIEN ===" -ForegroundColor Cyan
 
-    Start-Process "https://rdd.whatexpsare.online/?channel=LIVE&binaryType=WindowsPlayer&version=version-e380c8edc8f6477c"
+    Start-Process "https://rdd.weao.gg/?channel=LIVE&binaryType=WindowsPlayer&version=version-e380c8edc8f6477c&includeLauncher=true"
     Start-Process "https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/"
 
     Write-Host "Da mo 2 URL thu vien!" -ForegroundColor Green
@@ -542,9 +542,9 @@ function Install-WEAO-Fixed {
     # ZIP trong Downloads cua user hien tai
     $zip  = Join-Path $env:USERPROFILE "Downloads\WEAO-LIVE-WindowsPlayer-version-e380c8edc8f6477c.zip"
 
-    # Thu muc dich: C:\Program Files (x86)\Roblox\Versions\version-1849ecbff0824113
+    # Thu muc dich: C:\Program Files (x86)\Roblox\Versions\version-5aed1822f52c4b03
     $pf86   = [Environment]::GetFolderPath("ProgramFilesX86")
-    $verDir = Join-Path $pf86 "Roblox\Versions\version-1849ecbff0824113"
+    $verDir = Join-Path $pf86 "Roblox\Versions\version-5aed1822f52c4b03"
 
     $rar = "$env:ProgramFiles\WinRAR\winrar.exe"
     if (!(Test-Path $rar)) { $rar = "$env:ProgramFiles\WinRAR\rar.exe" }
