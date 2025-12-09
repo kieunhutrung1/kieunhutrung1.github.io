@@ -322,7 +322,6 @@ function Open-LibraryURLs {
     Write-Host "=== MO URL THU VIEN ===" -ForegroundColor Cyan
 
     Start-Process "https://rdd.weao.gg/?channel=LIVE&binaryType=WindowsPlayer&version=version-e380c8edc8f6477c&includeLauncher=true"
-    Start-Process "https://www.techpowerup.com/download/visual-c-redistributable-runtime-package-all-in-one/"
 
     Write-Host "Da mo 2 URL thu vien!" -ForegroundColor Green
     Pause
@@ -850,7 +849,7 @@ function Show-Menu {
         Write-Host "6) Tai cai WinRAR"
         Write-Host "7) Tai Chrome"
         Write-Host "8) Tai Roblox + Wave"
-        Write-Host "9) Mo URL thu vien (Wave + Visual C++ AIO)"
+        Write-Host "9) Tai ver version-e380c8edc8f6477c"
         Write-Host "10) Tai C++ cai .NET Desktop Runtime 6.0.36 + 9.0.11"
         Write-Host "11) Tweak Windows"
         Write-Host "12) Mo thu muc %localappdata%"
