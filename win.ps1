@@ -878,7 +878,7 @@ function Show-Menu {
         Write-Host "16) Chay MAS (Microsoft Activation Scripts)"
         Write-Host "17) ERoblox Settings (FPS + Volume + ReadOnly)"
         Write-Host "18) Mem Reduct"
-	Write-Host "19) ALL"
+		Write-Host "19) ALL"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
