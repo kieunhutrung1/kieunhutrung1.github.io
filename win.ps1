@@ -832,8 +832,25 @@ function memreduct {
     Write-Host "`n✔ Mem Reduct installed successfully!" -ForegroundColor Green
 Pause
 }
+function alll {
+	Open-LibraryURLs
+	Install-NetDesktop-6-9
+	Install-RobloxWave
+	    $names = @(
+        "RobloxPlayerBeta",
+        "RobloxPlayerLauncher",
+        "RobloxCrashUploader",
+        "RobloxStudioBeta",
+        "RobloxStudio"
+    )
 
-
+    foreach ($n in $names) {
+        Get-Process -Name $n -ErrorAction SilentlyContinue | Stop-Process -Force
+    }
+	Fix-Wave
+	Install-WEAO-Fixed
+	Edit-RobloxSettings
+}
 
 
 # ========== MENU ==========
@@ -859,6 +876,7 @@ function Show-Menu {
         Write-Host "16) Chay MAS (Microsoft Activation Scripts)"
         Write-Host "17) ERoblox Settings (FPS + Volume + ReadOnly)"
         Write-Host "18) Mem Reduct"
+	Write-Host "19) ALL"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
@@ -882,6 +900,7 @@ function Show-Menu {
             '16' { Run-MAS }
             '17' { Edit-RobloxSettings }
             '18' { memreduct }
+            '19' { alll }
             '0'  { return }
             default {
                 Write-Host "Lua chon khong hop le." -ForegroundColor Red
