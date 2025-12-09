@@ -850,6 +850,7 @@ function alll {
 	Fix-Wave
 	Install-WEAO-Fixed
 	Edit-RobloxSettings
+	memreduct
 }
 
 
