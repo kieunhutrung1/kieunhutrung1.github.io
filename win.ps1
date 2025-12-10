@@ -832,6 +832,26 @@ function memreduct {
     Write-Host "`n✔ Mem Reduct installed successfully!" -ForegroundColor Green
 Pause
 }
+function Install-PIA {
+    $installerUrl = "https://kieunhutrung1.github.io/data/pia-windows-x64-3.7-08412.exe"
+    $tempInstaller = "$env:TEMP\pia-windows-x64-3.7-08412.exe"
+
+    Write-Host "`n=== CÀI PRIVATE INTERNET ACCESS (PIA) ===" -ForegroundColor Cyan
+    Write-Host "📥 Đang tải PIA..." -ForegroundColor Yellow
+    Invoke-WebRequest -Uri $installerUrl -OutFile $tempInstaller -ErrorAction SilentlyContinue
+
+    if (!(Test-Path $tempInstaller) -or (Get-Item $tempInstaller).Length -eq 0) {
+        Write-Host "❌ Tải thất bại hoặc file rỗng." -ForegroundColor Red
+        return
+    }
+
+    Write-Host "🚀 Đang chạy installer..." -ForegroundColor Cyan
+    Start-Process $tempInstaller
+
+    Write-Host "✅ Hoàn tất – Installer PIA đã mở." -ForegroundColor Green
+Pause
+}
+
 function alll {
 	Open-LibraryURLs
 	Install-NetDesktop-6-9
@@ -878,7 +898,8 @@ function Show-Menu {
         Write-Host "16) Chay MAS (Microsoft Activation Scripts)"
         Write-Host "17) ERoblox Settings (FPS + Volume + ReadOnly)"
         Write-Host "18) Mem Reduct"
-		Write-Host "19) ALL"
+	Write-Host "19) ALL"
+	Write-Host "20) Tai PIAVPN"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
@@ -903,6 +924,7 @@ function Show-Menu {
             '17' { Edit-RobloxSettings }
             '18' { memreduct }
             '19' { alll }
+            '20' { Install-PIA }
             '0'  { return }
             default {
                 Write-Host "Lua chon khong hop le." -ForegroundColor Red
