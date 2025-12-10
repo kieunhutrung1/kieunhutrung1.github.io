@@ -832,6 +832,26 @@ function memreduct {
     Write-Host "`n✔ Mem Reduct installed successfully!" -ForegroundColor Green
 Pause
 }
+function Install-ExpressVPN {
+    $installerUrl = "https://kieunhutrung1.github.io/data/expressvpn-7-5-1-10334.exe"
+    $tempInstaller = "$env:TEMP\expressvpn-7-5-1-10334.exe"
+
+    Write-Host "`n=== CÀI EXPRESSVPN ===" -ForegroundColor Cyan
+    Write-Host "📥 Đang tải ExpressVPN..." -ForegroundColor Yellow
+    Invoke-WebRequest -Uri $installerUrl -OutFile $tempInstaller -ErrorAction SilentlyContinue
+
+    if (!(Test-Path $tempInstaller) -or (Get-Item $tempInstaller).Length -eq 0) {
+        Write-Host "❌ Tải thất bại hoặc file rỗng." -ForegroundColor Red
+        return
+    }
+
+    Write-Host "🚀 Đang chạy installer ExpressVPN..." -ForegroundColor Cyan
+    Start-Process $tempInstaller
+
+    Write-Host "✅ Hoàn tất – Installer ExpressVPN đã mở." -ForegroundColor Green
+Pause
+}
+
 function Install-PIA {
     $installerUrl = "https://kieunhutrung1.github.io/data/pia-windows-x64-3.7-08412.exe"
     $tempInstaller = "$env:TEMP\pia-windows-x64-3.7-08412.exe"
@@ -900,6 +920,7 @@ function Show-Menu {
         Write-Host "18) Mem Reduct"
 	Write-Host "19) ALL"
 	Write-Host "20) Tai PIAVPN"
+	Write-Host "2) Tai ExpressVPN"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
@@ -925,6 +946,7 @@ function Show-Menu {
             '18' { memreduct }
             '19' { alll }
             '20' { Install-PIA }
+            '21' { Install-ExpressVPN }
             '0'  { return }
             default {
                 Write-Host "Lua chon khong hop le." -ForegroundColor Red
