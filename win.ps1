@@ -34,7 +34,7 @@ function Fix-Wave {
     Clear-Host
     Write-Host "=== FIX WAVE ===" -ForegroundColor Cyan
 
-    $Url = "https://kieunhutrung1.github.io/data/Wave.rar"
+    $Url = "https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/data/Wave.rar"
     $TempFile = "$env:TEMP\bin_wave_fix.rar"
 
     $UserProfile = $env:USERPROFILE
@@ -347,7 +347,7 @@ function Install-NetDesktop-6-9 {
     #   DANH SÁCH VC++ x64 ONLINE
     # ==========================
 
-    $VCBase = "https://kieunhutrung1.github.io/data/"
+    $VCBase = "https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/data/"
     $VCFiles = @(
         "vcredist2005_x64.exe",
         "vcredist2008_x64.exe",
@@ -919,7 +919,7 @@ function Install-ExpressVPN {
 
 
 function Install-PIA {
-    $installerUrl = "https://kieunhutrung1.github.io/data/pia-windows-x64-3.7-08412.exe"
+    $installerUrl = "https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/data/pia-windows-x64-3.7-08412.exe"
     $tempInstaller = "$env:TEMP\pia-windows-x64-3.7-08412.exe"
 
     Write-Host "`n=== CÀI PRIVATE INTERNET ACCESS (PIA) ===" -ForegroundColor Cyan
