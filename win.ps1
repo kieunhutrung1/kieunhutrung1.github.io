@@ -222,7 +222,7 @@ function Install-WinRAR {
         return
     }
 
-    $Url = "https://kieunhutrung1.github.io/debs/winrar.exe"
+    $Url = "https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/data/winrar.exe"
     $Out = "$env:TEMP\winrar.exe"
 
     Write-Host "[SYS] Dang tai WinRAR..." -ForegroundColor Cyan
@@ -252,7 +252,7 @@ function Install-ChromeFromGH {
         return
     }
 
-    $Url = "https://kieunhutrung1.github.io/debs/ChromeSetup.exe"
+    $Url = "https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/data/ChromeSetup.exe"
     $Out = "$env:TEMP\ChromeSetup.exe"
 
     Write-Host "[SYS] Dang tai ChromeSetup.exe..." -ForegroundColor Cyan
