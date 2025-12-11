@@ -985,6 +985,51 @@ function Install-Cloudflared {
     & $file --version
 	Pause
 }
+function Install-PCRemote-C {
+    Clear-Host
+
+    $url = "https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/data/PC-remote.zip"
+    $zip = "$env:TEMP\PC-remote.zip"
+
+    Write-Host "📥 Đang tải PC-remote.zip..." -ForegroundColor Yellow
+    & curl.exe -L -o $zip $url
+
+    if (!(Test-Path $zip)) {
+        Write-Host "❌ Không tải được file ZIP." -ForegroundColor Red
+        return
+    }
+
+    Write-Host "📦 Đang giải nén vào C:\ (password = 1)..." -ForegroundColor Cyan
+
+    $rar = "$env:ProgramFiles\WinRAR\winrar.exe"
+    if (!(Test-Path $rar)) { $rar = "$env:ProgramFiles\WinRAR\rar.exe" }
+
+    if (!(Test-Path $rar)) {
+        Write-Host "❌ Không tìm thấy WinRAR." -ForegroundColor Red
+        return
+    }
+
+    # Giải nén trực tiếp vào C:\
+    & $rar x -p1 -y $zip "C:\"
+
+    Write-Host "🔍 Đang tìm file server_remote.exe ..." -ForegroundColor Cyan
+
+    # Tìm file server_remote.exe trong toàn bộ C:\ (nhanh vì vừa giải nén)
+    $exe = Get-ChildItem -Path "C:\" -Filter "server_remote.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+
+    if ($exe -eq $null) {
+        Write-Host "❌ Không tìm thấy server_remote.exe sau khi giải nén." -ForegroundColor Red
+        return
+    }
+
+    Write-Host "🚀 Đang chạy: $($exe.FullName)" -ForegroundColor Green
+
+    # Chạy chương trình
+    Start-Process $exe.FullName
+
+    Write-Host "✅ Hoàn tất — server_remote.exe đã chạy!" -ForegroundColor Green
+	Pause
+}
 
 
 function alll {
@@ -1036,6 +1081,7 @@ function Show-Menu {
 		Write-Host "20) Tai PIAVPN"
 		Write-Host "21) Tai ExpressVPN"
 		Write-Host "22) Fix Cloudflared"
+		Write-Host "23) PC-remote "
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
@@ -1063,6 +1109,7 @@ function Show-Menu {
             '20' { Install-PIA }
             '21' { Install-ExpressVPN }
             '22' { Install-Cloudflared }
+            '23' { Install-PCRemote-C }
             '0'  { return }
             default {
                 Write-Host "Lua chon khong hop le." -ForegroundColor Red
