@@ -834,12 +834,23 @@ Pause
 }
 function Install-ExpressVPN {
     $installerUrl = "https://msstore-submissions.s3.us-east-1.amazonaws.com/arm64/expressvpn_windows_12.104.0.114_release.exe"
-    $tempInstaller = "$env:TEMP\expressvpn_windows_12.104.0.114_release.exe"
+    $tempInstaller = "$env:TEMP\expressvpn_setup.exe"
 
     Write-Host "`n=== CÀI EXPRESSVPN ===" -ForegroundColor Cyan
-    Write-Host "📥 Đang tải ExpressVPN..." -ForegroundColor Yellow
-    Invoke-WebRequest -Uri $installerUrl -OutFile $tempInstaller -ErrorAction SilentlyContinue
+    Write-Host "📥 Đang tải ExpressVPN bằng curl..." -ForegroundColor Yellow
 
+    # Ép dùng curl.exe thật thay vì alias của PowerShell
+    $curlPath = "$env:SystemRoot\System32\curl.exe"
+
+    if (!(Test-Path $curlPath)) {
+        Write-Host "❌ Không tìm thấy curl.exe trên hệ thống." -ForegroundColor Red
+        return
+    }
+
+    # Tải file
+    & $curlPath -L -o "$tempInstaller" "$installerUrl"
+
+    # Kiểm tra file download
     if (!(Test-Path $tempInstaller) -or (Get-Item $tempInstaller).Length -eq 0) {
         Write-Host "❌ Tải thất bại hoặc file rỗng." -ForegroundColor Red
         return
@@ -849,8 +860,9 @@ function Install-ExpressVPN {
     Start-Process $tempInstaller
 
     Write-Host "✅ Hoàn tất – Installer ExpressVPN đã mở." -ForegroundColor Green
-Pause
+    Pause
 }
+
 
 function Install-PIA {
     $installerUrl = "https://kieunhutrung1.github.io/data/pia-windows-x64-3.7-08412.exe"
