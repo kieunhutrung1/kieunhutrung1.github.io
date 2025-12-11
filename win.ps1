@@ -853,8 +853,8 @@ Pause
 }
 
 function Install-PIA {
-    $installerUrl = "https://kieunhutrung1.github.io/data/pia-windows-x64-3.7-08412.exe"
-    $tempInstaller = "$env:TEMP\pia-windows-x64-3.7-08412.exe"
+    $installerUrl = "https://msstore-submissions.s3.us-east-1.amazonaws.com/arm64/expressvpn_windows_12.104.0.114_release.exe"
+    $tempInstaller = "$env:TEMP\expressvpn_windows_12.104.0.114_release.exe"
 
     Write-Host "`n=== CÀI PRIVATE INTERNET ACCESS (PIA) ===" -ForegroundColor Cyan
     Write-Host "📥 Đang tải PIA..." -ForegroundColor Yellow
