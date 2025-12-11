@@ -948,6 +948,43 @@ function Install-PIA {
     Write-Host "✅ Hoàn tất – Installer PIA đã mở." -ForegroundColor Green
     Pause
 }
+function Install-Cloudflared {
+    Clear-Host
+    Write-Host "=== INSTALL CLOUDFLARED (CURL ONLY) ===" -ForegroundColor Cyan
+
+    $url  = "https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/data/cloudflared.exe"
+    $dir  = "$env:localappdata\cloudflared"
+    $file = "$dir\cloudflared.exe"
+
+    # Kiểm tra curl.exe
+    $curl = "curl.exe"
+    if (-not (Get-Command $curl -ErrorAction SilentlyContinue)) {
+        Write-Host "❌ Không tìm thấy curl.exe!" -ForegroundColor Red
+        return
+    }
+
+    # Tạo thư mục (nếu chưa có)
+    Write-Host "📁 Đảm bảo thư mục tồn tại: $dir"
+    mkdir $dir -Force | Out-Null
+
+    # Tải file
+    Write-Host "📥 Đang tải cloudflared.exe..." -ForegroundColor Yellow
+    & $curl -L --retry 3 --retry-delay 2 -o "$file" "$url"
+
+    # Kiểm tra file tải về
+    if (-not (Test-Path $file)) {
+        Write-Host "❌ Lỗi tải cloudflared.exe" -ForegroundColor Red
+        return
+    }
+
+    Write-Host "✅ Tải thành công!" -ForegroundColor Green
+    Write-Host "📌 Đường dẫn: $file" -ForegroundColor Cyan
+
+    # Test chạy
+    Write-Host "`n🔍 Kiểm tra version:"
+    & $file --version
+	Pause
+}
 
 
 function alll {
@@ -995,9 +1032,10 @@ function Show-Menu {
         Write-Host "16) Chay MAS (Microsoft Activation Scripts)"
         Write-Host "17) ERoblox Settings (FPS + Volume + ReadOnly)"
         Write-Host "18) Mem Reduct"
-	Write-Host "19) ALL"
-	Write-Host "20) Tai PIAVPN"
-	Write-Host "21) Tai ExpressVPN"
+		Write-Host "19) ALL"
+		Write-Host "20) Tai PIAVPN"
+		Write-Host "21) Tai ExpressVPN"
+		Write-Host "22) Fix Cloudflared"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
@@ -1024,6 +1062,7 @@ function Show-Menu {
             '19' { alll }
             '20' { Install-PIA }
             '21' { Install-ExpressVPN }
+            '22' { Install-Cloudflared }
             '0'  { return }
             default {
                 Write-Host "Lua chon khong hop le." -ForegroundColor Red
