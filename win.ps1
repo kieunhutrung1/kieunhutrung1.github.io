@@ -588,40 +588,81 @@ function Install-FarmSyncClient {
 # ========== 15) WEAO INSTALL (GIAI NEN ZIP VAO VERSION CO DINH) ==========
 function Install-WEAO-Fixed {
     Clear-Host
-    Write-Host "=== WEAO INSTALL (GIAI NEN ZIP VAO VERSION CO DINH) ===" -ForegroundColor Cyan
+    Write-Host "=== WEAO INSTALL (GIAI NEN RAR VAO VERSION CO DINH - CURL ONLY) ===" -ForegroundColor Cyan
 
-    # ZIP trong Downloads cua user hien tai
-    $zip  = Join-Path $env:USERPROFILE "Downloads\WEAO-LIVE-WindowsPlayer-version-e380c8edc8f6477c.zip"
+    # ========================
+    #   CẤU HÌNH FILE + LINK
+    # ========================
 
-    # Thu muc dich: C:\Program Files (x86)\Roblox\Versions\version-5aed1822f52c4b03
+    $ArchiveName = "WEAO-LIVE-WindowsPlayer-version-e380c8edc8f6477c.rar"
+    $ArchiveUrl  = "https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/data/$ArchiveName"
+
+    # File RAR trong thư mục Downloads
+    $rarFile = Join-Path $env:USERPROFILE "Downloads\$ArchiveName"
+
+    # Thư mục đích Roblox cố định
     $pf86   = [Environment]::GetFolderPath("ProgramFilesX86")
     $verDir = Join-Path $pf86 "Roblox\Versions\version-5aed1822f52c4b03"
 
-    $rar = "$env:ProgramFiles\WinRAR\winrar.exe"
-    if (!(Test-Path $rar)) { $rar = "$env:ProgramFiles\WinRAR\rar.exe" }
+    # ========================
+    #   KIỂM TRA WINRAR
+    # ========================
 
-    if (-not (Test-Path $rar)) {
-        Write-Host "Khong tim thay WinRAR (winrar.exe / rar.exe)." -ForegroundColor Red
+    $rarExe = "$env:ProgramFiles\WinRAR\winrar.exe"
+    if (!(Test-Path $rarExe)) { $rarExe = "$env:ProgramFiles\WinRAR\rar.exe" }
+
+    if (-not (Test-Path $rarExe)) {
+        Write-Host "❌ Không tìm thấy WinRAR (winrar.exe / rar.exe)." -ForegroundColor Red
         Pause
         return
     }
 
-    if (-not (Test-Path $zip)) {
-        Write-Host "Khong tim thay file ZIP: $zip" -ForegroundColor Red
+    # ========================
+    #   KIỂM TRA CURL.EXE
+    # ========================
+
+    $curlPath = "$env:SystemRoot\System32\curl.exe"
+
+    if (-not (Test-Path $curlPath)) {
+        Write-Host "❌ Không tìm thấy curl.exe trên hệ thống." -ForegroundColor Red
         Pause
         return
     }
 
-    Write-Host "Xoa thu muc cu: $verDir"
+    # ========================
+    #   NẾU KHÔNG CÓ FILE → TẢI BẰNG CURL
+    # ========================
+
+    if (-not (Test-Path $rarFile)) {
+        Write-Host "📥 Đang tải WEAO từ R2 bằng CURL..." -ForegroundColor Yellow
+        Write-Host $ArchiveUrl -ForegroundColor DarkGray
+
+        & $curlPath -L --retry 3 --retry-delay 2 -o "$rarFile" "$ArchiveUrl"
+
+        if (-not (Test-Path $rarFile) -or ((Get-Item $rarFile).Length -eq 0)) {
+            Write-Host "❌ File tải về bị lỗi hoặc rỗng." -ForegroundColor Red
+            Pause
+            return
+        }
+
+        Write-Host "✅ Tải thành công!" -ForegroundColor Green
+    }
+
+    # ========================
+    #   GIẢI NÉN
+    # ========================
+
+    Write-Host "🗑 Xóa version cũ: $verDir" -ForegroundColor Cyan
     Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $verDir
     New-Item -ItemType Directory -Force -Path $verDir | Out-Null
 
-    Write-Host "Dang giai nen vao: $verDir ..."
-    & $rar x -y "$zip" "$verDir\"
+    Write-Host "📦 Đang giải nén RAR vào: $verDir ..." -ForegroundColor Cyan
+    & $rarExe x -y "$rarFile" "$verDir\"
 
-    Write-Host "Done!" -ForegroundColor Green
+    Write-Host "🎉 Hoàn tất — WEAO đã được giải nén vào version cố định." -ForegroundColor Green
     Pause
 }
+
 
 # ========== 16) RUN MAS (MICROSOFT ACTIVATION SCRIPTS) ==========
 function Run-MAS {
@@ -910,7 +951,6 @@ function Install-PIA {
 
 
 function alll {
-	Open-LibraryURLs
 	Install-NetDesktop-6-9
 	Install-RobloxWave
 	    $names = @(
