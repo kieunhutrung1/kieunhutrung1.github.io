@@ -362,8 +362,8 @@ function Install-NetDesktop-6-9 {
     # ==========================
 
     $DotNetUrls = @(
-        "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/6.0.36/windowsdesktop-runtime-6.0.36-win-x64.exe",
-        "https://builds.dotnet.microsoft.com/dotnet/WindowsDesktop/9.0.11/windowsdesktop-runtime-9.0.11-win-x64.exe"
+        "https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/data/windowsdesktop-runtime-6.0.36-win-x64.exe",
+        "https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/data/windowsdesktop-runtime-9.0.11-win-x64.exe"
     )
 
     # ==========================
