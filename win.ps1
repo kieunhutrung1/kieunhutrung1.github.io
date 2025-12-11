@@ -1009,22 +1009,28 @@ function Install-PCRemote-C {
         return
     }
 
-    # Giải nén trực tiếp vào C:\
     & $rar x -p1 -y $zip "C:\"
 
-    Write-Host "🔍 Đang tìm file server_remote.exe ..." -ForegroundColor Cyan
+    # Chờ file giải nén xong
+    Write-Host "⏳ Đang chờ server_remote.exe xuất hiện..." -ForegroundColor Cyan
 
-    # Tìm file server_remote.exe trong toàn bộ C:\ (nhanh vì vừa giải nén)
-    $exe = Get-ChildItem -Path "C:\" -Filter "server_remote.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+    $exe = $null
+    $timeout = 20  # tối đa 20 giây
+    $elapsed = 0
 
-    if ($exe -eq $null) {
-        Write-Host "❌ Không tìm thấy server_remote.exe sau khi giải nén." -ForegroundColor Red
+    while ($elapsed -lt $timeout) {
+        $exe = Get-ChildItem -Path "C:\" -Filter "server_remote.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($exe) { break }
+        Start-Sleep -Milliseconds 500
+        $elapsed += 0.5
+    }
+
+    if (-not $exe) {
+        Write-Host "❌ Không tìm thấy server_remote.exe sau khi chờ 20 giây!" -ForegroundColor Red
         return
     }
 
     Write-Host "🚀 Đang chạy: $($exe.FullName)" -ForegroundColor Green
-
-    # Chạy chương trình
     Start-Process $exe.FullName
 
     Write-Host "✅ Hoàn tất — server_remote.exe đã chạy!" -ForegroundColor Green
