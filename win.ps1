@@ -329,8 +329,19 @@ function Open-LibraryURLs {
 
 # ========== 10) INSTALL .NET DESKTOP 6.0.36 + 9.0.11 ==========
 function Install-NetDesktop-6-9 {
-   Clear-Host
+    Clear-Host
     Write-Host "=== CAI FULL RUNTIME (.NET + VC++) ONLINE ===" -ForegroundColor Cyan
+
+    # ==========================
+    #   KIỂM TRA CURL
+    # ==========================
+    $curlPath = "$env:SystemRoot\System32\curl.exe"
+    if (!(Test-Path $curlPath)) {
+        Write-Host "❌ Không tìm thấy curl.exe (Windows quá cũ hoặc bị xoá)." -ForegroundColor Red
+        Write-Host "👉 Cài curl hoặc dùng lại bản Invoke-WebRequest."
+        Pause
+        return
+    }
 
     # ==========================
     #   DANH SÁCH VC++ x64 ONLINE
@@ -356,25 +367,26 @@ function Install-NetDesktop-6-9 {
     )
 
     # ==========================
-    #   CAI VC++ ONLINE
+    #   CÀI VC++ ONLINE (DÙNG CURL)
     # ==========================
 
     Write-Host "`n=== VC++ X64 ===" -ForegroundColor Magenta
 
     foreach ($file in $VCFiles) {
-
         $Url = $VCBase + $file
         $Out = "$env:TEMP\$file"
 
-        Write-Host "`n📥 Dang tai: $file" -ForegroundColor Yellow
-        Invoke-WebRequest -Uri $Url -OutFile $Out -ErrorAction SilentlyContinue
+        Write-Host "`n📥 Đang tải: $file" -ForegroundColor Yellow
+
+        # Tải bằng curl (theo dõi redirect, retry nhẹ)
+        & $curlPath -L --retry 3 --retry-delay 3 -o "$Out" "$Url"
 
         if (!(Test-Path $Out) -or ((Get-Item $Out).Length -eq 0)) {
-            Write-Host "❌ Tai that bai: $file" -ForegroundColor Red
+            Write-Host "❌ Tải thất bại: $file" -ForegroundColor Red
             continue
         }
 
-        Write-Host "🔧 Cai dat (NO WAIT): $file ..." -ForegroundColor Cyan
+        Write-Host "🔧 Cài đặt (NO WAIT): $file ..." -ForegroundColor Cyan
 
         if ($file -like "*2005*") {
             Start-Process $Out -ArgumentList "/q"
@@ -386,37 +398,38 @@ function Install-NetDesktop-6-9 {
             Start-Process $Out -ArgumentList "/passive","/norestart"
         }
 
-        Write-Host "▶ Da goi cai dat: $file" -ForegroundColor Green
+        Write-Host "▶ Đã gọi cài đặt: $file" -ForegroundColor Green
     }
 
     # ==========================
-    #   CAI .NET DESKTOP RUNTIME ONLINE
+    #   CÀI .NET DESKTOP RUNTIME ONLINE (DÙNG CURL)
     # ==========================
 
     Write-Host "`n=== .NET DESKTOP RUNTIME ===" -ForegroundColor Magenta
 
     foreach ($url in $DotNetUrls) {
-
         $File = "$env:TEMP\" + [System.IO.Path]::GetFileName($url)
 
-        Write-Host "`n📥 Dang tai .NET: $File" -ForegroundColor Yellow
-        Invoke-WebRequest -Uri $url -OutFile $File -ErrorAction SilentlyContinue
+        Write-Host "`n📥 Đang tải .NET: $File" -ForegroundColor Yellow
+
+        & $curlPath -L --retry 3 --retry-delay 3 -o "$File" "$url"
 
         if (!(Test-Path $File) -or ((Get-Item $File).Length -eq 0)) {
-            Write-Host "❌ Tai that bai .NET: $File" -ForegroundColor Red
+            Write-Host "❌ Tải thất bại .NET: $File" -ForegroundColor Red
             continue
         }
 
-        Write-Host "🔧 Cai dat (NO WAIT): $File ..." -ForegroundColor Cyan
+        Write-Host "🔧 Cài đặt (NO WAIT): $File ..." -ForegroundColor Cyan
         Start-Process $File -ArgumentList "/passive","/norestart"
 
-        Write-Host "▶ Da goi cai dat: $File" -ForegroundColor Green
+        Write-Host "▶ Đã gọi cài đặt: $File" -ForegroundColor Green
     }
 
     # ==========================
-    Write-Host "`n🎉 DA GOI CAI FULL RUNTIME ONLINE (installer sẽ tự chạy nền)." -ForegroundColor Magenta
+    Write-Host "`n🎉 ĐÃ GỌI CÀI FULL RUNTIME ONLINE (installer sẽ tự chạy nền)." -ForegroundColor Magenta
     Pause
 }
+
 
 # ========== 11) TWEAK WINDOWS (UI & TIEN ICH) ==========
 function Tweak-Windows-UI {
@@ -869,9 +882,20 @@ function Install-PIA {
     $tempInstaller = "$env:TEMP\pia-windows-x64-3.7-08412.exe"
 
     Write-Host "`n=== CÀI PRIVATE INTERNET ACCESS (PIA) ===" -ForegroundColor Cyan
-    Write-Host "📥 Đang tải PIA..." -ForegroundColor Yellow
-    Invoke-WebRequest -Uri $installerUrl -OutFile $tempInstaller -ErrorAction SilentlyContinue
+    Write-Host "📥 Đang tải PIA bằng curl..." -ForegroundColor Yellow
 
+    # Đường dẫn curl.exe thật
+    $curlPath = "$env:SystemRoot\System32\curl.exe"
+
+    if (!(Test-Path $curlPath)) {
+        Write-Host "❌ Không tìm thấy curl.exe — bản Windows quá cũ." -ForegroundColor Red
+        return
+    }
+
+    # Tải file bằng curl
+    & $curlPath -L -o "$tempInstaller" "$installerUrl"
+
+    # Kiểm tra file tải về
     if (!(Test-Path $tempInstaller) -or (Get-Item $tempInstaller).Length -eq 0) {
         Write-Host "❌ Tải thất bại hoặc file rỗng." -ForegroundColor Red
         return
@@ -881,8 +905,9 @@ function Install-PIA {
     Start-Process $tempInstaller
 
     Write-Host "✅ Hoàn tất – Installer PIA đã mở." -ForegroundColor Green
-Pause
+    Pause
 }
+
 
 function alll {
 	Open-LibraryURLs
