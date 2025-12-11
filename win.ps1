@@ -920,7 +920,7 @@ function Show-Menu {
         Write-Host "18) Mem Reduct"
 	Write-Host "19) ALL"
 	Write-Host "20) Tai PIAVPN"
-	Write-Host "2) Tai ExpressVPN"
+	Write-Host "21) Tai ExpressVPN"
         Write-Host "0) Thoat"
         Write-Host "======================================="
         $choice = Read-Host "Chon"
