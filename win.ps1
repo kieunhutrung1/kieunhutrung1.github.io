@@ -1015,7 +1015,7 @@ function Install-PCRemote-C {
     Write-Host "⏳ Đang chờ server_remote.exe xuất hiện..." -ForegroundColor Cyan
 
     $exe = $null
-    $timeout = 20  # tối đa 20 giây
+    $timeout = 5  # tối đa 20 giây
     $elapsed = 0
 
     while ($elapsed -lt $timeout) {
