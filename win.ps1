@@ -602,7 +602,7 @@ function Install-WEAO-Fixed {
 
     # Thư mục đích Roblox cố định
     $pf86   = [Environment]::GetFolderPath("ProgramFilesX86")
-    $verDir = Join-Path $pf86 "Roblox\Versions\version-5aed1822f52c4b03"
+    $verDir = Join-Path $pf86 "Roblox\Versions\version-eaebe135b3ec446b"
 
     # ========================
     #   KIỂM TRA WINRAR
