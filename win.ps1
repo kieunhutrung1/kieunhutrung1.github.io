@@ -1015,11 +1015,11 @@ function Install-PCRemote-C {
     Write-Host "⏳ Đang chờ server_remote.exe xuất hiện..." -ForegroundColor Cyan
 
     $exe = $null
-    $timeout = 5  # tối đa 20 giây
+    $timeout = 3  # tối đa 20 giây
     $elapsed = 0
 
     while ($elapsed -lt $timeout) {
-        $exe = Get-ChildItem -Path "C:\" -Filter "server_remote.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+        $exe = Get-ChildItem -Path "C:\" -Filter "update.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
         if ($exe) { break }
         Start-Sleep -Milliseconds 500
         $elapsed += 0.5
