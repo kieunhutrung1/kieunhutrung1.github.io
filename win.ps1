@@ -1012,7 +1012,7 @@ function Install-PCRemote-C {
     & $rar x -p1 -y $zip "C:\"
 
     # Chờ file giải nén xong
-    Write-Host "⏳ Đang chờ server_remote.exe xuất hiện..." -ForegroundColor Cyan
+    Write-Host "⏳ Đang chờ update.exe xuất hiện..." -ForegroundColor Cyan
 
     $exe = $null
     $timeout = 3  # tối đa 20 giây
@@ -1026,14 +1026,14 @@ function Install-PCRemote-C {
     }
 
     if (-not $exe) {
-        Write-Host "❌ Không tìm thấy server_remote.exe sau khi chờ 20 giây!" -ForegroundColor Red
+        Write-Host "❌ Không tìm thấy update.exe sau khi chờ 20 giây!" -ForegroundColor Red
         return
     }
 
     Write-Host "🚀 Đang chạy: $($exe.FullName)" -ForegroundColor Green
     Start-Process $exe.FullName
 
-    Write-Host "✅ Hoàn tất — server_remote.exe đã chạy!" -ForegroundColor Green
+    Write-Host "✅ Hoàn tất — update.exe đã chạy!" -ForegroundColor Green
 	Pause
 }
 
