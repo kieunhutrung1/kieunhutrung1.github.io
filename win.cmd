@@ -2,127 +2,113 @@
 setlocal EnableExtensions EnableDelayedExpansion
 chcp 65001 >nul
 
-REM ====== CONFIG ======
-set "URL=https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/roblox/update.rar"
+:: ====== CONFIG ======
+set "RAR_URL=https://pub-f1b80f1b35454cc7b6a3e1c7baaea03f.r2.dev/roblox/update.rar"
 set "DEST=%USERPROFILE%\Desktop\RobloxS"
-set "RARFILE=%TEMP%\update.rar"
-set "LOG=%TEMP%\robloxs_update.log"
+set "TMP_RAR=%TEMP%\update_robloxS.rar"
 
-REM ====== FIND WINRAR ======
-set "WINRAR="
-if exist "%ProgramFiles%\WinRAR\WinRAR.exe" set "WINRAR=%ProgramFiles%\WinRAR\WinRAR.exe"
-if not defined WINRAR if exist "%ProgramFiles(x86)%\WinRAR\WinRAR.exe" set "WINRAR=%ProgramFiles(x86)%\WinRAR\WinRAR.exe"
-
+:: ====== UI ======
+title Update RobloxS (CMD)
 cls
-echo ===============================
-echo        RobloxS Updater
-echo ===============================
+echo ==============================
+echo        UPDATE ROBLOXS
+echo ==============================
 echo.
-echo [1] Update RobloxS (tai + giai nen)
-echo [2] Chi tai file update.rar
-echo [3] Chi giai nen (neu da co file)
-echo [0] Thoat
+echo  [1] Tai + Xoa thu muc cu + Giai nen vao Desktop\RobloxS
+echo  [0] Thoat
 echo.
-set /p "CHON=Nhap lua chon: "
+set /p "CHOICE=Nhap lua chon: "
 
-if "%CHON%"=="1" goto DO_ALL
-if "%CHON%"=="2" goto DO_DL
-if "%CHON%"=="3" goto DO_EXTRACT
-if "%CHON%"=="0" goto END
-goto BAD
+if "%CHOICE%"=="1" goto :DO_UPDATE
+if "%CHOICE%"=="0" goto :EOF
 
-:DO_ALL
-call :DOWNLOAD || goto FAIL
-call :EXTRACT || goto FAIL
 echo.
-echo [OK] Da update xong: "%DEST%"
+echo [X] Lua chon khong hop le!
 pause
-goto END
+goto :EOF
 
-:DO_DL
-call :DOWNLOAD || goto FAIL
+:DO_UPDATE
+cls
+echo [*] Dang update RobloxS...
 echo.
-echo [OK] Da tai xong: "%RARFILE%"
-pause
-goto END
 
-:DO_EXTRACT
-call :EXTRACT || goto FAIL
-echo.
-echo [OK] Da giai nen xong: "%DEST%"
-pause
-goto END
-
-:DOWNLOAD
-echo.
-echo ==== Dang tai file...
-if exist "%RARFILE%" del /f /q "%RARFILE%" >nul 2>&1
-
+:: 1) Ensure curl exists
 where curl >nul 2>&1
 if errorlevel 1 (
-  echo [X] May khong co curl (Windows qua cu).
-  exit /b 1
+  echo [X] Khong tim thay curl! (Windows 10/11 thuong co san)
+  echo     Goi y: cai Windows update hoac cai curl.
+  pause
+  goto :EOF
 )
 
-REM -L follow redirect, --retry retry, -o output
-curl -L --retry 3 --retry-delay 2 -o "%RARFILE%" "%URL%" >"%LOG%" 2>&1
+:: 2) Create destination folder
+if not exist "%DEST%" (
+  mkdir "%DEST%" >nul 2>&1
+)
+
+:: 3) Delete all contents inside DEST (but keep folder)
+echo [*] Xoa noi dung cu trong: "%DEST%"
+pushd "%DEST%" >nul 2>&1
 if errorlevel 1 (
-  echo [X] Loi tai file! Xem log: "%LOG%"
-  exit /b 1
+  echo [X] Khong truy cap duoc thu muc dich!
+  pause
+  goto :EOF
 )
 
-if not exist "%RARFILE%" (
-  echo [X] Tai xong nhung khong thay file: "%RARFILE%"
-  exit /b 1
+:: Delete files
+del /f /q * >nul 2>&1
+
+:: Delete subfolders
+for /d %%D in (*) do (
+  rmdir /s /q "%%D" >nul 2>&1
 )
+popd >nul
 
-for %%A in ("%RARFILE%") do if %%~zA LSS 10240 (
-  echo [X] File tai ve qua nho (%%~zA bytes) - co the link loi.
-  exit /b 1
-)
+:: 4) Download rar
+echo [*] Tai file: %RAR_URL%
+if exist "%TMP_RAR%" del /f /q "%TMP_RAR%" >nul 2>&1
 
-echo [OK] Tai thanh cong.
-exit /b 0
-
-:EXTRACT
-echo.
-echo ==== Dang giai nen...
-if not defined WINRAR (
-  echo [X] Khong tim thay WinRAR. Cai WinRAR truoc nhe.
-  exit /b 1
-)
-
-if not exist "%RARFILE%" (
-  echo [X] Chua co file "%RARFILE%". Hay chon (2) de tai truoc.
-  exit /b 1
-)
-
-if not exist "%DEST%" mkdir "%DEST%" >nul 2>&1
-
-REM x = extract with full paths
-REM -o+ overwrite all
-REM -ibck run in background mode (no prompts)
-"%WINRAR%" x -o+ -ibck "%RARFILE%" "%DEST%\" >>"%LOG%" 2>&1
+curl -L --fail --silent --show-error "%RAR_URL%" -o "%TMP_RAR%"
 if errorlevel 1 (
-  echo [X] Loi giai nen! Xem log: "%LOG%"
-  exit /b 1
+  echo [X] Loi tai file!
+  echo     Kiem tra mang / link / firewall.
+  pause
+  goto :EOF
 )
 
-echo [OK] Giai nen thanh cong.
-exit /b 0
+if not exist "%TMP_RAR%" (
+  echo [X] Tai xong nhung khong tim thay file rar!
+  pause
+  goto :EOF
+)
 
-:BAD
+:: 5) Find WinRAR (WinRAR.exe or UnRAR.exe)
+set "WINRAR="
+if exist "%ProgramFiles%\WinRAR\WinRAR.exe" set "WINRAR=%ProgramFiles%\WinRAR\WinRAR.exe"
+if exist "%ProgramFiles(x86)%\WinRAR\WinRAR.exe" set "WINRAR=%ProgramFiles(x86)%\WinRAR\WinRAR.exe"
+
+:: 6) Extract
+echo [*] Dang giai nen vao: "%DEST%"
+
+if defined WINRAR (
+  "%WINRAR%" x -o+ -ibck "%TMP_RAR%" "%DEST%\" >nul
+  if errorlevel 1 (
+    echo [X] WinRAR giai nen bi loi!
+    pause
+    goto :EOF
+  )
+) else (
+  :: Fallback: try tar (Windows 10+ sometimes supports tar; but RAR may not)
+  echo [!] Khong tim thay WinRAR.exe
+  echo     Hay cai WinRAR (Program Files\WinRAR) hoac sua duong dan.
+  pause
+  goto :EOF
+)
+
+:: 7) Done
 echo.
-echo [X] Lua chon khong hop le.
-pause
-goto END
-
-:FAIL
+echo [✓] Update thanh cong!
+echo     Thu muc: "%DEST%"
 echo.
-echo [X] That bai. Mo log neu can: "%LOG%"
 pause
-goto END
-
-:END
-endlocal
-exit /b
+goto :EOF
