@@ -58,38 +58,39 @@
 
   <!-- Vùng hiển thị mã Lua -->
   <textarea id="code" readonly>
-local url = "https://kieunhutrung1.github.io/hide/debs/update.zip"
-local zipPath = rootDir() .. "/update.zip"
-local extractTo = rootDir()
---Hàm kiểm tra file tồn tại
-function fileExists(filePath)
-  local f = io.open(filePath, "r")
-  if f then f:close() return true else return false end
+local curl = require("lcurl")
+local zipUrl     = "http://ttmal.net/att/auto_gg_less.zip"
+local savePath      = "/var/jb/var/mobile/Library/AutoTouch/Scripts/auto_gg_less.zip"
+local extractTo     = "/var/jb/var/mobile/Library/AutoTouch/Scripts"
+-- Hàm tải file zip
+local function downloadFile(url, savePath)
+    local file = io.open(savePath, "wb")
+    assert(file, "Không thể tạo file: " .. savePath)
+    local easy = curl.easy{
+        url = url,
+        writefunction = function(data)
+            file:write(data)
+            return #data
+        end
+    }
+    local ok, err = pcall(function() easy:perform() end)
+    easy:close()
+    file:close()
+    return ok, err
 end
---Tải file bằng curl
-toast("Đang tải file...")
-local cmd = string.format('curl -k -L "%s" -o "%s"', url, zipPath)
-execute(cmd)
---Kiểm tra
-if fileExists(zipPath) then
-  execute("rm -r "..rootDir() .."/Debug/*")
-  execute("rm -r "..rootDir() .."/img/*")
-  execute("rm -r "..rootDir() .."/WhatIsAutoTouch.at")
-  execute("rm -r "..rootDir() .."/Examples")
-  --execute("rm -r "..rootDir() .."/libs/*")
-  toast("Tải thành công!", 2)
-  --Giải nén nếu file tồn tại
-  toast("Đang giải nén...")
-  local unzipCmd = string.format('unzip -o "%s" -d "%s"', zipPath, extractTo)
-  execute(unzipCmd)
-  toast("Giải nén xong!", 5)
-  -- Xóa file zip nếu muốn:
-  os.remove(zipPath)
+-- Tải auto_gg.zip
+local ok1, err1 = downloadFile(zipUrl, savePath)
+if ok1 then
+    -- Giải nén cả hai
+    local unzip1 = string.format('unzip -o "%s" -d "%s"', savePath, extractTo)
+    execute(unzip1)
+    -- Xóa file zip bằng lệnh rm
+    execute('rm -f "' .. savePath .. '"')
+    toast("Successfully updated!", 5)
 else
-  toast("Không tìm thấy file sau khi tải!", 5)
+    toast("Error updated: " .. (err1 or err2 or " null"), 3)
 end
   </textarea>
-
   <!-- 📋 Nút sao chép -->
   <button class="button" onclick="copyCode()">📋 Copy</button>
   <span id="copyMsg">✔ Đã sao chép!</span>
