@@ -97,8 +97,8 @@ fi
   read -p "✏️ Nhập prefix đặt tên VM (mặc định: $PREFIX): " CUSTOM_PREFIX
   PREFIX=${CUSTOM_PREFIX:-$PREFIX}
 
-  read -p "🔢 Nhập số lượng VM muốn tạo (mặc định: 24): " COUNT
-  COUNT=${COUNT:-24}
+  read -p "🔢 Nhập số lượng VM muốn tạo (mặc định: 5): " COUNT
+  COUNT=${COUNT:-5}
 
   echo "🌐 Chọn loại IP:"
   echo "1) Có IP công cộng (Public IP – sẽ gán IP tĩnh riêng)"
