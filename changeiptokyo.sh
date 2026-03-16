@@ -45,7 +45,18 @@ create_ip_batch() {
 create_vm_flow() {
   zones_tokyo=("asia-northeast1-a" "asia-northeast1-b" "asia-northeast1-c")
   zones_osaka=("asia-northeast2-a" "asia-northeast2-b" "asia-northeast2-c")
+echo ""
+echo "🖥️ Chọn loại máy:"
+echo "1) e2-micro (free tier)"
+echo "2) t2d-standard-1 (AMD EPYC mạnh hơn)"
+read -p "👉 Nhập lựa chọn [1-2] (mặc định: 1): " MACHINE_OPTION
+MACHINE_OPTION=${MACHINE_OPTION:-1}
 
+if [ "$MACHINE_OPTION" == "2" ]; then
+  MACHINE_TYPE="t2d-standard-1"
+else
+  MACHINE_TYPE="e2-micro"
+fi
   echo -e "\n🌏 Chọn khu vực:"
   echo "1) Tokyo (asia-northeast1)"
   echo "2) Osaka (asia-northeast2)"
@@ -132,7 +143,7 @@ create_vm_flow() {
       echo "🛠️ Tạo VM [$name] ở $ZONE với IP: $STATIC_IP"
       gcloud compute instances create "$name" \
         --zone="$ZONE" \
-        --machine-type=e2-micro \
+        --machine-type="$MACHINE_TYPE" \
         --image=ubuntu-minimal-2404-noble-amd64-v20250624 \
         --image-project=ubuntu-os-cloud \
         --boot-disk-size=10GB \
@@ -143,7 +154,7 @@ create_vm_flow() {
       echo "🔒 Tạo VM [$name] không có IP công cộng ở $ZONE"
       gcloud compute instances create "$name" \
         --zone="$ZONE" \
-        --machine-type=e2-micro \
+        --machine-type="$MACHINE_TYPE" \
         --image=ubuntu-minimal-2404-noble-amd64-v20250624 \
         --image-project=ubuntu-os-cloud \
         --boot-disk-size=10GB \
