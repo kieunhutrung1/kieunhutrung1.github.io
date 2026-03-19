@@ -10,13 +10,7 @@ if [[ "$root_choice" =~ ^[Yy]$ ]]; then
 fi
 file_path="/etc/lp"
 
-# ========== MENU CHÍNH ==========
-echo ""
-echo "🌐 MENU CHÍNH:"
-echo "1) Tạo Proxy và gửi API"
-echo "2) Chỉ hiển thị danh sách Proxy"
-read -p "👉 Nhập lựa chọn (1 hoặc 2, Enter = mặc định 1): " main_choice
-main_choice=${main_choice:-1}
+
 
 # ========== HIỂN THỊ PROXY FUNCTION ==========
 show_proxy() {
@@ -26,16 +20,7 @@ show_proxy() {
   cat "$file_path"
   echo "----------------------------------------"
 }
-
-# ========== TÙY CHỌN CHỈ HIỂN THỊ ==========
-if [[ "$main_choice" == "2" ]]; then
-  if [ -f "$file_path" ]; then
-    show_proxy
-  else
-    echo "❌ Không tìm thấy file proxy."
-  fi
-  exit 0
-fi
+create_vm_flow() {
 # ❓ Cập nhật hệ thống
 read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
 update_ans=${update_ans:-n}
@@ -133,3 +118,25 @@ done < "$file_path"
 
 # ========== HIỂN THỊ SAU KHI GỬI ==========
 # show_proxy
+}
+# ========== MENU CHÍNH ==========
+echo ""
+echo "🌐 MENU CHÍNH:"
+echo "1) Tạo Proxy và gửi API"
+echo "2) Chỉ hiển thị danh sách Proxy"
+echo "3) Đổi IP VM"
+echo "4) Xoá tất cả IP tĩnh không dùng (toàn bộ dự án)"
+echo "5) Xoá IP khỏi 1 VM đang gán IP"
+echo "6) Tạo nhiều IP tĩnh (STANDARD hoặc PREMIUM)"
+read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 1): " MAIN_CHOICE
+MAIN_CHOICE=${MAIN_CHOICE:-1}
+
+case "$MAIN_CHOICE" in
+  1) create_vm_flow ;;
+  1) show_proxy ;;
+  3) change_ip_flow ;;
+  4) cleanup_global_ips_direct ;;
+  5) remove_ip_from_vm ;;
+  6) create_ip_batch ;;
+  *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
+esac
