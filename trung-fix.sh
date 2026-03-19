@@ -133,7 +133,7 @@ MAIN_CHOICE=${MAIN_CHOICE:-1}
 
 case "$MAIN_CHOICE" in
   1) create_vm_flow ;;
-  1) show_proxy ;;
+  2) show_proxy ;;
   3) change_ip_flow ;;
   4) cleanup_global_ips_direct ;;
   5) remove_ip_from_vm ;;
