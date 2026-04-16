@@ -20,7 +20,7 @@ show_proxy() {
   cat "$file_path"
   echo "----------------------------------------"
 }
-create_vm_flow() {
+create_ip() {
 # ❓ Cập nhật hệ thống
 read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
 update_ans=${update_ans:-n}
@@ -255,7 +255,7 @@ read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 1): " MAIN_CHOICE
 MAIN_CHOICE=${MAIN_CHOICE:-1}
 
 case "$MAIN_CHOICE" in
-  1) create_vm_flow ;;
+  1) create_ip ;;
   2) show_proxy ;;
   3) create_vm_flow ;;
   4) change_ip_flow ;;
