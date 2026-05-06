@@ -119,6 +119,128 @@ done < "$file_path"
 # ========== HIỂN THỊ SAU KHI GỬI ==========
 # show_proxy
 }
+create_vm_flow1() {
+  zones_tokyo=("asia-northeast1-a" "asia-northeast1-b" "asia-northeast1-c")
+  zones_osaka=("asia-northeast2-a" "asia-northeast2-b" "asia-northeast2-c")
+
+  echo ""
+  echo "🖥️ Chọn loại máy:"
+  echo "1) e2-micro (free tier)"
+  echo "2) t2d-standard-1 (AMD EPYC mạnh hơn)"
+  read -p "👉 Nhập lựa chọn [1-2] (mặc định: 1): " MACHINE_OPTION
+  MACHINE_OPTION=${MACHINE_OPTION:-1}
+
+  if [ "$MACHINE_OPTION" == "2" ]; then
+    MACHINE_TYPE="t2d-standard-1"
+  else
+    MACHINE_TYPE="e2-micro"
+  fi
+
+  read -p "✏️ Nhập prefix đặt tên VM (mặc định: vm): " PREFIX
+  PREFIX=${PREFIX:-vm}
+
+  echo "🌐 Chọn loại IP:"
+  echo "1) Có IP công cộng (Public IP – sẽ gán IP tĩnh riêng)"
+  echo "2) Không có IP công cộng (Private only)"
+  read -p "🔌 Nhập lựa chọn [1-2] (mặc định: 1): " IP_OPTION
+  IP_OPTION=${IP_OPTION:-1}
+
+  if [ "$IP_OPTION" == "1" ]; then
+    echo "📶 Chọn Network Tier cho IP:"
+    echo "1) STANDARD (giá rẻ) 🔹"
+    echo "2) PREMIUM (xịn hơn)"
+    read -p "💡 Nhập lựa chọn [1-2] (mặc định: 1): " TIER_OPTION
+    TIER_OPTION=${TIER_OPTION:-1}
+    if [ "$TIER_OPTION" == "1" ]; then
+      NETWORK_TIER="STANDARD"
+    else
+      NETWORK_TIER="PREMIUM"
+    fi
+  fi
+
+  TOKYO_COUNT=4
+  OSAKA_COUNT=4
+
+  echo -e "\n🚀 Tạo $TOKYO_COUNT VM Tokyo + $OSAKA_COUNT VM Osaka..."
+
+  # reset log
+  > created_vms.log
+
+  create_vm_in_zone() {
+    ZONE=$1
+    ZONE_REGION=$(echo "$ZONE" | rev | cut -d'-' -f2- | rev)
+
+    # random name (ít trùng hơn)
+    num=$(date +%s | tail -c 4)$((RANDOM % 10))
+    name="${PREFIX}${num}"
+
+    if gcloud compute instances describe "$name" --zone="$ZONE" &>/dev/null; then
+      echo "⚠️ $name đã tồn tại ở $ZONE"
+      return
+    fi
+
+    if [ "$IP_OPTION" == "1" ]; then
+      IP_NAME="ip-${name}"
+
+      if ! gcloud compute addresses create "$IP_NAME" \
+        --region="$ZONE_REGION" \
+        --network-tier="$NETWORK_TIER" --quiet; then
+        echo "❌ Lỗi tạo IP $IP_NAME"
+        return
+      fi
+
+      STATIC_IP=$(gcloud compute addresses describe "$IP_NAME" \
+        --region="$ZONE_REGION" --format="get(address)")
+
+      if gcloud compute instances create "$name" \
+        --zone="$ZONE" \
+        --machine-type="$MACHINE_TYPE" \
+        --image-family=ubuntu-minimal-2404-lts-amd64 \
+        --image-project=ubuntu-os-cloud \
+        --boot-disk-size=10GB \
+        --network=default \
+        --address="$STATIC_IP" \
+        --network-tier="$NETWORK_TIER"; then
+
+        echo "$name,$STATIC_IP,$ZONE" >> created_vms.log
+        echo "✅ $name ($ZONE)"
+      else
+        echo "❌ Lỗi tạo VM $name"
+      fi
+
+    else
+      if gcloud compute instances create "$name" \
+        --zone="$ZONE" \
+        --machine-type="$MACHINE_TYPE" \
+        --image-family=ubuntu-minimal-2404-lts-amd64 \
+        --image-project=ubuntu-os-cloud \
+        --boot-disk-size=10GB \
+        --network=default \
+        --no-address; then
+
+        echo "$name,NONE,$ZONE" >> created_vms.log
+        echo "✅ $name ($ZONE)"
+      else
+        echo "❌ Lỗi tạo VM $name"
+      fi
+    fi
+  }
+
+  # Tokyo
+  for ((i=1; i<=TOKYO_COUNT; i++)); do
+    ZONE=${zones_tokyo[$RANDOM % ${#zones_tokyo[@]}]}
+    create_vm_in_zone "$ZONE"
+  done
+
+  # Osaka
+  for ((i=1; i<=OSAKA_COUNT; i++)); do
+    ZONE=${zones_osaka[$RANDOM % ${#zones_osaka[@]}]}
+    create_vm_in_zone "$ZONE"
+  done
+
+  echo -e "\n📄 Danh sách VM đã tạo:"
+  cat created_vms.log
+}
 create_vm_flow() {
   zones_tokyo=("asia-northeast1-a" "asia-northeast1-b" "asia-northeast1-c")
   zones_osaka=("asia-northeast2-a" "asia-northeast2-b" "asia-northeast2-c")
@@ -251,6 +373,7 @@ echo "4) Đổi IP VM"
 echo "5) Xoá tất cả IP tĩnh không dùng (toàn bộ dự án)"
 echo "6) Xoá IP khỏi 1 VM đang gán IP"
 echo "7) Tạo nhiều IP tĩnh (STANDARD hoặc PREMIUM)"
+echo "8) Tạo nhiều VM"
 read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 1): " MAIN_CHOICE
 MAIN_CHOICE=${MAIN_CHOICE:-1}
 
@@ -262,5 +385,6 @@ case "$MAIN_CHOICE" in
   4) cleanup_global_ips_direct ;;
   5) remove_ip_from_vm ;;
   6) create_ip_batch ;;
+  8) create_vm_flow1 ;;
   *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
 esac
