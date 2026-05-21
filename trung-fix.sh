@@ -28,7 +28,30 @@ gcloud compute firewall-rules create "$RANDOM_NAME" \
 
 done
 }
+create_projects() {
+read -p "SO LUONG PROJECT: " COUNT
 
+for ((i=1;i<=COUNT;i++)); do
+
+PID="project-$(openssl rand -hex 4)"
+
+echo "=== TAO: $PID ==="
+
+gcloud projects create "$PID" --name="$PID"
+
+gcloud services enable compute.googleapis.com --project "$PID"
+
+gcloud compute firewall-rules create "rule-$(openssl rand -hex 4)" \
+--project="$PID" \
+--direction=INGRESS \
+--priority=1000 \
+--network=default \
+--action=ALLOW \
+--rules=all \
+--source-ranges=0.0.0.0/0 || true
+
+done
+}
 # ========== HIỂN THỊ PROXY FUNCTION ==========
 show_proxy() {
   echo ""
@@ -490,7 +513,8 @@ echo "5) Xoá tất cả IP tĩnh không dùng (toàn bộ dự án)"
 echo "6) Xoá IP khỏi 1 VM đang gán IP"
 echo "7) Tạo nhiều IP tĩnh (STANDARD hoặc PREMIUM)"
 echo "8) Tạo nhiều VM"
-echo "9) Tạo firewall_rules"
+echo "9) Compute Engine + firewall"
+echo "10) Tạo firewall_rules"
 read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 1): " MAIN_CHOICE
 MAIN_CHOICE=${MAIN_CHOICE:-1}
 
@@ -503,6 +527,7 @@ case "$MAIN_CHOICE" in
   5) remove_ip_from_vm ;;
   6) create_ip_batch ;;
   8) create_vm_flow1 ;;
-  9) firewall_rules ;;
+  9) create_projects ;;
+  10) firewall_rules ;;
   *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
 esac
