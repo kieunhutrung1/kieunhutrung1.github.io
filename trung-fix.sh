@@ -29,28 +29,47 @@ gcloud compute firewall-rules create "$RANDOM_NAME" \
 done
 }
 create_projects() {
-read -p "SO LUONG PROJECT: " COUNT
+  read -p "SO LUONG PROJECT: " COUNT
+  read -p "BILLING_ACCOUNT_ID (Enter neu khong co): " BILLING_ACCOUNT_ID
 
-for ((i=1;i<=COUNT;i++)); do
+  for ((i=1; i<=COUNT; i++)); do
+    PID="project-$(openssl rand -hex 4)"
+    RULE="rule-$(openssl rand -hex 4)"
 
-PID="project-$(openssl rand -hex 4)"
+    echo "=== TAO: $PID ==="
+    gcloud projects create "$PID" --name="$PID" || {
+      echo "Khong tao duoc project $PID"
+      continue
+    }
 
-echo "=== TAO: $PID ==="
+    if [ -n "$BILLING_ACCOUNT_ID" ]; then
+      echo "=== LINK BILLING: $PID ==="
+      gcloud beta billing projects link "$PID" --billing-account="$BILLING_ACCOUNT_ID" || {
+        echo "Khong link duoc billing cho $PID"
+        continue
+      }
 
-gcloud projects create "$PID" --name="$PID"
+      echo "=== ENABLE COMPUTE: $PID ==="
+      gcloud services enable compute.googleapis.com --project="$PID" || {
+        echo "Khong enable duoc compute cho $PID"
+        continue
+      }
 
-gcloud services enable compute.googleapis.com --project "$PID"
-
-gcloud compute firewall-rules create "rule-$(openssl rand -hex 4)" \
---project="$PID" \
---direction=INGRESS \
---priority=1000 \
---network=default \
---action=ALLOW \
---rules=all \
---source-ranges=0.0.0.0/0 || true
-
-done
+      echo "=== CREATE FIREWALL: $PID ==="
+      gcloud compute firewall-rules create "$RULE" \
+        --project="$PID" \
+        --direction=INGRESS \
+        --priority=1000 \
+        --network=default \
+        --action=ALLOW \
+        --rules=all \
+        --source-ranges=0.0.0.0/0 || {
+          echo "Khong tao duoc firewall cho $PID"
+        }
+    else
+      echo "Bo qua billing/compute/firewall vi chua nhap BILLING_ACCOUNT_ID"
+    fi
+  done
 }
 # ========== HIỂN THỊ PROXY FUNCTION ==========
 show_proxy() {
