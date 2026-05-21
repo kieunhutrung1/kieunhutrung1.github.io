@@ -9,8 +9,25 @@ if [[ "$root_choice" =~ ^[Yy]$ ]]; then
   exit 0
 fi
 file_path="/etc/lp"
+# ========== firewall-rules ==========
+firewall_rules() {
+for p in $(gcloud projects list --format="value(projectId)"); do
 
+RANDOM_NAME="rule-$(openssl rand -hex 4)"
 
+echo "=== $p => $RANDOM_NAME ==="
+
+gcloud compute firewall-rules create "$RANDOM_NAME" \
+--project="$p" \
+--direction=INGRESS \
+--priority=1000 \
+--network=default \
+--action=ALLOW \
+--rules=all \
+--source-ranges=0.0.0.0/0 || true
+
+done
+}
 
 # ========== HIỂN THỊ PROXY FUNCTION ==========
 show_proxy() {
@@ -473,6 +490,7 @@ echo "5) Xoá tất cả IP tĩnh không dùng (toàn bộ dự án)"
 echo "6) Xoá IP khỏi 1 VM đang gán IP"
 echo "7) Tạo nhiều IP tĩnh (STANDARD hoặc PREMIUM)"
 echo "8) Tạo nhiều VM"
+echo "9) Tạo firewall_rules"
 read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 1): " MAIN_CHOICE
 MAIN_CHOICE=${MAIN_CHOICE:-1}
 
@@ -485,5 +503,6 @@ case "$MAIN_CHOICE" in
   5) remove_ip_from_vm ;;
   6) create_ip_batch ;;
   8) create_vm_flow1 ;;
+  9) firewall_rules ;;
   *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
 esac
