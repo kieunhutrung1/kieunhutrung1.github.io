@@ -171,10 +171,10 @@ done < "$file_path"
 # ========== HIỂN THỊ SAU KHI GỬI ==========
 # show_proxy
 }
-create_ip() {
+create_ip2() {
 # ❓ Cập nhật hệ thống
 read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
-update_ans=${update_ans:-n}
+update_ans=${update_ans:-y}
 
 if [[ "$update_ans" =~ ^[Yy]$ ]]; then
   echo "🔧 Đang cập nhật và cài đặt..."
@@ -265,6 +265,92 @@ while IFS= read -r proxy_line; do
   echo "🌐 Gửi dòng: $proxy_line"
   # curl -s -G "$url" && echo "✅ Gửi thành công." || echo "❌ Gửi thất bại."
    curl -s -L -G "$url" > /dev/null 2>&1
+done < "$file_path"
+
+# ========== HIỂN THỊ SAU KHI GỬI ==========
+# show_proxy
+}
+create_ip() {
+# ❓ Cập nhật hệ thống
+read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
+update_ans=${update_ans:-n}
+
+if [[ "$update_ans" =~ ^[Yy]$ ]]; then
+  echo "🔧 Đang cập nhật và cài đặt..."
+  sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
+else
+  echo "⏩ Bỏ qua bước cập nhật."
+fi
+# ========== NHẬP TÊN SERVER ==========
+read -p "👉 Nhập Tên SEVER: " server_name
+
+# ========== CHỌN CẤU HÌNH ==========
+echo ""
+echo "📡 Cấu hình TCP/IP:"
+echo "1) iOS 1440 generic tunnel or VPN (4G-5G)"
+echo "2) iOS 1450 generic tunnel or VPN (4G-5G)"
+echo "3) iOS 1492 PPPoE (wifi)"
+echo "4) Android 1440 generic tunnel or VPN (4G-5G)"
+echo "5) Android 1450 generic tunnel or VPN (4G-5G)"
+echo "6) Android 1492 PPPoE (wifi)"
+echo "7) macOS 1492 PPPoE (wifi)"
+echo "8) Windows 1492 PPPoE (wifi)"
+echo "9) Windows 1440 generic tunnel or VPN (4G-5G)"
+
+while true; do
+  read -p "👉 Chọn cấu hình TCP/IP (1-9, Enter = mặc định 7): " config_option
+  config_option=${config_option:-7}
+  [[ "$config_option" =~ ^[1-9]$ ]] && break
+  echo "❌ Vui lòng nhập số 1–9."
+done
+
+# ========== TẠO PROXY ==========
+wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz
+chmod +x /usr/local/bin/createprx
+
+{
+  echo "Tienmaster@123"
+  echo "$server_name"
+  echo "kieunhutrung1.github.io"
+  sleep 2
+  echo "$config_option"
+  sleep 2
+} | /usr/local/bin/createprx
+
+# ========== GỬI API CHO TỪNG DÒNG ==========
+if [ ! -f "$file_path" ]; then
+  echo "❌ Không tìm thấy file $file_path"
+  exit 1
+fi
+
+while IFS= read -r proxy_line; do
+  IFS='&' read -ra proxy_parts <<< "$proxy_line"
+
+  socks_proxy=""
+  http_proxy=""
+  shadow_proxy=""
+  main_ip=""
+  server_tag=""
+
+  for entry in "${proxy_parts[@]}"; do
+    IFS=':' read -ra f <<< "$entry"
+    proto="${f[0]}"
+    ip="${f[1]}"
+    [[ -z "$main_ip" && "$proto" == "socks5" ]] && main_ip="$ip"
+
+    case "$proto" in
+      socks5)
+        socks_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:socks"
+        ;;
+      http)
+        http_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:http"
+        ;;
+      shadowsocks)
+        shadow_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:shadowsocks"
+        server_tag="${f[5]}"
+        ;;
+    esac
+  done
 done < "$file_path"
 
 # ========== HIỂN THỊ SAU KHI GỬI ==========
@@ -525,7 +611,7 @@ echo "5) Xoá tất cả IP tĩnh không dùng (toàn bộ dự án)"
 echo "6) Xoá IP khỏi 1 VM đang gán IP"
 echo "7) Tạo nhiều IP tĩnh (STANDARD hoặc PREMIUM)"
 echo "8) Tạo nhiều VM"
-echo "9) Compute Engine + firewall"
+echo "9) Tạo Proxy no Api"
 echo "10) Tạo firewall_rules"
 read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 1): " MAIN_CHOICE
 MAIN_CHOICE=${MAIN_CHOICE:-1}
@@ -539,7 +625,7 @@ case "$MAIN_CHOICE" in
   5) remove_ip_from_vm ;;
   6) create_ip_batch ;;
   8) create_vm_flow1 ;;
-  9) create_projects ;;
+  9) create_ip2 ;;
   10) firewall_rules ;;
   *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
 esac
