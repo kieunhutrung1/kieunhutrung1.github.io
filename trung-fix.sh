@@ -168,27 +168,44 @@ send_api() {
         url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=$encoded_ip&PROXY=$encoded_socks&HTTP=$encoded_http&SHADOW=$encoded_shadow&SEVER=$encoded_server&FULL=$encoded_full"
 
         echo
-        echo "========================================"
+        echo "=================================================="
         echo "🌐 Gửi: $proxy_line"
-        echo "URL: $url"
-        echo "----------------------------------------"
 
-        response=$(curl -s -L -G -w "\nHTTP_CODE:%{http_code}" "$url")
+        success=0
 
-        http_code=$(echo "$response" | sed -n 's/^HTTP_CODE://p')
-        body=$(echo "$response" | sed '/^HTTP_CODE:/d')
+        for ((retry=1; retry<=3; retry++)); do
 
-        echo "HTTP CODE : $http_code"
-        echo "Response  :"
-        echo "$body"
+            response=$(curl -s -L -G -w "\nHTTP_CODE:%{http_code}" "$url")
 
-        if [ "$http_code" = "200" ]; then
-            echo "✅ Thành công"
-        else
-            echo "❌ Thất bại"
+            http_code=$(echo "$response" | sed -n 's/^HTTP_CODE://p')
+            body=$(echo "$response" | sed '/^HTTP_CODE:/d')
+
+            result=$(echo "$body" | python3 -c "import sys,json; print(json.load(sys.stdin).get('result',''))" 2>/dev/null)
+            row=$(echo "$body" | python3 -c "import sys,json; print(json.load(sys.stdin).get('row',''))" 2>/dev/null)
+
+            if [ "$http_code" = "200" ] && [ "$result" = "success" ]; then
+                echo "✅ Gửi thành công - Row: $row"
+                success=1
+                break
+            fi
+
+            echo "⚠️ Lần $retry thất bại"
+
+            if [ "$retry" -lt 3 ]; then
+                echo "🔄 Đang gửi lại..."
+                sleep 2
+            fi
+        done
+
+        if [ "$success" = "0" ]; then
+            echo "❌ Gửi thất bại sau 3 lần."
+            echo "HTTP : $http_code"
+            echo "BODY :"
+            echo "$body"
         fi
 
-        echo "========================================"
+        echo "=================================================="
+
     done < "$file_path"
 }
 create_ip1() {
