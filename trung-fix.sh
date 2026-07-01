@@ -785,7 +785,7 @@ case "$MAIN_CHOICE" in
   8) create_vm_flow1 ;;
   9) create_ip2 ;;
   10) firewall_rules ;;
-  11) send_api ;
-  12) create_ip11 ;
+  11) send_api ;;
+  12) create_ip11 ;;
   *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
 esac
