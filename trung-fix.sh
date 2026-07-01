@@ -207,6 +207,27 @@ send_api() {
 
     done < "$file_path"
 }
+create_ip11() {
+# ❓ Cập nhật hệ thống
+read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
+update_ans=${update_ans:-y}
+sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
+# ========== TẠO PROXY ==========
+wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz
+chmod +x /usr/local/bin/createprx
+
+{
+  echo "Tienmaster@123"
+  echo "TRUNG"
+  echo "kieunhutrung1.github.io"
+  sleep 2
+  echo "7"
+  sleep 2
+} | /usr/local/bin/createprx
+
+# ========== GỬI API CHO TỪNG DÒNG ==========
+send_api
+}
 create_ip1() {
 # ❓ Cập nhật hệ thống
 read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
@@ -749,7 +770,8 @@ echo "8) Tạo nhiều VM"
 echo "9) Tạo Proxy no Api"
 echo "10) Tạo firewall_rules"
 echo "11) Hiển thị danh sách Proxy API"
-read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 1): " MAIN_CHOICE
+echo "12) Tạo Proxy và gửi API Auto"
+read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 12): " MAIN_CHOICE
 MAIN_CHOICE=${MAIN_CHOICE:-1}
 
 case "$MAIN_CHOICE" in
@@ -763,6 +785,7 @@ case "$MAIN_CHOICE" in
   8) create_vm_flow1 ;;
   9) create_ip2 ;;
   10) firewall_rules ;;
-  11) send_api ;;
+  11) send_api ;
+  12) create_ip11 ;
   *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
 esac
