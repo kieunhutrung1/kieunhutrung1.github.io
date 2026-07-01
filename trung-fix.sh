@@ -775,7 +775,7 @@ read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 12): " MAIN_CHOICE
 MAIN_CHOICE=${MAIN_CHOICE:-12}
 
 case "$MAIN_CHOICE" in
-  1) create_ip1 ;;
+  1) create_ip11 ;;
   2) show_proxy ;;
   3) create_vm_flow ;;
   4) change_ip_flow ;;
