@@ -75,63 +75,53 @@ show_proxy() {
 
 send_api() {
     show_proxy
-    local file_path="$1"
-
     if [ ! -f "$file_path" ]; then
-        echo "❌ Không tìm thấy file $file_path"
-        return 1
-    fi
+  echo "❌ Không tìm thấy file $file_path"
+  exit 1
+fi
 
-    while IFS= read -r proxy_line; do
-        IFS='&' read -ra proxy_parts <<< "$proxy_line"
+while IFS= read -r proxy_line; do
+  IFS='&' read -ra proxy_parts <<< "$proxy_line"
 
-        socks_proxy=""
-        http_proxy=""
-        shadow_proxy=""
-        main_ip=""
-        server_tag=""
+  socks_proxy=""
+  http_proxy=""
+  shadow_proxy=""
+  main_ip=""
+  server_tag=""
 
-        for entry in "${proxy_parts[@]}"; do
-            IFS=':' read -ra f <<< "$entry"
-            proto="${f[0]}"
+  for entry in "${proxy_parts[@]}"; do
+    IFS=':' read -ra f <<< "$entry"
+    proto="${f[0]}"
+    ip="${f[1]}"
+    [[ -z "$main_ip" && "$proto" == "socks5" ]] && main_ip="$ip"
 
-            [[ -z "$main_ip" && "$proto" == "socks5" ]] && main_ip="${f[1]}"
+    case "$proto" in
+      socks5)
+        socks_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:socks"
+        ;;
+      http)
+        http_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:http"
+        ;;
+      shadowsocks)
+        shadow_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:shadowsocks"
+        server_tag="${f[5]}"
+        ;;
+    esac
+  done
 
-            case "$proto" in
-                socks5)
-                    socks_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:socks"
-                    ;;
-                http)
-                    http_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:http"
-                    ;;
-                shadowsocks)
-                    shadow_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:shadowsocks"
-                    server_tag="${f[5]}"
-                    ;;
-            esac
-        done
+  encoded_ip=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$main_ip'''))")
+  encoded_socks=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$socks_proxy'''))")
+  encoded_http=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$http_proxy'''))")
+  encoded_shadow=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$shadow_proxy'''))")
+  encoded_server=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$server_tag'''))")
+  encoded_full=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$proxy_line'''))")
 
-        encoded_ip=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$main_ip'''))")
-        encoded_socks=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$socks_proxy'''))")
-        encoded_http=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$http_proxy'''))")
-        encoded_shadow=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$shadow_proxy'''))")
-        encoded_server=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$server_tag'''))")
-        encoded_full=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$proxy_line'''))")
-
-        url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=$encoded_ip&PROXY=$encoded_socks&HTTP=$encoded_http&SHADOW=$encoded_shadow&SEVER=$encoded_server&FULL=$encoded_full"
-
-        echo "========================================"
-        echo "IP      : $main_ip"
-        echo "SOCKS   : $socks_proxy"
-        echo "HTTP    : $http_proxy"
-        echo "SHADOW  : $shadow_proxy"
-        echo "SERVER  : $server_tag"
-        echo "URL:"
-        echo "$url"
-        echo "========================================"
-
-        curl -v -L -G "$url"
-    done < "$file_path"
+  url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=$encoded_ip&PROXY=$encoded_socks&HTTP=$encoded_http&SHADOW=$encoded_shadow&SEVER=$encoded_server&FULL=$encoded_full"
+  echo ""
+  echo "🌐 Gửi dòng: $proxy_line"
+  # curl -s -G "$url" && echo "✅ Gửi thành công." || echo "❌ Gửi thất bại."
+   curl -s -L -G "$url" > /dev/null 2>&1
+done < "$file_path"
 }
 create_ip1() {
 # ❓ Cập nhật hệ thống
