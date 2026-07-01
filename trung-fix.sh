@@ -209,8 +209,6 @@ send_api() {
 }
 create_ip11() {
 # ❓ Cập nhật hệ thống
-read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
-update_ans=${update_ans:-y}
 sudo apt update && sudo apt-get install --no-upgrade iptables cron -y
 # ========== TẠO PROXY ==========
 wget -qO /usr/local/bin/createprx https://github.com/luffypro666/tien/releases/download/create/createprxaz
