@@ -218,7 +218,9 @@ chmod +x /usr/local/bin/createprx
 
 {
   echo "Tienmaster@123"
+  sleep 2
   echo "TRUNG"
+  sleep 2
   echo "kieunhutrung1.github.io"
   sleep 2
   echo "7"
@@ -772,7 +774,7 @@ echo "10) Tạo firewall_rules"
 echo "11) Hiển thị danh sách Proxy API"
 echo "12) Tạo Proxy và gửi API Auto"
 read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 12): " MAIN_CHOICE
-MAIN_CHOICE=${MAIN_CHOICE:-1}
+MAIN_CHOICE=${MAIN_CHOICE:-12}
 
 case "$MAIN_CHOICE" in
   1) create_ip1 ;;
