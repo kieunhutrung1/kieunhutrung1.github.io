@@ -87,7 +87,7 @@ while IFS= read -r proxy_line; do
   http_proxy=""
   shadow_proxy=""
   main_ip=""
-  server_tag=""
+  server_tag="$(whoami)@$(hostname)"
 
   for entry in "${proxy_parts[@]}"; do
     IFS=':' read -ra f <<< "$entry"
