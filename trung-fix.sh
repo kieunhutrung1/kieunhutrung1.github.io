@@ -153,7 +153,6 @@ send_api() {
                     ;;
                 shadowsocks)
                     shadow_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:shadowsocks"
-                    server_tag="${f[5]}"
                     ;;
             esac
         done
