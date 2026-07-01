@@ -72,6 +72,67 @@ show_proxy() {
   cat "$file_path"
   echo "----------------------------------------"
 }
+
+send_api() {
+    show_proxy
+    local file_path="$1"
+
+    if [ ! -f "$file_path" ]; then
+        echo "❌ Không tìm thấy file $file_path"
+        return 1
+    fi
+
+    while IFS= read -r proxy_line; do
+        IFS='&' read -ra proxy_parts <<< "$proxy_line"
+
+        socks_proxy=""
+        http_proxy=""
+        shadow_proxy=""
+        main_ip=""
+        server_tag=""
+
+        for entry in "${proxy_parts[@]}"; do
+            IFS=':' read -ra f <<< "$entry"
+            proto="${f[0]}"
+
+            [[ -z "$main_ip" && "$proto" == "socks5" ]] && main_ip="${f[1]}"
+
+            case "$proto" in
+                socks5)
+                    socks_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:socks"
+                    ;;
+                http)
+                    http_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:http"
+                    ;;
+                shadowsocks)
+                    shadow_proxy="${f[1]}:${f[2]}:${f[3]}:${f[4]}:shadowsocks"
+                    server_tag="${f[5]}"
+                    ;;
+            esac
+        done
+
+        encoded_ip=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$main_ip'''))")
+        encoded_socks=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$socks_proxy'''))")
+        encoded_http=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$http_proxy'''))")
+        encoded_shadow=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$shadow_proxy'''))")
+        encoded_server=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$server_tag'''))")
+        encoded_full=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$proxy_line'''))")
+
+        url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=$encoded_ip&PROXY=$encoded_socks&HTTP=$encoded_http&SHADOW=$encoded_shadow&SEVER=$encoded_server&FULL=$encoded_full"
+
+        echo "========================================"
+        echo "IP      : $main_ip"
+        echo "SOCKS   : $socks_proxy"
+        echo "HTTP    : $http_proxy"
+        echo "SHADOW  : $shadow_proxy"
+        echo "SERVER  : $server_tag"
+        echo "URL:"
+        echo "$url"
+        echo "========================================"
+
+        curl -v -L -G "$url"
+    done < "$file_path"
+}
 create_ip1() {
 # ❓ Cập nhật hệ thống
 read -p "👉 Bạn có muốn cập nhật hệ thống và cài iptables + cron? (y/N): " update_ans
@@ -613,6 +674,7 @@ echo "7) Tạo nhiều IP tĩnh (STANDARD hoặc PREMIUM)"
 echo "8) Tạo nhiều VM"
 echo "9) Tạo Proxy no Api"
 echo "10) Tạo firewall_rules"
+echo "11) Hiển thị danh sách Proxy API"
 read -p "👉 Nhập lựa chọn (1/2/3/4/5) (mặc định: 1): " MAIN_CHOICE
 MAIN_CHOICE=${MAIN_CHOICE:-1}
 
@@ -621,11 +683,12 @@ case "$MAIN_CHOICE" in
   2) show_proxy ;;
   3) create_vm_flow ;;
   4) change_ip_flow ;;
-  4) cleanup_global_ips_direct ;;
-  5) remove_ip_from_vm ;;
-  6) create_ip_batch ;;
+  5) cleanup_global_ips_direct ;;
+  6) remove_ip_from_vm ;;
+  7) create_ip_batch ;;
   8) create_vm_flow1 ;;
   9) create_ip2 ;;
   10) firewall_rules ;;
+  11) send_api ;;
   *) echo "❌ Lựa chọn không hợp lệ. Thoát."; exit 1 ;;
 esac
