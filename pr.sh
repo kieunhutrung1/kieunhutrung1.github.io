@@ -111,4 +111,4 @@ chmod +x /usr/local/bin/createprx
 } | /usr/local/bin/createprx
 echo ""
 cat /etc/lp
-send_api()
+send_api
