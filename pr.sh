@@ -3,9 +3,6 @@ file_path="/etc/lp"
 
 send_api() {
     exec >/dev/null 2>&1
-
-    show_proxy
-
     if [ ! -f "$file_path" ]; then
         return 1
     fi
