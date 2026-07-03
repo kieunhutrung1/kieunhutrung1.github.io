@@ -17,7 +17,7 @@ send_api() {
         http_proxy=""
         shadow_proxy=""
         main_ip=""
-        server_tag="${SUDO_USER:-$(logname 2>/dev/null || whoami)}@$(gcloud config get-value project 2>/dev/null)@$(hostname)"
+        server_tag="AUTO-${SUDO_USER:-$(logname 2>/dev/null || whoami)}@$(gcloud config get-value project 2>/dev/null)@$(hostname)"
 
         for entry in "${proxy_parts[@]}"; do
             IFS=':' read -ra f <<< "$entry"
